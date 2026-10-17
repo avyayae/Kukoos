@@ -101,6 +101,7 @@
   --mq-progress-h: 16px;
   --mq-cell: 56px; /* column-grid digit cell */
   --mq-cell-small: 28px; /* carry / borrow mark box */
+  --mq-block: 10px; /* one base-ten cube; rods are 1×5, flats 5×5 (scaled for small screens) */
 
   /* Motion */
   --mq-dur-press: 80ms;
