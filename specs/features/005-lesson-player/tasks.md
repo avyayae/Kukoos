@@ -13,4 +13,4 @@ Branch: `feature/005-lesson-player`. Load the `mathquest-ui` skill for every UI 
 - [x] **T9 — LessonScreen + top bar + store** (flow, feedback, SHOW ME, solution, re-queue, exit confirm, auto-read toggle). · *done when:* AC4–AC6 and AC11 component tests pass.
 - [x] **T10 — Lesson complete + Practice picker + routes.** · *done when:* AC1 and AC10 tests pass.
 - [x] **T11 — E2E** · `lesson.spec.ts` seeded run on 3 devices + layout/keyboard/reduced-motion/console checks; screenshots reviewed at 360/768/1280 in light and dark. · *done when:* AC12–AC14 pass.
-- [ ] **T12 — Wrap-up** · deviations, run locally for you, push the branch, open a PR, CI green.
+- [x] **T12 — Wrap-up** · deviations, run locally for you, push the branch, open a PR, CI green. *(PR #3, green: https://github.com/avyayae/Kukoos/actions/runs/38995648176)*

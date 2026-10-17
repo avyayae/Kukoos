@@ -1,6 +1,6 @@
 # Feature 005 — Lesson Player
 
-**Status:** Implemented. All ACs are verified locally; CI is pending on the PR.  ·  **Constitution check:** §1.2 no shame (no lives, gentle copy), §1.4 can play without reading (TTS on every prompt), §2.3 adaptive difficulty (staircase), §2.4 concrete → pictorial → abstract (blocks → guided column → free), §3.4 code computes answers (domain `check()`), §3.7 accessible and reduced motion
+**Status:** Done. All ACs verified, and CI is green on PR #3.  ·  **Constitution check:** §1.2 no shame (no lives, gentle copy), §1.4 can play without reading (TTS on every prompt), §2.3 adaptive difficulty (staircase), §2.4 concrete → pictorial → abstract (blocks → guided column → free), §3.4 code computes answers (domain `check()`), §3.7 accessible and reduced motion
 
 ## Why
 This is the first time the kid can actually **play**. F003 can generate and check every problem. F05 turns that into the Duolingo-style core loop: one question at a time, big friendly controls, Kukoos reacting, and (above all for our first player) **hands-on regrouping**. She trades a ten rod for ten ones with the blocks, then solves in columns with Kukoos guiding her column by column, and gets a hint about *her* mistake when she slips.
