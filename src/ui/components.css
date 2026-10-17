@@ -556,6 +556,75 @@
     }
   }
 
+  /* ---------------------------------------------------------- lesson layout */
+  .lesson {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-3);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .lesson > * {
+    width: 100%;
+    max-width: var(--mq-lesson-max);
+    margin-inline: auto;
+  }
+  .lesson__top,
+  .lesson__kukoos {
+    display: flex;
+    align-items: center;
+    gap: var(--mq-space-3);
+  }
+  .lesson__question {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+  .lesson__check {
+    max-width: var(--mq-content-max);
+    min-height: calc(var(--mq-tap-xl) + var(--mq-lip-xl));
+  }
+  .worked {
+    margin: 0;
+    padding-left: var(--mq-space-6);
+    font-size: var(--mq-text-base);
+  }
+
+  /* ---------------------------------------------------------- lesson complete stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mq-space-3);
+    width: 100%;
+    max-width: var(--mq-content-max);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mq-space-1);
+    padding: var(--mq-space-3) var(--mq-space-2);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-card);
+    background: var(--mq-surface);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-border);
+  }
+  .stat__icon {
+    font-size: var(--mq-text-xl);
+  }
+  .stat__value {
+    font-size: var(--mq-text-2xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .stat__label {
+    color: var(--mq-ink-muted);
+    font-size: var(--mq-text-base);
+  }
+
   /* ---------------------------------------------------------- stat pill */
   .pill {
     display: inline-flex;
