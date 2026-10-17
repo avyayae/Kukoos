@@ -1,6 +1,6 @@
 # Feature 007 — World Map & Kid Navigation
 
-**Status:** Draft (awaiting review)  ·  **Constitution check:** §1.4 can play without reading (tap-to-hear everywhere, one obvious next step), §2.1 mastery-based progression (nodes unlock on crowns), §1.3 no dark patterns (no endless loop; map is calm), §3.7 accessible & reduced motion
+**Status:** Approved (2026-10-17)  ·  **Constitution check:** §1.4 can play without reading (tap-to-hear everywhere, one obvious next step), §2.1 mastery-based progression (nodes unlock on crowns), §1.3 no dark patterns (no endless loop; map is calm), §3.7 accessible & reduced motion
 
 ## Why
 A 7-year-old can't use a long text list of 23 missions: too much reading, too many choices, and no sense of "where am I?". F07 replaces it with the thing kids already understand from games: **a journey map**. Kukoos flies from the jungle up into space, and the kid always sees **one bright "play next" step**. Everything a kid can tap **speaks its name**, so reading is optional. The full mission list moves behind a grown-up gate.
@@ -120,7 +120,7 @@ The old Start splash goes away: the app opens straight to the map, and a first-l
 - A natural/recorded voice, Rive Kukoos, Lottie rocket and sound effects (F09; this feature uses the current TTS and CSS/SVG motion).
 - PIN and parent dashboard (F11).
 
-## Open questions
-1. **Boss gating:** clearing a world's boss (≥ 80%) is required to enter the next world. *Proposed: yes* (it's the "level up" moment). Alternative: bosses optional.
-2. **Grown-up gate** is a multiplication question (PIN later in F11). *Proposed: yes.*
-3. **Start splash removed:** the app opens straight onto the map. *Proposed: yes.*
+## Decisions (approved 2026-10-17)
+1. **Bosses gate the next world** (≥ 80% first-try), retryable any time.
+2. **Grown-up gate** is a multiplication question; a PIN comes in F11.
+3. **No Start splash:** the app opens straight onto the map.
