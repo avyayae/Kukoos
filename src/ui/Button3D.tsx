@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react'
 
 export type Button3DVariant = 'primary' | 'secondary' | 'sky' | 'success' | 'danger-soft' | 'ghost'
 export type Button3DSize = 'md' | 'lg' | 'xl'
@@ -11,6 +11,7 @@ export interface Button3DProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean
   loading?: boolean
   icon?: ReactNode
+  ref?: Ref<HTMLButtonElement>
 }
 
 /**

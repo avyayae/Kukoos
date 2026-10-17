@@ -96,6 +96,11 @@
   --mq-tap-kid: 56px;
   --mq-tap-xl: 64px;
   --mq-content-max: 640px; /* lesson column width on tablet/desktop */
+  --mq-keypad-max: 336px;
+  --mq-tile-min: 96px; /* ChoiceTile min height */
+  --mq-progress-h: 16px;
+  --mq-cell: 56px; /* column-grid digit cell */
+  --mq-cell-small: 28px; /* carry / borrow mark box */
 
   /* Motion */
   --mq-dur-press: 80ms;
