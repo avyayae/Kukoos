@@ -48,7 +48,7 @@ Each bug is **simulated** by a pure function `simulateBugs(a, b, op)` that retur
 | Key | Applies to | Simulation | Example (correct) |
 |---|---|---|---|
 | `sub.smallerFromLarger` | subtraction | per column `|aᵢ − bᵢ|`, no borrowing | 36 − 28 → **12** (8) |
-| `sub.borrowNoDecrement` | subtraction | if `aᵢ < bᵢ` use `aᵢ + 10 − bᵢ`, but never reduce the next column | 52 − 27 → **35** (25); 403 − 178 → **335** (225) |
+| `sub.borrowNoDecrement` | subtraction | if `aᵢ < bᵢ` use `aᵢ + 10 − bᵢ`, but never reduce the next column | 52 − 28 → **34** (24); 403 − 178 → **335** (225) |
 | `sub.acrossZeroSkip` | subtraction with a 0 to borrow across | borrow correctly, but the zero column becomes 10 instead of 9 | 403 − 178 → **235** (225); 500 − 263 → **247** (237) |
 | `add.forgotCarry` | addition | per column `(aᵢ + bᵢ) mod 10`, carries dropped | 47 + 38 → **75** (85) |
 | `add.wroteWholeSum` | addition | writes each column's full sum side by side | 47 + 38 → **715** (85) |
@@ -57,6 +57,7 @@ Each bug is **simulated** by a pure function `simulateBugs(a, b, op)` that retur
 | `offByTen` | all numeric | `|answer − correct| ∈ {10, 100}` | 225 → 325 |
 
 **Priority** when two bugs produce the same number: the order of the table (algorithmic bugs first, then the generic `offBy*`). A bug whose simulated answer equals the correct answer never fires.
+*Known collision:* when `bᵢ − aᵢ = 5` in a borrowing column, `smallerFromLarger` and `borrowNoDecrement` give the same digit (52 − 27 → 35 for both). Priority reports `smallerFromLarger`.
 
 ## Acceptance criteria
 - **AC1 — Curriculum data:** Given `skills.ts`, then all 23 MVP skills exist with a world, title, ≥1 CCSS code, prereqs, supported question kinds, and (for column skills) a regrouping pattern. The prereq graph is acyclic, references only existing skills, and each world's first skill depends only on the previous world.

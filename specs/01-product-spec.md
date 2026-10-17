@@ -48,8 +48,8 @@ A 2nd grader wants to learn math, but worksheets are boring and most apps are fu
   |---|---|---|
   | Smaller-from-larger | 36 − 28 → 12 (did 8 − 6) | "Can we take 8 from 6? Let's trade a ten for 10 ones!" |
   | Forgot the carry | 47 + 38 → 75 | "7 + 8 = 15. Where does the extra ten go?" |
-  | Borrowed but didn't reduce | 52 − 27 → 35 | "We traded a ten, so how many tens are left?" |
-  | Borrow across zero | 403 − 178 → 335 | "No tens to trade! Let's open a hundred first." |
+  | Borrowed but didn't reduce | 52 − 28 → 34 | "We traded a ten, so how many tens are left?" |
+  | Borrow across zero | 403 − 178 → 235 (the 0 became 10, not 9) | "No tens to trade! Let's open a hundred first." |
   | Off by one | answer ± 1 | "So close! Count once more." |
   Misconceptions are logged per profile and shown in the Parent zone.
 - **End of lesson:** confetti, XP count-up, gems earned, accuracy, a treasure chest on perfect lessons, daily goal progress, streak update.
