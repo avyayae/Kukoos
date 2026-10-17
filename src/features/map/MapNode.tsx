@@ -5,7 +5,7 @@ import { BOSS_EMOJI, nodeLabel } from './labels'
 
 interface MapNodeProps {
   node: Node
-  /** Zigzag column: -1, 0 or 1. */
+  /** Zigzag column: -1, 0 or 1. Kukoos + "Start here!" sit on the roomier side. */
   lane: number
   onSelect: (node: Node) => void
 }
@@ -24,7 +24,7 @@ export function MapNode({ node, lane, onSelect }: MapNodeProps) {
   else face = String(node.skill.order)
 
   return (
-    <div className={`map-row${lane === 1 ? ' map-row--right' : ''}`} style={style}>
+    <div className={`map-row${lane >= 0 ? ' map-row--here-left' : ''}`} style={style}>
       <button
         type="button"
         className={`map-node map-node--${node.state}${boss ? ' map-node--boss' : ''}`}

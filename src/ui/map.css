@@ -5,9 +5,11 @@
     min-height: 100dvh;
     /* Room for the fixed Play button + bottom bar. */
     padding-bottom: calc(
-      var(--mq-bar-h) + var(--mq-tap-xl) + var(--mq-space-12) + env(safe-area-inset-bottom)
+      var(--mq-bar-h) + var(--mq-tap-xl) + var(--mq-space-12) + var(--mq-space-8) +
+        env(safe-area-inset-bottom)
     );
-    background: var(--mq-map-space);
+    /* Below the journey is still the jungle floor (the page bottom sits under the dock). */
+    background: var(--mq-map-jungle);
   }
 
   /* ---------------------------------------------------------- header */
@@ -224,7 +226,7 @@
     gap: var(--mq-space-1);
     pointer-events: none;
   }
-  .map-row--right .map-node__here {
+  .map-row--here-left .map-node__here {
     left: auto;
     right: calc(50% + var(--mq-map-node) / 2 + var(--mq-space-2));
     flex-direction: row-reverse;

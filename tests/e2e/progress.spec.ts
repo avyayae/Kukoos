@@ -1,10 +1,17 @@
 import { readFile } from 'node:fs/promises'
 import { expect, type Page, test } from '@playwright/test'
-import { playPerfectLesson } from './helpers'
+import { passGate, playPerfectLesson } from './helpers'
 
 // Spec 004 AC11: progress survives reloads and a backup → wipe → restore round trip.
+// Since spec 007 the score list lives under Grown-ups → All missions.
 const SKILL = 'add.within20'
 const card = (page: Page) => page.getByRole('link', { name: /Add within 20/ })
+
+async function openMissions(page: Page) {
+  await page.goto('/grown-ups/missions')
+  await passGate(page)
+  await expect(page.getByRole('heading', { name: 'All missions' })).toBeVisible()
+}
 
 async function wipeLocalData(page: Page) {
   // Dexie closes its connection on 'versionchange', so the delete isn't blocked.
@@ -23,15 +30,16 @@ test('a finished lesson is still there after a reload', async ({ page }) => {
   page.on('console', (m) => {
     if (m.type() === 'error' || m.type() === 'warning') problems.push(m.text())
   })
-  await page.goto('/practice')
+  await openMissions(page)
   await expect(card(page)).toContainText('New!')
 
   await playPerfectLesson(page, SKILL, 7)
   await page.getByRole('button', { name: 'Continue' }).click()
-  await expect(page).toHaveURL(/\/practice$/)
-  await expect(card(page)).toContainText('⭐ 100%')
+  // Back on the map (lesson query params are carried over)
+  await expect(page).toHaveURL(/\/(\?.*)?$/)
 
   await page.reload()
+  await openMissions(page)
   await expect(card(page)).toContainText('⭐ 100%')
   expect(problems).toEqual([])
 })
@@ -39,10 +47,10 @@ test('a finished lesson is still there after a reload', async ({ page }) => {
 test('backup → wipe → restore brings progress back', async ({ page }, testInfo) => {
   await playPerfectLesson(page, SKILL, 7)
   await page.getByRole('button', { name: 'Continue' }).click()
-  await expect(card(page)).toContainText('⭐ 100%')
 
   // Download a backup.
-  await page.getByRole('link', { name: /For grown-ups/ }).click()
+  await page.goto('/grown-ups')
+  await passGate(page)
   await expect(page.getByTestId('counts')).toContainText('1 lesson and 10 answers')
   const [download] = await Promise.all([
     page.waitForEvent('download'),
@@ -56,14 +64,15 @@ test('backup → wipe → restore brings progress back', async ({ page }, testIn
 
   // Lose everything (like a browser clearing site data).
   await wipeLocalData(page)
-  await page.goto('/practice')
+  await openMissions(page)
   await expect(card(page)).toContainText('New!')
 
   // Restore.
   await page.goto('/grown-ups')
+  await passGate(page)
   await page.getByTestId('backup-file').setInputFiles(path)
   await page.getByRole('button', { name: 'Replace' }).click()
   await expect(page.getByRole('status')).toContainText('Restored! 1 lesson is back.')
-  await page.goto('/practice')
+  await openMissions(page)
   await expect(card(page)).toContainText('⭐ 100%')
 })

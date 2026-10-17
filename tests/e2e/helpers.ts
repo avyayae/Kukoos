@@ -69,3 +69,15 @@ export async function playPerfectLesson(page: Page, skillId: string, seed: numbe
   await page.goto(`/lesson/${skillId}?seed=${seed}`)
   await playThrough(page, startLesson({ skillId, seed, at: 0 }))
 }
+
+/** Answers the grown-up check ("What is 13 × 4?") on the current page. */
+export async function passGate(page: Page, { wrong = false } = {}) {
+  const heading = page.getByRole('heading', { name: /What is \d+ × \d+\?/ })
+  const text = (await heading.textContent()) ?? ''
+  const [, a, b] = /What is (\d+) × (\d+)/.exec(text) ?? []
+  const answer = Number(a) * Number(b)
+  const buttons = page.locator('.gate-choices button')
+  const values = await buttons.allTextContents()
+  const index = values.findIndex((v) => (Number(v) === answer) !== wrong)
+  await buttons.nth(index).click()
+}

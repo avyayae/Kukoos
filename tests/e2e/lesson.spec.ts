@@ -72,7 +72,7 @@ test('plays a full seeded lesson, with one targeted hint, to Mission complete (A
   await expect(page.getByRole('heading', { name: 'Mission complete!' })).toBeVisible()
   await expect(page.getByRole('list', { name: 'Lesson results' })).toContainText('90%')
   await page.getByRole('button', { name: 'Continue' }).click()
-  await expect(page).toHaveURL(/\/practice$/)
+  await expect(page).toHaveURL(/\/(\?.*)?$/)
   expect(problems).toEqual([])
 })
 
@@ -165,13 +165,13 @@ for (const size of [
   })
 }
 
-test('picker → lesson → leave → picker', async ({ page }) => {
+test('map → Play next → lesson → leave → map', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Start' }).click()
-  await expect(page).toHaveURL(/\/practice$/)
-  await page.getByRole('link', { name: /Borrow across zero/ }).click()
-  await expect(page).toHaveURL(/\/lesson\/sub\.3digit\.acrossZero$/)
+  await page.getByTestId('play-next').click()
+  await expect(page).toHaveURL(/\/lesson\/add\.within20$/)
+  await lessonReady(page)
   await page.getByRole('button', { name: 'Leave lesson' }).click()
   await page.getByRole('button', { name: 'Leave', exact: true }).click()
-  await expect(page).toHaveURL(/\/practice$/)
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByTestId('journey')).toBeVisible()
 })
