@@ -12,7 +12,10 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-`specs/features/001-project-setup/` (spec → plan → tasks)
+`specs/features/003-domain-core/` (spec → plan → tasks) on branch `feature/003-domain-core`. Done: 001 (PR #1).
+
+## Git workflow
+Run `npm run verify` locally first, then push to a `feature/NNN-*` branch and open a PR. Never push to `main` directly.
 
 ## Commands
 - `npm run dev` · `npm test` · `npm run test:e2e` (builds, then Playwright on phone/tablet/desktop) · `npm run lint` · `npm run typecheck` · `npm run format`
