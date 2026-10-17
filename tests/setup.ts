@@ -9,21 +9,24 @@ export function setReducedMotion(value: boolean) {
   reducedMotion = value
 }
 
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn((query: string) => ({
-    matches: query.includes('prefers-reduced-motion') ? reducedMotion : false,
-    media: query,
-    onchange: null,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    dispatchEvent: vi.fn(() => false),
-  })),
-})
+// Node-environment tests (e.g. tests/lint) have no DOM to mock or clean up.
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn((query: string) => ({
+      matches: query.includes('prefers-reduced-motion') ? reducedMotion : false,
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(() => false),
+    })),
+  })
 
-afterEach(() => {
-  cleanup()
-  reducedMotion = false
-})
+  afterEach(() => {
+    cleanup()
+    reducedMotion = false
+  })
+}
