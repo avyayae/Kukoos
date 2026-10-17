@@ -1,16 +1,26 @@
-import { Link } from 'react-router'
-import { useBestScores } from '@/data'
-import { skillsInWorld, WORLDS } from '@/domain'
+import type { CSSProperties } from 'react'
+import { Link, useSearchParams } from 'react-router'
+import { clockNow } from '@/app/clock'
+import { useBestScores, useProgress } from '@/data'
+import { dueSkills, skillsInWorld, WORLDS } from '@/domain'
 import { Kukoos } from '@/ui'
 
 const WORLD_EMOJI = { jungle: '🐒', savanna: '🦁', ocean: '🐠', moon: '🌙', mars: '🔴' } as const
 
 /**
- * Temporary mission picker (spec 005 AC1): every skill grouped by world in path order,
- * with the best saved score (spec 004 AC6). Replaced by the world map in F07.
+ * Temporary mission picker (spec 005 AC1): every skill grouped by world in path order, with
+ * the best saved score (spec 004), crowns, mastery rings and the Review mission (spec 006).
+ * Replaced by the world map in F07.
  */
 export function PracticeScreen() {
+  const [params] = useSearchParams()
   const best = useBestScores()
+  const loaded = useProgress()
+  const progress = loaded?.progress ?? {}
+  const due = loaded ? dueSkills(progress, clockNow(params)) : []
+  // Keep test-clock params (dev/e2e) when opening the Review mission.
+  const search = params.toString() ? `?${params.toString()}` : ''
+
   return (
     <main className="screen practice">
       <div className="practice__inner">
@@ -22,6 +32,24 @@ export function PracticeScreen() {
             Pick a mission!
           </Kukoos>
         </header>
+
+        {due.length > 0 && (
+          <Link to={`/lesson/review${search}`} className="review-card" data-testid="review-card">
+            <span className="review-card__icon" aria-hidden="true">
+              🔁
+            </span>
+            <span className="review-card__text">
+              <span className="review-card__title">Review</span>
+              <span className="review-card__sub">
+                {due.length} {due.length === 1 ? 'skill' : 'skills'} to practise again
+              </span>
+            </span>
+            <span className="review-card__go" aria-hidden="true">
+              ›
+            </span>
+          </Link>
+        )}
+
         {WORLDS.map((world) => (
           <section
             key={world.id}
@@ -34,22 +62,38 @@ export function PracticeScreen() {
             <ul className="world__skills">
               {skillsInWorld(world.id).map((skill) => {
                 const score = best[skill.id]
+                const m = progress[skill.id]
+                const crowned = !!m?.crowned
+                const ring = { '--p': Math.round((m?.mastery ?? 0) * 100) } as CSSProperties
                 return (
                   <li key={skill.id}>
                     <Link to={`/lesson/${skill.id}`} className="skill-card">
-                      <span className="skill-card__order num">{skill.order}</span>
+                      <span
+                        className={`skill-card__ring${crowned ? ' skill-card__ring--crowned' : ''}`}
+                        style={ring}
+                      >
+                        <span className="skill-card__order num">
+                          {crowned ? (
+                            <span role="img" aria-label="Mastered">
+                              👑
+                            </span>
+                          ) : (
+                            skill.order
+                          )}
+                        </span>
+                      </span>
                       <span className="skill-card__title">{skill.title}</span>
                       {skill.focus && (
                         <span className="skill-card__focus" aria-label="Focus skill">
                           🎯
                         </span>
                       )}
-                      {score === undefined ? (
-                        <span className="skill-card__new">New!</span>
-                      ) : (
+                      {score !== undefined ? (
                         <span className="skill-card__score num" aria-label={`Best ${score}%`}>
                           ⭐ {score}%
                         </span>
+                      ) : crowned ? null : (
+                        <span className="skill-card__new">New!</span>
                       )}
                     </Link>
                   </li>
@@ -59,8 +103,8 @@ export function PracticeScreen() {
           </section>
         ))}
         <footer className="practice__footer">
-          <Link to="/backup" className="practice__grownups">
-            For grown-ups: back up progress
+          <Link to="/grown-ups" className="practice__grownups">
+            For grown-ups: starting point &amp; backup
           </Link>
         </footer>
       </div>

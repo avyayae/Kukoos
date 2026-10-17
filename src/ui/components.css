@@ -787,6 +787,70 @@
   .skill-card__title {
     flex: 1;
   }
+  /* Mastery ring around the path number (spec 006); gold when crowned. */
+  .skill-card__ring {
+    --p: 0;
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    padding: var(--mq-space-1);
+    border-radius: var(--mq-radius-pill);
+    background: conic-gradient(var(--mq-secondary) calc(var(--p) * 1%), var(--mq-track) 0);
+  }
+  .skill-card__ring--crowned {
+    background: var(--mq-sun);
+  }
+  .skill-card__ring--crowned .skill-card__order {
+    background: var(--mq-sun);
+    color: var(--mq-ink);
+    font-size: var(--mq-text-xl);
+  }
+
+  /* Review mission card */
+  .review-card {
+    display: flex;
+    align-items: center;
+    gap: var(--mq-space-3);
+    min-height: calc(var(--mq-tap-xl) + var(--mq-space-4));
+    padding: var(--mq-space-3) var(--mq-space-4);
+    border: var(--mq-stroke) solid var(--mq-primary);
+    border-radius: var(--mq-radius-card);
+    background: var(--mq-primary-tint);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-primary-lip);
+    color: var(--mq-ink);
+    text-decoration: none;
+    transition: transform var(--mq-dur-press) var(--mq-ease-out);
+  }
+  .review-card:active {
+    transform: translateY(var(--mq-lip));
+    box-shadow: none;
+  }
+  .review-card__icon {
+    font-size: var(--mq-text-2xl);
+  }
+  .review-card__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+  .review-card__title {
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .review-card__sub {
+    color: var(--mq-ink-muted);
+    font-size: var(--mq-text-base);
+  }
+  .review-card__go {
+    font-size: var(--mq-text-2xl);
+    color: var(--mq-primary);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .review-card:active {
+      transform: none;
+    }
+  }
   .skill-card__new,
   .skill-card__score {
     flex-shrink: 0;
@@ -855,6 +919,22 @@
   .grownup__card p {
     margin: 0;
     color: var(--mq-ink-muted);
+  }
+  .grownup__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-1);
+    width: 100%;
+    color: var(--mq-ink);
+  }
+  .grownup__select {
+    min-height: var(--mq-tap-parent);
+    padding-inline: var(--mq-space-3);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-btn);
+    background: var(--mq-surface);
+    color: var(--mq-ink);
+    font: inherit;
   }
   .grownup__status {
     margin: 0;

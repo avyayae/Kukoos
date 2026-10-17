@@ -72,7 +72,8 @@ describe('lessons repository (AC3–AC6)', () => {
     await repos.lessons.save(state, { lessonId, profileId: 'P1' })
     expect(await db.lessons.count()).toBe(1)
     expect(await db.attempts.where('lessonId').equals(lessonId).count()).toBe(11)
-    expect(await db.outbox.count()).toBe(12)
+    // lesson + 11 attempts + 1 skill-progress row (F006)
+    expect(await db.outbox.count()).toBe(13)
     const lesson = await db.lessons.get(lessonId)
     expect(lesson).toMatchObject({ updatedAt: 2_000_000, version: 1, completed: true })
     const attempt = await db.attempts.where('lessonId').equals(lessonId).first()
@@ -89,7 +90,8 @@ describe('lessons repository (AC3–AC6)', () => {
     await repos.lessons.save(state, meta)
     expect(await db.lessons.count()).toBe(1)
     expect(await db.attempts.count()).toBe(11)
-    expect(await db.outbox.count()).toBe(12)
+    // lesson + 11 attempts + 1 skill-progress row (F006)
+    expect(await db.outbox.count()).toBe(13)
   })
 
   it('saves an early exit as incomplete, and nothing when no question was answered', async () => {

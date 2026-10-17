@@ -4,8 +4,10 @@ import {
   type Difficulty,
   getSkill,
   hintFor,
+  type LessonMode,
   lessonProgress,
   lessonReducer,
+  type PlannedQuestion,
   type Response,
   type SkillId,
   solutionFor,
@@ -31,6 +33,9 @@ interface LessonScreenProps {
   skillId: SkillId
   seed: number
   startDifficulty?: Difficulty
+  /** A composed plan (spec 006); without one, the new-skill plan is used. */
+  plan?: readonly PlannedQuestion[]
+  mode?: LessonMode
   onExit: () => void
   /** Injectable clock for tests. */
   now?: () => number
@@ -50,13 +55,21 @@ const FEEDBACK: Record<string, FeedbackState> = {
 export function LessonScreen({
   skillId,
   seed,
-  startDifficulty = 2,
+  startDifficulty,
+  plan,
+  mode,
   onExit,
   now = Date.now,
 }: LessonScreenProps) {
-  const skill = getSkill(skillId)
   const [state, dispatch] = useReducer(lessonReducer, undefined, () =>
-    startLesson({ skillId, seed, difficulty: startDifficulty, at: now() }),
+    startLesson({
+      skillId,
+      seed,
+      at: now(),
+      ...(startDifficulty ? { difficulty: startDifficulty } : {}),
+      ...(plan ? { plan } : {}),
+      ...(mode ? { mode } : {}),
+    }),
   )
   const [response, setResponse] = useState<Response | null>(null)
   const [bubble, setBubble] = useState<string | null>(null)
@@ -97,7 +110,10 @@ export function LessonScreen({
   let banner: { variant: 'correct' | 'notYet' | 'solution'; title: string; body?: string } | null =
     null
   if (phase === 'correct')
-    banner = { variant: 'correct', title: praiseFor(skill.worldId, q.seed + state.index) }
+    banner = {
+      variant: 'correct',
+      title: praiseFor(getSkill(q.skillId).worldId, q.seed + state.index),
+    }
   if (phase === 'notYet')
     banner = {
       variant: 'notYet',

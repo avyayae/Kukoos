@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { SkillId } from '@/domain'
+import type { Progress, SkillId } from '@/domain'
 import { useRepos } from './context'
 import type { ProfileRow } from './rows'
 
@@ -18,6 +18,31 @@ export function useCurrentProfile(): ProfileRow | null | undefined {
     }
   }, [repos])
   return profile
+}
+
+export interface LoadedProgress {
+  profile: ProfileRow | null
+  progress: Progress
+}
+
+/** Mastery per skill for the current profile; `undefined` while loading (spec 006). */
+export function useProgress(): LoadedProgress | undefined {
+  const repos = useRepos()
+  const profile = useCurrentProfile()
+  const [loaded, setLoaded] = useState<LoadedProgress | undefined>(undefined)
+  useEffect(() => {
+    if (!profile) return
+    let alive = true
+    repos.progress
+      .forProfile(profile.id)
+      .then((progress) => alive && setLoaded({ profile, progress }))
+      .catch(() => alive && setLoaded({ profile, progress: {} }))
+    return () => {
+      alive = false
+    }
+  }, [repos, profile])
+  if (profile === null) return { profile: null, progress: {} }
+  return loaded
 }
 
 /** Best first-try score per skill for the current profile (empty while loading). */

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { SKILLS } from '@/domain/curriculum/skills'
-import { lessonPlan } from '@/domain/engine/lessonPlan'
+import { composeLesson, type PlannedQuestion } from '@/domain/engine/lessonComposer'
+import { DAY_MS, newMastery } from '@/domain/engine/mastery'
 import {
   firstTryAccuracy,
   type LessonState,
@@ -23,26 +24,52 @@ const wrong = (s: LessonState, at = 1) =>
   lessonReducer(s, { type: 'answer', response: wrongResponse(s.question), at })
 const next = (s: LessonState, at = 1) => lessonReducer(s, { type: 'continue', at })
 
-describe('lessonPlan', () => {
-  it('uses only kinds the skill supports, 10 per lesson', () => {
+describe('composed plans with mixed skills (AC6)', () => {
+  const now = 50 * DAY_MS
+  const due = { ...newMastery(), mastery: 0.9, crowned: true, nextReviewAt: now - DAY_MS }
+  const composed = composeLesson({
+    focusSkillId: SKILL,
+    progress: { [SKILL]: { ...newMastery(), mastery: 0.7 }, 'add.within20': due },
+    now,
+    seed: 5,
+  })
+
+  it('plays review questions from other skills and records each result’s skill', () => {
+    let s = startLesson({ skillId: SKILL, seed: 5, at: now, plan: composed.plan, difficulty: 3 })
+    expect(s.mode).toBe('skill')
+    while (s.phase !== 'complete') s = next(right(s))
+    expect(s.results.map((r) => r.skillId)).toEqual(composed.plan.map((p) => p.skillId))
+    const review = s.results.find((r) => r.skillId === 'add.within20')
+    expect(review?.difficulty).toBe(3)
+  })
+
+  it('re-queued questions keep their skill', () => {
+    let s = startLesson({ skillId: SKILL, seed: 5, at: now, plan: composed.plan })
+    while (s.question.skillId !== 'add.within20') s = next(right(s))
+    s = next(wrong(lessonReducer(wrong(s), { type: 'retry' })))
+    const requeued = s.plan.at(-1) as PlannedQuestion
+    expect(requeued).toMatchObject({ skillId: 'add.within20', isRequeue: true })
+  })
+
+  it('without a plan, uses the brand-new-skill plan (blocks first, difficulty 1)', () => {
+    const s = startLesson({ skillId: SKILL, seed: 1, at: 0 })
+    expect(s.question.kind).toBe('tradeBlocks')
+    expect(s.difficulty).toBe(1)
+    expect(s.plan.every((p) => p.skillId === SKILL && p.role === 'focus')).toBe(true)
+  })
+
+  it('refuses an empty plan', () => {
+    expect(() => startLesson({ skillId: SKILL, seed: 1, at: 0, plan: [] })).toThrow(/empty plan/)
+  })
+
+  it('every skill’s default plan uses only kinds it supports', () => {
     for (const skill of SKILLS) {
-      const plan = lessonPlan(skill)
-      expect(plan).toHaveLength(10)
-      for (const p of plan) expect(skill.kinds).toContain(p.kind)
+      const s = startLesson({ skillId: skill.id, seed: 3, at: 0 })
+      expect(s.plan).toHaveLength(10)
+      for (const p of s.plan) expect(skill.kinds).toContain(p.kind)
     }
   })
-
-  it('goes blocks → guided column → free column for column skills', () => {
-    const plan = lessonPlan(SKILLS.find((s) => s.id === SKILL) as (typeof SKILLS)[number])
-    expect(plan.slice(0, 4)).toEqual([
-      { kind: 'tradeBlocks', guided: false },
-      { kind: 'tradeBlocks', guided: false },
-      { kind: 'column', guided: true },
-      { kind: 'column', guided: true },
-    ])
-  })
 })
-
 describe('correct/wrong response helpers', () => {
   it('build responses that check() marks correct / wrong for every skill and kind', () => {
     for (const skill of SKILLS) {

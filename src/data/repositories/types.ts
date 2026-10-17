@@ -1,4 +1,4 @@
-import type { LessonState, SkillId } from '@/domain'
+import type { LessonState, Progress, SkillId } from '@/domain'
 import type { LessonMeta } from '../mappers'
 import type { ProfileRow, RowsByTable, TableName } from '../rows'
 
@@ -28,6 +28,12 @@ export interface Repositories {
     save(state: LessonState, meta: LessonMeta): Promise<void>
     /** Best first-try score (0–100) of completed lessons per skill. */
     bestFirstTryBySkill(profileId: string): Promise<Partial<Record<SkillId, number>>>
+  }
+  progress: {
+    /** Mastery per skill for a kid (spec 006). */
+    forProfile(profileId: string): Promise<Progress>
+    /** Pre-masters the starting point's prerequisites; returns how many skills changed. */
+    applyStartingPoint(profileId: string, skillId: SkillId): Promise<number>
   }
   backup: {
     export(): Promise<BackupFile>

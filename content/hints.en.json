@@ -45,7 +45,9 @@
     "lesson:combo": "You're on fire!",
     "lesson:complete": "Mission complete!",
     "lesson:leaveTitle": "Leave this mission?",
-    "lesson:notFound": "Hmm, Kukoos can't find that lesson."
+    "lesson:notFound": "Hmm, Kukoos can't find that lesson.",
+    "lesson:nothingToReview": "Nothing to review right now. Great job!",
+    "practice:review": "Review"
   },
   "lists": {
     "notYet": ["Almost!", "So close!", "Not yet!"],

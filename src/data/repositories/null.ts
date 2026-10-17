@@ -18,6 +18,10 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
       save: () => Promise.resolve(),
       bestFirstTryBySkill: () => Promise.resolve({}),
     },
+    progress: {
+      forProfile: () => Promise.resolve({}),
+      applyStartingPoint: () => Promise.resolve(0),
+    },
     backup: {
       export: () =>
         Promise.resolve({

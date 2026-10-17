@@ -50,10 +50,9 @@ export async function answer(page: Page, q: Question, r: Response) {
   }
 }
 
-/** Plays a whole seeded lesson with correct answers and lands on "Mission complete!". */
-export async function playPerfectLesson(page: Page, skillId: string, seed: number) {
-  await page.goto(`/lesson/${skillId}?seed=${seed}`)
-  let mirror: LessonState = startLesson({ skillId, seed, at: 0 })
+/** Answers every question of start (mirrored in-test) correctly, up to "Mission complete!". */
+export async function playThrough(page: Page, start: LessonState) {
+  let mirror = start
   while (mirror.phase !== 'complete') {
     const r = correctResponse(mirror.question)
     await answer(page, mirror.question, r)
@@ -63,4 +62,10 @@ export async function playPerfectLesson(page: Page, skillId: string, seed: numbe
     mirror = lessonReducer(mirror, { type: 'continue', at: 0 })
   }
   await expect(page.getByRole('heading', { name: 'Mission complete!' })).toBeVisible()
+}
+
+/** Plays a whole seeded lesson on a brand-new skill with correct answers. */
+export async function playPerfectLesson(page: Page, skillId: string, seed: number) {
+  await page.goto(`/lesson/${skillId}?seed=${seed}`)
+  await playThrough(page, startLesson({ skillId, seed, at: 0 }))
 }
