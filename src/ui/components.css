@@ -232,6 +232,43 @@
     text-align: center;
   }
 
+  /* ---------------------------------------------------------- question area layout */
+  .qa {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--mq-space-4);
+    width: 100%;
+    max-width: var(--mq-content-max);
+    min-height: 0;
+    margin-inline: auto;
+  }
+  .qa__main {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    min-height: 0;
+  }
+  .qa__input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-3);
+  }
+  @media (min-width: 768px) and (orientation: landscape) {
+    .qa--split {
+      flex-direction: row;
+      align-items: center;
+      max-width: none;
+    }
+    .qa--split .qa__main {
+      flex: 3;
+    }
+    .qa--split .qa__input {
+      flex: 2;
+    }
+  }
+
   /* ---------------------------------------------------------- question displays */
   .display {
     display: flex;
