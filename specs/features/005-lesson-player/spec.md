@@ -1,6 +1,6 @@
 # Feature 005 — Lesson Player
 
-**Status:** Draft (awaiting review)  ·  **Constitution check:** §1.2 no shame (no lives, gentle copy), §1.4 can play without reading (TTS on every prompt), §2.3 adaptive difficulty (staircase), §2.4 concrete → pictorial → abstract (blocks → guided column → free), §3.4 code computes answers (domain `check()`), §3.7 accessible and reduced motion
+**Status:** Approved (2026-10-16)  ·  **Constitution check:** §1.2 no shame (no lives, gentle copy), §1.4 can play without reading (TTS on every prompt), §2.3 adaptive difficulty (staircase), §2.4 concrete → pictorial → abstract (blocks → guided column → free), §3.4 code computes answers (domain `check()`), §3.7 accessible and reduced motion
 
 ## Why
 This is the first time the kid can actually **play**. F003 can generate and check every problem. F05 turns that into the Duolingo-style core loop: one question at a time, big friendly controls, Kukoos reacting, and (above all for our first player) **hands-on regrouping**. She trades a ten rod for ten ones with the blocks, then solves in columns with Kukoos guiding her column by column, and gets a hint about *her* mistake when she slips.
@@ -143,6 +143,6 @@ Kukoos (cheer) + "Mission complete!" + three stat cards: 🎯 first-try accuracy
 - Sound effects, Rive mascot, AI-written voice lines (F09). Kukoos stays the placeholder SVG with simple CSS mood animations.
 - World map (F07), time tracking/daily limit (F08), settings (F11).
 
-## Open questions
-1. **Start difficulty:** 2 by default, with the staircase adapting from there. *Proposed: yes.*
-2. **Auto-read on by default:** good for a 2nd grader, but it can get chatty. *Proposed: on, with a 🔇 toggle in the lesson top bar.*
+## Decisions (approved 2026-10-16)
+1. Start difficulty is 2, and the staircase adapts from there.
+2. Auto-read is on by default, with a 🔇 toggle in the lesson top bar.
