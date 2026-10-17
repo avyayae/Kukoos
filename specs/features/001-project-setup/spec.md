@@ -1,6 +1,6 @@
 # Feature 001 — Project Setup & App Shell
 
-**Status:** Implemented. All ACs are verified locally; AC10 (CI) is pending the first push.  ·  **Constitution check:** §3.2 pure domain core (enforced by lint), §3.6 offline always works, §1.5 privacy (no third-party requests), §4 Definition of Done (tooling makes it checkable)
+**Status:** Done. All ACs verified (AC10 by the green CI run on PR #1).  ·  **Constitution check:** §3.2 pure domain core (enforced by lint), §3.6 offline always works, §1.5 privacy (no third-party requests), §4 Definition of Done (tooling makes it checkable)
 
 ## Why
 Every later feature depends on a working skeleton: build, type-checking, tests, lint rules that enforce the architecture, offline PWA behavior and CI. Getting this right once means each feature task can be "write code + tests, run one command, done". It's also the guardrail that keeps AI-generated code inside the architecture.
