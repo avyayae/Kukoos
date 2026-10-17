@@ -24,6 +24,7 @@ import {
   type KukoosMood,
   ProgressBar,
   SpeakButton,
+  useReadAloud,
 } from '@/ui'
 import { pick, praiseFor, say, t } from './copy'
 import { LessonComplete } from './LessonComplete'
@@ -74,7 +75,7 @@ export function LessonScreen({
   const [response, setResponse] = useState<Response | null>(null)
   const [bubble, setBubble] = useState<string | null>(null)
   const [retries, setRetries] = useState(0)
-  const [autoRead, setAutoRead] = useState(true)
+  const { readAloud: autoRead, setReadAloud: setAutoRead } = useReadAloud()
   const [showMe, setShowMe] = useState(false)
   const [confirmExit, setConfirmExit] = useState(false)
 

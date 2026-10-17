@@ -5,6 +5,7 @@ import {
   DataProvider,
   type Repositories,
 } from '@/data'
+import { ReadAloudProvider } from '@/ui'
 import { freshDb } from './data/testDb'
 
 /** A real (in-memory) Dexie store plus its repositories, for integration tests. */
@@ -15,5 +16,9 @@ export function testStore() {
 
 /** Wraps UI in a DataProvider (null store by default: nothing is saved). */
 export function withData(ui: ReactNode, repos: Repositories = createNullRepositories()) {
-  return <DataProvider repos={repos}>{ui}</DataProvider>
+  return (
+    <DataProvider repos={repos}>
+      <ReadAloudProvider>{ui}</ReadAloudProvider>
+    </DataProvider>
+  )
 }
