@@ -8,11 +8,11 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 3. Implement one task from `tasks.md` at a time; tick it when its "done when" test passes.
 4. Keep `src/domain/` pure: no React, Dexie, DOM or `Math.random` (use `domain/rng.ts`).
 5. Correct answers are computed by code. Never let AI-generated text define an answer.
-6. For ANY UI work (components, screens, styling, animation, copy), load the `mathquest-ui` skill (`.claude/skills/mathquest-ui/`) and use only its design tokens.
+6. For ANY UI work (components, screens, styling, animation, copy), load the `mathquest-ui` skill (`.claude/skills/mathquest-ui/`) and use only its design tokens. For motion, also load `motion-design`; for visual direction, `frontend-design`.
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-None in progress. Done: 001 (PR #1), 003 (PR #2), 005 (PR #3), 004 (PR #4), 006 mastery/SRS (PR #5). Next: F07 world map + kid navigation, F09 voice/sound/mascot, F08 rewards.
+`specs/features/007-world-map/` on branch `feature/007-world-map`. Done: 001–006 (PRs #1–#5). Deferred: natural voice (F09). Next: F08 rewards, F09 voice/sound/mascot.
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.
 
