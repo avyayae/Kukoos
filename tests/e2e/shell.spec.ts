@@ -1,12 +1,14 @@
 import { expect, test, type Page } from '@playwright/test'
 
-// Spec 001 acceptance criteria. Token values mirror src/ui/tokens.css.
+// Spec 001 acceptance criteria (the app shell is the journey map since spec 007).
+// Token values mirror src/ui/tokens.css.
 const PRIMARY_LIGHT = 'rgb(124, 77, 255)' // --mq-primary
 const PRIMARY_DARK = 'rgb(155, 123, 255)' // --mq-primary (dark)
 const BG_LIGHT = 'rgb(246, 243, 255)' // --mq-bg
 const BG_DARK = 'rgb(20, 17, 48)' // --mq-bg (dark)
 
-const startButton = (page: Page) => page.getByRole('button', { name: 'Start' })
+/** The primary kid button on the home screen (was START before spec 007). */
+const startButton = (page: Page) => page.getByTestId('play-next')
 
 async function waitForServiceWorkerControl(page: Page) {
   await page.evaluate(async () => {
@@ -19,11 +21,11 @@ async function waitForServiceWorkerControl(page: Page) {
 }
 
 test.describe('app shell', () => {
-  test('AC1: shows title in Baloo 2, Kukoos and a Start button', async ({ page }) => {
+  test('AC1: shows the greeting in Baloo 2, Kukoos and the Play button', async ({ page }) => {
     await page.goto('/')
-    const title = page.getByRole('heading', { level: 1, name: 'Kukoos Math Quest' })
+    const title = page.getByRole('heading', { level: 1, name: 'Hi, Explorer!' })
     await expect(title).toBeVisible()
-    await expect(page.getByRole('img', { name: 'Kukoos the bird' })).toBeVisible()
+    await expect(page.getByRole('img', { name: 'Kukoos the bird' }).first()).toBeVisible()
     await expect(startButton(page)).toBeVisible()
 
     const baloLoaded = await page.evaluate(async () => {
@@ -77,7 +79,7 @@ test.describe('app shell', () => {
     await page.goto('/')
     const button = startButton(page)
     const box = await button.boundingBox()
-    if (!box) throw new Error('Start button not laid out')
+    if (!box) throw new Error('Play button not laid out')
 
     // Release off the button so the press doesn't click START (which navigates away).
     const releaseOffButton = () => page.mouse.move(box.x + box.width / 2, box.y - 200)
@@ -145,7 +147,7 @@ test.describe('PWA', () => {
 
     await context.setOffline(true)
     await page.reload()
-    await expect(page.getByRole('heading', { level: 1, name: 'Kukoos Math Quest' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Hi, Explorer!' })).toBeVisible()
     await expect(startButton(page)).toBeVisible()
     await context.setOffline(false)
   })

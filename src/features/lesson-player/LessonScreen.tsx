@@ -11,6 +11,7 @@ import {
   type Response,
   type SkillId,
   solutionFor,
+  type WorldId,
   startLesson,
 } from '@/domain'
 import { newId, useCurrentProfile, useRepos } from '@/data'
@@ -24,6 +25,7 @@ import {
   type KukoosMood,
   ProgressBar,
   SpeakButton,
+  useReadAloud,
 } from '@/ui'
 import { pick, praiseFor, say, t } from './copy'
 import { LessonComplete } from './LessonComplete'
@@ -36,6 +38,8 @@ interface LessonScreenProps {
   /** A composed plan (spec 006); without one, the new-skill plan is used. */
   plan?: readonly PlannedQuestion[]
   mode?: LessonMode
+  /** Boss challenges (spec 007). */
+  worldId?: WorldId
   onExit: () => void
   /** Injectable clock for tests. */
   now?: () => number
@@ -58,6 +62,7 @@ export function LessonScreen({
   startDifficulty,
   plan,
   mode,
+  worldId,
   onExit,
   now = Date.now,
 }: LessonScreenProps) {
@@ -69,12 +74,13 @@ export function LessonScreen({
       ...(startDifficulty ? { difficulty: startDifficulty } : {}),
       ...(plan ? { plan } : {}),
       ...(mode ? { mode } : {}),
+      ...(worldId ? { worldId } : {}),
     }),
   )
   const [response, setResponse] = useState<Response | null>(null)
   const [bubble, setBubble] = useState<string | null>(null)
   const [retries, setRetries] = useState(0)
-  const [autoRead, setAutoRead] = useState(true)
+  const { readAloud: autoRead, setReadAloud: setAutoRead } = useReadAloud()
   const [showMe, setShowMe] = useState(false)
   const [confirmExit, setConfirmExit] = useState(false)
 

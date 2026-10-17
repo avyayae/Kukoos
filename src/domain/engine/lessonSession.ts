@@ -8,6 +8,7 @@ import type {
   QuestionKind,
   Response,
   SkillId,
+  WorldId,
 } from '../types'
 import { composeLesson, LESSON_LENGTH, type PlannedQuestion } from './lessonComposer'
 
@@ -36,6 +37,7 @@ export interface LessonState {
   /** The focus skill (for a Review mission: the first reviewed skill). */
   skillId: SkillId
   mode: LessonMode
+  worldId: WorldId | null
   seed: number
   plan: readonly PlannedQuestion[]
   index: number
@@ -63,7 +65,7 @@ export type LessonEvent =
   | { type: 'retry' }
   | { type: 'continue'; at: number }
 
-export type LessonMode = 'skill' | 'review'
+export type LessonMode = 'skill' | 'review' | 'boss'
 
 export interface StartLessonOptions {
   skillId: SkillId
@@ -73,6 +75,8 @@ export interface StartLessonOptions {
   plan?: readonly PlannedQuestion[]
   difficulty?: Difficulty
   mode?: LessonMode
+  /** Boss challenges: the world being challenged (spec 007). */
+  worldId?: WorldId
 }
 
 const clamp = (d: number): Difficulty => Math.min(5, Math.max(1, d)) as Difficulty
@@ -98,7 +102,7 @@ const freshQuestionState = {
  * lesson is reproducible. Without a plan, the brand-new-skill plan is composed.
  */
 export function startLesson(options: StartLessonOptions): LessonState {
-  const { skillId, seed, at, mode = 'skill' } = options
+  const { skillId, seed, at, mode = 'skill', worldId = null } = options
   const composed = options.plan
     ? null
     : composeLesson({ focusSkillId: skillId, progress: {}, now: at, seed })
@@ -110,6 +114,7 @@ export function startLesson(options: StartLessonOptions): LessonState {
     ...freshQuestionState,
     skillId,
     mode,
+    worldId,
     seed,
     plan,
     index: 0,

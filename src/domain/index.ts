@@ -45,6 +45,22 @@ export {
 } from './engine/mastery'
 export { applyStartingPoint, prereqClosure } from './engine/startingPoint'
 export {
+  BOSS_LENGTH,
+  BOSS_PASS_ACCURACY,
+  bossPassed,
+  bossUnlocked,
+  composeBoss,
+  isUnlocked,
+  mapNodes,
+  nextMission,
+  worldCleared,
+  worldComplete,
+  type JourneyInput,
+  type MapNode,
+  type MissionTarget,
+  type NodeState,
+} from './engine/journey'
+export {
   firstTryAccuracy,
   lessonMinutes,
   lessonProgress,

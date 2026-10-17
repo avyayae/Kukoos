@@ -22,6 +22,11 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
       forProfile: () => Promise.resolve({}),
       applyStartingPoint: () => Promise.resolve(0),
     },
+    journey: {
+      bossesBeaten: () => Promise.resolve(new Set()),
+      seenWorlds: () => Promise.resolve([]),
+      markWorldsSeen: () => Promise.resolve(),
+    },
     backup: {
       export: () =>
         Promise.resolve({

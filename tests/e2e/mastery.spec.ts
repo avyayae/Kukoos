@@ -1,19 +1,19 @@
 import { expect, type Page, test } from '@playwright/test'
 import { composeReview, DAY_MS, newMastery, type Progress, startLesson } from '../../src/domain'
-import { lessonReady, playThrough } from './helpers'
+import { lessonReady, passGate, playThrough } from './helpers'
 
-// Spec 006 AC11: starting point → crowns; new skill starts with blocks; due reviews play.
+// Spec 006 AC11 (on the spec 007 map): starting point → crowns; a new skill starts with
+// blocks; due reviews show on the bottom bar and play as a Review mission.
 const JUNGLE = [
   'Add within 20',
   'Subtract within 20',
   'Add 2-digit numbers',
   'Subtract 2-digit numbers',
 ]
-const crown = (page: Page, title: string) =>
-  page.getByRole('link', { name: new RegExp(title) }).getByRole('img', { name: 'Mastered' })
 
 async function setStartingPoint(page: Page) {
   await page.goto('/grown-ups')
+  await passGate(page)
   await page.getByRole('combobox', { name: 'Start at' }).selectOption('pv.tradeTens')
   await page.getByRole('button', { name: 'Set starting point' }).click()
   await page.getByRole('button', { name: 'Yes, mark as known' }).click()
@@ -28,25 +28,30 @@ test('starting point crowns earlier missions and new skills start with blocks', 
     if (m.type() === 'error' || m.type() === 'warning') problems.push(m.text())
   })
   await setStartingPoint(page)
-  await page.goto('/practice')
-  for (const title of JUNGLE) await expect(crown(page, title), title).toBeVisible()
-  await expect(page.getByRole('link', { name: /Trade a ten for ones/ })).toContainText('New!')
-  // Nothing is due yet (pre-mastered reviews are 4 days out).
-  await expect(page.getByTestId('review-card')).toHaveCount(0)
+  await page.goto('/')
+  for (const [i, title] of JUNGLE.entries()) {
+    await expect(
+      page.getByRole('button', { name: `Mission ${i + 1}, ${title}, mastered` }),
+    ).toBeVisible()
+  }
+  await expect(page.getByRole('button', { name: 'Review, nothing due' })).toBeVisible()
+  await expect(page.getByTestId('play-next')).toHaveAccessibleName(
+    'Play next: Trade a ten for ones',
+  )
 
-  await page.getByRole('link', { name: /Subtract with borrowing/ }).click()
+  await page.getByTestId('play-next').click()
   await lessonReady(page)
   await expect(page.getByTestId('blocks')).toBeVisible()
   expect(problems).toEqual([])
 })
 
-test('due reviews appear on the picker and play as a Review mission', async ({ page }) => {
+test('due reviews appear in the bottom bar and play as a Review mission', async ({ page }) => {
   await setStartingPoint(page)
   const later = Date.now() + 5 * DAY_MS
-  await page.goto(`/practice?now=${later}&seed=1`)
-  const review = page.getByTestId('review-card')
-  await expect(review).toContainText('4 skills to practise again')
-  await review.click()
+  await page.goto(`/?now=${later}&seed=1`)
+  // 4 due reviews ≥ 3, so Review is also the Play-next step.
+  await expect(page.getByTestId('play-next')).toHaveAccessibleName('Play next: Review')
+  await page.getByRole('button', { name: 'Review, 4 due' }).click()
   await expect(page).toHaveURL(/\/lesson\/review\?/)
 
   // Mirror the Review plan in-test: due order only depends on review dates (equal here) and seed.
@@ -64,9 +69,8 @@ test('due reviews appear on the picker and play as a Review mission', async ({ p
     startLesson({ skillId: plan[0]?.skillId ?? '', seed: 1, at: 0, plan, mode: 'review' }),
   )
 
-  // Reviews passed: the next review moves out, so the card disappears.
+  // Reviews passed: the next review moves out, so nothing is due any more.
   await page.getByRole('button', { name: 'Continue' }).click()
-  await page.goto(`/practice?now=${later}`)
-  await expect(page.getByRole('link', { name: /Add within 20/ })).toBeVisible()
-  await expect(page.getByTestId('review-card')).toHaveCount(0)
+  await expect(page).toHaveURL(/\/\?/)
+  await expect(page.getByRole('button', { name: 'Review, nothing due' })).toBeVisible()
 })

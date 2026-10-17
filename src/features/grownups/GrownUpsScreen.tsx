@@ -68,7 +68,7 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
     <main className="screen grownup">
       <div className="grownup__inner">
         <header className="flex items-center gap-3">
-          <Link to="/practice" className="btn3d btn3d--ghost btn3d--md icon-btn" aria-label="Back">
+          <Link to="/" className="btn3d btn3d--ghost btn3d--md icon-btn" aria-label="Back to map">
             ←
           </Link>
           <h1 className="grownup__title">Grown-ups</h1>
@@ -84,6 +84,14 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
         ) : (
           <>
             <StartingPointSection onDone={(text) => setStatus({ tone: 'ok', text })} />
+
+            <section className="grownup__card" aria-label="All missions">
+              <h2>All missions</h2>
+              <p>Open any mission directly, including locked ones.</p>
+              <Link to="/grown-ups/missions" className="btn3d btn3d--ghost btn3d--md">
+                Show all missions
+              </Link>
+            </section>
 
             <section className="grownup__card" aria-label="Storage status">
               <p data-testid="persistence">

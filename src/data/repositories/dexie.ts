@@ -1,6 +1,7 @@
 import type { SkillId } from '@/domain'
 import { exportBackup, importBackup, tableCounts } from '../backup'
 import type { KukoosDb } from '../db'
+import { bossesBeaten, markWorldsSeen, seenWorlds } from '../journey'
 import { lessonToRows } from '../mappers'
 import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
@@ -65,7 +66,8 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
         const lessons = await db.lessons.where('profileId').equals(profileId).toArray()
         const best: Partial<Record<SkillId, number>> = {}
         for (const l of lessons) {
-          if (!l.completed || l.questionCount === 0 || l.mode === 'review') continue
+          if (!l.completed || l.questionCount === 0 || (l.mode !== undefined && l.mode !== 'skill'))
+            continue
           const score = Math.round((l.firstTryCorrect / l.questionCount) * 100)
           best[l.skillId] = Math.max(best[l.skillId] ?? 0, score)
         }
@@ -77,6 +79,12 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       forProfile: (profileId) => progressForProfile(db, profileId),
       applyStartingPoint: (profileId, skillId) =>
         applyStartingPointProgress(db, profileId, skillId, now()),
+    },
+
+    journey: {
+      bossesBeaten: (profileId) => bossesBeaten(db, profileId),
+      seenWorlds: (profileId) => seenWorlds(db, profileId),
+      markWorldsSeen: (profileId, worlds) => markWorldsSeen(db, profileId, worlds, now()),
     },
 
     backup: {

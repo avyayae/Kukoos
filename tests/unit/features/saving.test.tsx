@@ -1,11 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
-import { routes } from '@/app/routes'
 import { correctResponse, type LessonState, lessonReducer, startLesson } from '@/domain'
 import { LessonScreen } from '@/features/lesson-player/LessonScreen'
 import { testStore, withData } from '../withData'
+import { renderGrownUp } from './nav'
 import { answerInUi } from './lessonUi'
 
 const SKILL = 'add.within20'
@@ -78,12 +77,9 @@ describe('mission cards show saved progress (AC6)', () => {
     }
     await repos.lessons.save(s, { lessonId: 'L1', profileId: profile?.id ?? '' })
 
-    const router = createMemoryRouter(routes, { initialEntries: ['/practice'] })
-    render(withData(<RouterProvider router={router} />, repos))
+    await renderGrownUp('/grown-ups/missions', repos)
     const card = screen.getByRole('link', { name: /Add within 20/ })
     await waitFor(() => expect(card).toHaveTextContent('⭐ 100%'))
     expect(screen.getByRole('link', { name: /Subtract within 20/ })).toHaveTextContent('New!')
-    await userEvent.click(screen.getByRole('link', { name: /For grown-ups/ }))
-    expect(router.state.location.pathname).toBe('/grown-ups')
   })
 })

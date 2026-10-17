@@ -1,4 +1,4 @@
-import type { LessonState, Progress, SkillId } from '@/domain'
+import type { LessonState, Progress, SkillId, WorldId } from '@/domain'
 import type { LessonMeta } from '../mappers'
 import type { ProfileRow, RowsByTable, TableName } from '../rows'
 
@@ -34,6 +34,12 @@ export interface Repositories {
     forProfile(profileId: string): Promise<Progress>
     /** Pre-masters the starting point's prerequisites; returns how many skills changed. */
     applyStartingPoint(profileId: string, skillId: SkillId): Promise<number>
+  }
+  journey: {
+    /** Worlds whose boss challenge was passed (spec 007). */
+    bossesBeaten(profileId: string): Promise<Set<WorldId>>
+    seenWorlds(profileId: string): Promise<WorldId[]>
+    markWorldsSeen(profileId: string, worlds: readonly WorldId[]): Promise<void>
   }
   backup: {
     export(): Promise<BackupFile>

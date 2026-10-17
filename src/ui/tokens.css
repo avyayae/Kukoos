@@ -61,6 +61,22 @@
   --mq-world-ocean: #d6efff;
   --mq-world-space: #141130; /* Moon / Mars worlds always use the space background */
 
+  /* Journey map bands (spec 007): deeper than the world tints so nodes pop */
+  --mq-map-jungle: #bfe6a8;
+  --mq-map-jungle-deep: #8fcf74;
+  --mq-map-savanna: #ffd98f;
+  --mq-map-savanna-deep: #f2b94f;
+  --mq-map-ocean: #8fd3f4;
+  --mq-map-ocean-deep: #4fb3e3;
+  --mq-map-twilight: #6c5bb8;
+  --mq-map-twilight-deep: #4a3b8f;
+  --mq-map-space: #141130;
+  --mq-map-row: 112px; /* vertical distance between path nodes */
+  --mq-map-step: 72px; /* zigzag offset */
+  --mq-map-node: 72px;
+  --mq-map-boss: 96px;
+  --mq-bar-h: 72px; /* kid bottom bar */
+
   /* Type */
   --mq-font-display: 'Baloo 2', 'Nunito Variable', system-ui, sans-serif;
   --mq-font-body: 'Nunito Variable', 'Nunito', system-ui, sans-serif;

@@ -1,14 +1,31 @@
 import { Navigate, type RouteObject } from 'react-router'
+import { RequireGrownUp } from '@/features/grownups/GrownUpGate'
 import { GrownUpsScreen } from '@/features/grownups/GrownUpsScreen'
+import { MissionsList } from '@/features/grownups/MissionsList'
 import { LessonRoute } from '@/features/lesson-player/LessonRoute'
-import { PracticeScreen } from '@/features/practice/PracticeScreen'
-import { ShellScreen } from './ShellScreen'
+import { MapScreen } from '@/features/map/MapScreen'
 
 export const routes: RouteObject[] = [
-  { path: '/', element: <ShellScreen /> },
-  { path: '/practice', element: <PracticeScreen /> },
+  { path: '/', element: <MapScreen /> },
+  { path: '/lesson/boss/:worldId', element: <LessonRoute /> },
   { path: '/lesson/:skillId', element: <LessonRoute /> },
-  { path: '/grown-ups', element: <GrownUpsScreen /> },
+  {
+    path: '/grown-ups',
+    element: (
+      <RequireGrownUp>
+        <GrownUpsScreen />
+      </RequireGrownUp>
+    ),
+  },
+  {
+    path: '/grown-ups/missions',
+    element: (
+      <RequireGrownUp>
+        <MissionsList />
+      </RequireGrownUp>
+    ),
+  },
+  { path: '/practice', element: <Navigate to="/" replace /> },
   { path: '/backup', element: <Navigate to="/grown-ups" replace /> },
-  { path: '*', element: <ShellScreen /> },
+  { path: '*', element: <Navigate to="/" replace /> },
 ]

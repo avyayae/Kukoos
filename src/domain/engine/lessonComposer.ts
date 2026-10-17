@@ -14,7 +14,7 @@ const STRETCH_SLOT = 8
 const REVIEW_DIFFICULTY: Difficulty = 3
 const REVIEW_PER_SKILL = 3
 
-export type QuestionRole = 'focus' | 'review' | 'stretch'
+export type QuestionRole = 'focus' | 'review' | 'stretch' | 'boss'
 
 export interface PlannedQuestion {
   skillId: SkillId

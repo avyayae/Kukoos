@@ -20,6 +20,7 @@ export function lessonToRows(
     profileId,
     skillId: state.skillId,
     mode: state.mode,
+    ...(state.worldId ? { worldId: state.worldId } : {}),
     seed: state.seed,
     startedAt: state.startedAt,
     endedAt,
