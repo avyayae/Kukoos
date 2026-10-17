@@ -1,0 +1,10 @@
+// Data layer (spec 004). UI code imports from here — never from Dexie directly.
+export { DataProvider } from './DataProvider'
+export { useRepos } from './context'
+export { useBestScores, useCurrentProfile } from './hooks'
+export { createRepositories } from './createRepositories'
+export { createDexieRepositories, DEFAULT_PROFILE } from './repositories/dexie'
+export { createNullRepositories, NO_STORAGE_MESSAGE } from './repositories/null'
+export type { BackupFile, ImportResult, Repositories } from './repositories/types'
+export type { ProfileRow, TableName } from './rows'
+export { newId } from './write'
