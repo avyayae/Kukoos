@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent } from 'react'
 import { Link } from 'react-router'
+import { playSfx } from '@/audio/sfx'
 import { speak } from '@/audio/tts'
 import { useActivity } from '@/app/time'
 import { Kukoos, useReadAloud } from '@/ui'
@@ -19,6 +20,7 @@ export function Goodnight({ minutes }: GoodnightProps) {
   const { readAloud } = useReadAloud()
   const speech = `${REWARD_COPY.goodnightTitle} ${REWARD_COPY.goodnightBody}`
   const announce = useEffectEvent(() => {
+    playSfx('lullaby')
     if (readAloud) speak(speech)
   })
   useEffect(() => announce(), [])

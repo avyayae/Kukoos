@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { isSfxKey, playSfx } from '@/audio/sfx'
 import { speak } from '@/audio/tts'
 import { EFFECT_SOUNDS, type RewardEffect } from '@/domain'
 import { Button3D } from '@/ui'
@@ -21,6 +22,10 @@ export function RewardMoment({ step, effect, copy, autoRead, onContinue }: Rewar
   useEffect(() => {
     if (autoRead) speak(speech)
   }, [autoRead, speech])
+  const sound = EFFECT_SOUNDS[effect.type]
+  useEffect(() => {
+    if (isSfxKey(sound)) playSfx(sound)
+  }, [sound])
 
   return (
     <main

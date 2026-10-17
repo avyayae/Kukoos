@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useReducer, useState } from 'react'
 import { useActivity } from '@/app/time'
+import { playSfx } from '@/audio/sfx'
 import { cancelSpeech, speak } from '@/audio/tts'
 import {
   type Difficulty,
@@ -31,6 +32,7 @@ import {
 } from '@/ui'
 import { pick, praiseFor, say, t } from './copy'
 import { LessonComplete } from './LessonComplete'
+import { sfxFor } from './sounds'
 import { BlocksPicture, WorkedSteps } from './VisualHint'
 
 interface LessonScreenProps {
@@ -152,6 +154,13 @@ export function LessonScreen({
     if (autoRead && announcement) speak(announcement)
   }, [announcement, autoRead])
   useEffect(() => cancelSpeech, [])
+
+  // --- sound (spec 009 AC6): one sound per feedback moment
+  const playFeedback = useEffectEvent(() => {
+    const key = sfxFor(phase, state.combo)
+    if (key) playSfx(key)
+  })
+  useEffect(() => playFeedback(), [rendererKey, phase])
 
   // --- actions
   const submit = () => {

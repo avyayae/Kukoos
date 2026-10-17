@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, useState } from 'react'
+import { playSfx } from '@/audio/sfx'
 import { type LoadedJourney, useRepos } from '@/data'
 import { getWorld, type MapNode, type WorldId } from '@/domain'
 import { useSpeakOnTap } from '@/ui'
@@ -31,7 +32,9 @@ export function WorldUnlockMoment({
   const record = useEffectEvent((worlds: WorldId[]) => {
     if (!profileId) return
     void repos.journey.markWorldsSeen(profileId, worlds)
-    if (celebrate) say(`New world! ${getWorld(celebrate).title}`)
+    if (!celebrate) return
+    playSfx('unlock')
+    say(`New world! ${getWorld(celebrate).title}`)
   })
   useEffect(() => {
     if (profileId && key) record(key.split(',') as WorldId[])

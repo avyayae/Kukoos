@@ -1,3 +1,4 @@
+import { type AudioPrefs, DEFAULT_AUDIO } from '@/audio/prefs'
 import { DEFAULT_TIME_SETTINGS, localDate, NEW_WALLET, type TimeSettings } from '@/domain'
 import { SCHEMA_VERSION } from '../db'
 import { TABLES, type TableName } from '../rows'
@@ -16,6 +17,7 @@ const zeroCounts = () => Object.fromEntries(TABLES.map((t) => [t, 0])) as Record
 export function createNullRepositories(now: () => number = Date.now): Repositories {
   let today: TodayTime = emptyToday(localDate(now()))
   let settings: TimeSettings = DEFAULT_TIME_SETTINGS
+  let audio: AudioPrefs = DEFAULT_AUDIO
   const current = () => {
     const date = localDate(now())
     if (today.date !== date) today = emptyToday(date)
@@ -62,6 +64,13 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
     rewards: {
       wallet: () => Promise.resolve({ wallet: NEW_WALLET, roll: { kind: 'none' } }),
       badges: () => Promise.resolve([]),
+    },
+    device: {
+      audio: () => Promise.resolve(audio),
+      setAudio: (prefs) => {
+        audio = prefs
+        return Promise.resolve()
+      },
     },
     backup: {
       export: () =>

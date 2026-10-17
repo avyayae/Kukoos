@@ -4,6 +4,7 @@ import { NO_STORAGE_MESSAGE, type TableName, useRepos, validateBackup } from '@/
 import { Button3D, ConfirmSheet } from '@/ui'
 import { backupFileName, downloadJson } from './download'
 import { DailyTimeSection } from './DailyTimeSection'
+import { SoundVoiceSection } from './SoundVoiceSection'
 import { StartingPointSection } from './StartingPointSection'
 
 type Status = { tone: 'ok' | 'error'; text: string } | null
@@ -76,6 +77,7 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
         </header>
 
         <DailyTimeSection onDone={(text) => setStatus({ tone: 'ok', text })} />
+        <SoundVoiceSection />
 
         {!repos.available ? (
           <section className="grownup__card">

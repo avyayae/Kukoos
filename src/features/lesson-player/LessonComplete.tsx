@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { playSfx } from '@/audio/sfx'
 import { speak } from '@/audio/tts'
 import { firstTryAccuracy, type LessonState, lessonMinutes, type RewardEffect } from '@/domain'
 import { momentFor } from '@/features/rewards/copy'
@@ -15,6 +16,8 @@ interface LessonCompleteProps {
   autoRead: boolean
   onContinue: () => void
 }
+
+const XP_SOUND_DELAY_MS = 700
 
 function formatMinutes(minutes: number): string {
   if (minutes < 1) return '<1'
@@ -64,6 +67,13 @@ function Summary({ state, effects, autoRead, onContinue }: LessonCompleteProps) 
     { icon: '🔥', label: 'Best combo', value: String(state.bestCombo) },
   ]
   const xp = effects?.find((e) => e.type === 'xpGained')
+  const xpAmount = xp?.amount ?? 0
+  // The XP sparkle follows the fanfare, while the numbers count up.
+  useEffect(() => {
+    if (xpAmount === 0) return
+    const id = window.setTimeout(() => playSfx('xp'), XP_SOUND_DELAY_MS)
+    return () => window.clearTimeout(id)
+  }, [xpAmount])
   const gems = effects?.find((e) => e.type === 'gemsGained')
 
   return (
