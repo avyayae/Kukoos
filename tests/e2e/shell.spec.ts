@@ -34,6 +34,22 @@ test.describe('app shell', () => {
     await expect(title).toHaveCSS('font-family', /Baloo 2/)
   })
 
+  test('DoD: loads and interacts without console errors', async ({ page }) => {
+    const errors: string[] = []
+    page.on('console', (msg) => {
+      if (msg.type() === 'error' || msg.type() === 'warning')
+        errors.push(`${msg.type()}: ${msg.text()}`)
+    })
+    page.on('pageerror', (err) => errors.push(`pageerror: ${err.message}`))
+
+    await page.goto('/')
+    await expect(startButton(page)).toBeVisible()
+    await startButton(page).click()
+    await page.evaluate(() => document.fonts.ready)
+    await page.waitForLoadState('networkidle')
+    expect(errors).toEqual([])
+  })
+
   test('layout: no horizontal scroll and kid-size tap target', async ({ page }) => {
     await page.goto('/')
     const overflow = await page.evaluate(
