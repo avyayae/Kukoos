@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { Progress, SkillId } from '@/domain'
+import type { Progress, SkillId, WorldId } from '@/domain'
 import { useRepos } from './context'
 import type { ProfileRow } from './rows'
 
@@ -42,6 +42,39 @@ export function useProgress(): LoadedProgress | undefined {
     }
   }, [repos, profile])
   if (profile === null) return { profile: null, progress: {} }
+  return loaded
+}
+
+export interface LoadedJourney extends LoadedProgress {
+  bossesBeaten: ReadonlySet<WorldId>
+  seenWorlds: readonly WorldId[]
+}
+
+/** Everything the map needs (spec 007); `undefined` while loading. */
+export function useJourney(): LoadedJourney | undefined {
+  const repos = useRepos()
+  const profile = useCurrentProfile()
+  const [loaded, setLoaded] = useState<LoadedJourney | undefined>(undefined)
+  useEffect(() => {
+    if (!profile) return
+    let alive = true
+    Promise.all([
+      repos.progress.forProfile(profile.id),
+      repos.journey.bossesBeaten(profile.id),
+      repos.journey.seenWorlds(profile.id),
+    ])
+      .then(([progress, beaten, seen]) => {
+        if (alive) setLoaded({ profile, progress, bossesBeaten: beaten, seenWorlds: seen })
+      })
+      .catch(() => {
+        if (alive) setLoaded({ profile, progress: {}, bossesBeaten: new Set(), seenWorlds: [] })
+      })
+    return () => {
+      alive = false
+    }
+  }, [repos, profile])
+  if (profile === null)
+    return { profile: null, progress: {}, bossesBeaten: new Set(), seenWorlds: [] }
   return loaded
 }
 

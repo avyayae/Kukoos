@@ -1,4 +1,12 @@
-import type { Difficulty, MisconceptionKey, QuestionKind, SkillId, SrsBox } from '@/domain'
+import type {
+  Difficulty,
+  LessonMode,
+  MisconceptionKey,
+  QuestionKind,
+  SkillId,
+  SrsBox,
+  WorldId,
+} from '@/domain'
 
 /**
  * Row shapes stored in IndexedDB (spec 004). The same shapes become SQL tables when the
@@ -25,12 +33,16 @@ export interface ProfileRow extends SyncFields {
 export interface SettingsRow extends SyncFields {
   currentProfileId?: string
   persistenceRequested?: boolean
+  /** Per-profile: worlds whose unlock moment was already shown (spec 007). */
+  seenWorlds?: WorldId[]
 }
 
 export interface LessonRow extends SyncFields {
   skillId: SkillId
-  /** 'review' = a Review mission (spec 006); absent on rows saved before F006. */
-  mode?: 'skill' | 'review'
+  /** Review mission (spec 006) or boss challenge (spec 007); absent on rows saved before F006. */
+  mode?: LessonMode
+  /** Boss challenges: the world challenged (spec 007). */
+  worldId?: WorldId
   seed: number
   startedAt: number
   endedAt: number
