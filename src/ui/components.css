@@ -232,6 +232,80 @@
     text-align: center;
   }
 
+  /* ---------------------------------------------------------- question displays */
+  .display {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mq-space-3);
+    margin: 0;
+    font-size: var(--mq-text-math);
+    font-weight: var(--mq-weight-black);
+    line-height: 1.1;
+  }
+  .display__part {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mq-space-3);
+  }
+  .display__op {
+    color: var(--mq-ink-muted);
+  }
+  .display--units {
+    font-size: var(--mq-text-2xl);
+  }
+  .units__parts {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--mq-space-3);
+  }
+  .units__part {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--mq-space-1);
+  }
+  .units__name {
+    font-family: var(--mq-font-body);
+    font-size: var(--mq-text-base);
+    color: var(--mq-ink-muted);
+  }
+  .display--digit {
+    flex-direction: column;
+  }
+  .display__big {
+    margin: 0;
+    letter-spacing: 0.08em;
+  }
+  .answer-slot {
+    display: inline-grid;
+    place-items: center;
+    min-width: calc(var(--mq-cell) * 1.4);
+    min-height: var(--mq-cell);
+    padding-inline: var(--mq-space-2);
+    border: var(--mq-stroke) solid var(--mq-primary);
+    border-radius: var(--mq-radius-btn);
+    background: var(--mq-primary-tint);
+    color: var(--mq-ink);
+    font-family: var(--mq-font-display);
+    font-variant-numeric: tabular-nums;
+  }
+  .answer-slot--empty {
+    color: var(--mq-ink-muted);
+    border-style: dashed;
+  }
+  .answer-slot--correct {
+    border-color: var(--mq-success);
+    background: var(--mq-success-tint);
+    color: var(--mq-success-ink);
+  }
+  .answer-slot--incorrect {
+    border-color: var(--mq-danger);
+    background: var(--mq-danger-tint);
+    color: var(--mq-danger-ink);
+  }
+
   /* ---------------------------------------------------------- stat pill */
   .pill {
     display: inline-flex;
