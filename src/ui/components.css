@@ -343,6 +343,108 @@
     color: var(--mq-danger-ink);
   }
 
+  /* ---------------------------------------------------------- column grid */
+  .cg {
+    display: grid;
+    grid-auto-rows: auto;
+    gap: var(--mq-space-1) var(--mq-space-2);
+    justify-content: center;
+    align-items: center;
+    font-size: var(--mq-text-2xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .cg__op,
+  .cg__digit,
+  .cg__top,
+  .cg__cell,
+  .cg__mark,
+  .cg__carry {
+    display: grid;
+    place-items: center;
+    width: var(--mq-cell);
+    border-radius: var(--mq-radius-btn);
+    transition:
+      opacity var(--mq-dur-fast) linear,
+      background var(--mq-dur-fast) linear;
+  }
+  .cg__op,
+  .cg__digit,
+  .cg__top,
+  .cg__cell {
+    height: var(--mq-cell);
+  }
+  .cg__op {
+    color: var(--mq-ink-muted);
+  }
+  .cg__mark,
+  .cg__carry {
+    height: var(--mq-cell-small);
+    font-size: var(--mq-text-lg);
+    color: var(--mq-secondary-lip);
+  }
+  .cg__carry {
+    border: var(--mq-stroke) dashed var(--mq-border);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--mq-font-display);
+  }
+  .cg__carry--on {
+    border-style: solid;
+    border-color: var(--mq-secondary);
+    background: var(--mq-secondary-tint);
+  }
+  .cg__top {
+    border: var(--mq-stroke) solid transparent;
+    background: transparent;
+    color: var(--mq-ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .cg__top:hover:not(:disabled) {
+    border-color: var(--mq-border);
+  }
+  .cg__top--traded {
+    color: var(--mq-ink-muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--mq-secondary);
+    text-decoration-thickness: 3px;
+  }
+  .cg__rule {
+    height: var(--mq-lip);
+    border-radius: var(--mq-radius-pill);
+    background: var(--mq-ink);
+  }
+  .cg__cell {
+    border: var(--mq-stroke) dashed var(--mq-border);
+    background: var(--mq-surface);
+    color: var(--mq-ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .cg__cell--focus {
+    border-style: solid;
+    border-color: var(--mq-primary);
+    background: var(--mq-primary-tint);
+  }
+  .cg__cell--correct {
+    border-style: solid;
+    border-color: var(--mq-success);
+    background: var(--mq-success-tint);
+    color: var(--mq-success-ink);
+  }
+  .cg__cell--incorrect {
+    border-style: solid;
+    border-color: var(--mq-danger);
+    background: var(--mq-danger-tint);
+    color: var(--mq-danger-ink);
+  }
+  .cg--active:not(.cg__cell--focus) {
+    background: var(--mq-primary-tint);
+  }
+  .cg--dim {
+    opacity: 0.45;
+  }
+
   /* ---------------------------------------------------------- stat pill */
   .pill {
     display: inline-flex;
