@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { clockNow } from '@/app/clock'
-import { useJourney } from '@/data'
+import { useActivity, useDailyTime } from '@/app/time'
+import { useJourney, useWallet } from '@/data'
+import { REWARD_COPY } from '@/features/rewards/copy'
+import { Goodnight } from '@/features/rewards/Goodnight'
+import { Notice } from '@/features/rewards/Notice'
+import { TopStats } from '@/features/rewards/TopStats'
 import { dueSkills, type MapNode, mapNodes, type MissionTarget, nextMission } from '@/domain'
 import { cancelSpeech } from '@/audio/tts'
 import { KukoosPlaceholder, useReadAloud, useSpeakOnTap } from '@/ui'
@@ -18,7 +23,18 @@ import { WorldUnlockMoment } from './WorldUnlockMoment'
  * speaks its name, so reading is optional.
  */
 export function MapScreen() {
+  const time = useDailyTime()
+  // The daily limit is reached: Kukoos sleeps until tomorrow (spec 008 AC8).
+  if (time.ready && time.budget.locked) {
+    return <Goodnight minutes={Math.floor((time.today?.totalSeconds ?? 0) / 60)} />
+  }
+  return <JourneyMap />
+}
+
+function JourneyMap() {
   const journey = useJourney()
+  const loadedWallet = useWallet()
+  const time = useDailyTime()
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const say = useSpeakOnTap()
@@ -26,6 +42,7 @@ export function MapScreen() {
   const reduced = usePrefersReducedMotion()
   const [selected, setSelected] = useState<MapNode | null>(null)
   const scrolled = useRef(false)
+  useActivity('map')
 
   // Glide to the current node once the map is ready (motion-design: one opening moment).
   useEffect(() => {
@@ -36,6 +53,7 @@ export function MapScreen() {
   }, [journey, reduced])
 
   if (!journey) return null
+  const roll = loadedWallet?.roll
   const now = clockNow(params)
   const input = { progress: journey.progress, bossesBeaten: journey.bossesBeaten, now }
   const nodes = mapNodes(input)
@@ -69,7 +87,22 @@ export function MapScreen() {
         >
           {readAloud ? '🔊' : '🔇'}
         </button>
+        {loadedWallet && (
+          <TopStats
+            wallet={loadedWallet.wallet}
+            budget={time.budget}
+            settings={time.settings}
+            lessonSeconds={time.today?.lessonSeconds ?? 0}
+            onSay={say}
+          />
+        )}
       </header>
+      {roll?.kind === 'frozen' && (
+        <Notice emoji="🧊" text={REWARD_COPY.frozen} testId="streak-notice" />
+      )}
+      {roll?.kind === 'reset' && (
+        <Notice emoji="🔥" text={REWARD_COPY.newFlame} testId="streak-notice" />
+      )}
 
       <JourneyCanvas
         nodes={nodes}
@@ -102,6 +135,10 @@ export function MapScreen() {
             }
             say('Review')
             go({ type: 'review' })
+          }}
+          onTrophies={() => {
+            say('Trophies')
+            navigate(`/trophies${search}`)
           }}
           onGrownUps={() => {
             say('Grown-ups')

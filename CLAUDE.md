@@ -12,7 +12,7 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-`specs/features/007-world-map/` on branch `feature/007-world-map`. Done: 001–006 (PRs #1–#5). Deferred: natural voice (F09). Next: F08 rewards, F09 voice/sound/mascot.
+`specs/features/008-rewards/` on branch `feature/008-rewards` (implemented, PR #7). Done: 001–007 (PRs #1–#6). Deferred: natural voice (F09). Next: F09 voice/sound/mascot.
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.
 

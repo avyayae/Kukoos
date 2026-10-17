@@ -65,7 +65,7 @@ describe('GrownUpsScreen: backup', () => {
     const file = JSON.parse(await (created[0] as Blob).text())
     expect(file).toMatchObject({ app: 'kukoos', schemaVersion: 1 })
     expect(file.tables.lessons).toHaveLength(1)
-    expect(screen.getByRole('status')).toHaveTextContent('Backup downloaded')
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Backup downloaded'))
   })
 
   it('restores a backup after confirming (AC7)', async () => {

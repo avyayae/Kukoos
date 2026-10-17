@@ -231,6 +231,14 @@
     right: calc(50% + var(--mq-map-node) / 2 + var(--mq-space-2));
     flex-direction: row-reverse;
   }
+  /* Narrow phones: the bubble sits above Kukoos so it never runs off the screen edge. */
+  @media (max-width: 400px) {
+    .map-node__here,
+    .map-row--here-left .map-node__here {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
   .map-node__bubble {
     padding: var(--mq-space-1) var(--mq-space-3);
     border-radius: var(--mq-radius-pill);

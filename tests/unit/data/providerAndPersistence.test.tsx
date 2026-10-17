@@ -48,7 +48,7 @@ describe('no storage (AC10)', () => {
     expect(await repos.profiles.ensureCurrent()).toBeNull()
     await expect(
       repos.lessons.save({} as never, { lessonId: 'x', profileId: 'y' }),
-    ).resolves.toBeUndefined()
+    ).resolves.toEqual([])
     expect(await repos.lessons.bestFirstTryBySkill('y')).toEqual({})
     expect((await repos.backup.export()).tables.lessons).toEqual([])
     expect(await repos.backup.import({})).toMatchObject({ ok: false })

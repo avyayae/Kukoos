@@ -77,6 +77,11 @@
   --mq-map-boss: 96px;
   --mq-bar-h: 72px; /* kid bottom bar */
 
+  /* Rewards (spec 008) */
+  --mq-ring: 36px; /* daily goal ring in the map header */
+  --mq-moment-disc: 176px; /* the big emoji disc on a reward moment */
+  --mq-night: #0d0b24; /* goodnight sky, top (deeper than space) */
+
   /* Type */
   --mq-font-display: 'Baloo 2', 'Nunito Variable', system-ui, sans-serif;
   --mq-font-body: 'Nunito Variable', 'Nunito', system-ui, sans-serif;

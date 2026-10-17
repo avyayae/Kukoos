@@ -2,11 +2,12 @@ interface BottomBarProps {
   dueCount: number
   onMap: () => void
   onReview: () => void
+  onTrophies: () => void
   onGrownUps: () => void
 }
 
-/** Kid navigation (spec 007): big icon + label items, each one also speaks when tapped. */
-export function BottomBar({ dueCount, onMap, onReview, onGrownUps }: BottomBarProps) {
+/** Kid navigation (specs 007, 008): big icon + label items, each one also speaks when tapped. */
+export function BottomBar({ dueCount, onMap, onReview, onTrophies, onGrownUps }: BottomBarProps) {
   return (
     <nav className="bottom-bar" aria-label="Main">
       <button type="button" className="bottom-bar__item" aria-current="page" onClick={onMap}>
@@ -27,6 +28,12 @@ export function BottomBar({ dueCount, onMap, onReview, onGrownUps }: BottomBarPr
           {dueCount > 0 && <span className="bottom-bar__badge num">{dueCount}</span>}
         </span>
         <span>Review</span>
+      </button>
+      <button type="button" className="bottom-bar__item" onClick={onTrophies}>
+        <span className="bottom-bar__icon" aria-hidden="true">
+          🏆
+        </span>
+        <span>Trophies</span>
       </button>
       <button
         type="button"

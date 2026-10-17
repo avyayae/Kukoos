@@ -1,12 +1,17 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { speak } from '@/audio/tts'
-import { firstTryAccuracy, type LessonState, lessonMinutes } from '@/domain'
+import { firstTryAccuracy, type LessonState, lessonMinutes, type RewardEffect } from '@/domain'
+import { momentFor } from '@/features/rewards/copy'
+import { CountUp } from '@/features/rewards/CountUp'
+import { RewardMoment } from '@/features/rewards/RewardMoment'
 import { Button3D, Kukoos } from '@/ui'
 import { useAutoFocus } from '@/ui/useAutoFocus'
 import { t } from './copy'
 
 interface LessonCompleteProps {
   state: LessonState
+  /** The lesson's rewards; `null` while the save is still running. */
+  effects: readonly RewardEffect[] | null
   autoRead: boolean
   onContinue: () => void
 }
@@ -16,10 +21,39 @@ function formatMinutes(minutes: number): string {
   return String(Math.round(minutes))
 }
 
-/** "Mission complete!" with first-try accuracy, minutes and best combo (spec 005 AC10). */
-export function LessonComplete({ state, autoRead, onContinue }: LessonCompleteProps) {
+/**
+ * "Mission complete!" (spec 005 AC10) followed by the CelebrationOrchestrator (spec 008
+ * AC10): XP and crystals count up on the summary, then each bigger moment (chest, badge,
+ * level, goal, streak) gets its own screen, one at a time, with the same CONTINUE.
+ */
+export function LessonComplete({ state, effects, autoRead, onContinue }: LessonCompleteProps) {
+  const [step, setStep] = useState(0)
+  const moments = (effects ?? []).flatMap((effect) => {
+    const copy = momentFor(effect)
+    return copy ? [{ effect, copy }] : []
+  })
+  const next = () => (step < moments.length ? setStep(step + 1) : onContinue())
+
+  const current = step > 0 ? moments[step - 1] : undefined
+  if (current) {
+    return (
+      <RewardMoment
+        key={step}
+        step={step}
+        effect={current.effect}
+        copy={current.copy}
+        autoRead={autoRead}
+        onContinue={next}
+      />
+    )
+  }
+  return <Summary state={state} effects={effects} autoRead={autoRead} onContinue={next} />
+}
+
+function Summary({ state, effects, autoRead, onContinue }: LessonCompleteProps) {
   const title = t('lesson:complete')
-  const continueRef = useAutoFocus<HTMLButtonElement>()
+  // Focus CONTINUE once it's enabled (rewards saved).
+  const continueRef = useAutoFocus<HTMLButtonElement>(effects === null)
   useEffect(() => {
     if (autoRead) speak(title)
   }, [autoRead, title])
@@ -29,6 +63,8 @@ export function LessonComplete({ state, autoRead, onContinue }: LessonCompletePr
     { icon: '⏱', label: 'Minutes', value: formatMinutes(lessonMinutes(state)) },
     { icon: '🔥', label: 'Best combo', value: String(state.bestCombo) },
   ]
+  const xp = effects?.find((e) => e.type === 'xpGained')
+  const gems = effects?.find((e) => e.type === 'gemsGained')
 
   return (
     <main className="screen flex flex-col items-center justify-center gap-6 text-center">
@@ -47,8 +83,33 @@ export function LessonComplete({ state, autoRead, onContinue }: LessonCompletePr
           </li>
         ))}
       </ul>
+      {(xp || gems) && (
+        <ul className="earned" aria-label="You earned" data-testid="earned">
+          {xp && (
+            <li className="earned__item earned__item--xp">
+              <span aria-hidden="true">⭐</span>
+              <CountUp value={xp.amount} prefix="+" />
+              <span>XP</span>
+            </li>
+          )}
+          {gems && (
+            <li className="earned__item earned__item--gems">
+              <span aria-hidden="true">💎</span>
+              <CountUp value={gems.amount} prefix="+" />
+              <span>crystals</span>
+            </li>
+          )}
+        </ul>
+      )}
       <div className="w-full max-w-sm">
-        <Button3D ref={continueRef} variant="primary" size="xl" block onClick={onContinue}>
+        <Button3D
+          ref={continueRef}
+          variant="primary"
+          size="xl"
+          block
+          disabled={effects === null}
+          onClick={onContinue}
+        >
           Continue
         </Button3D>
       </div>

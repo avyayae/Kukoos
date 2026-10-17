@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react'
-import type { Progress, SkillId, WorldId } from '@/domain'
+import {
+  NEW_WALLET,
+  type Progress,
+  type SkillId,
+  type StreakRoll,
+  type Wallet,
+  type WorldId,
+} from '@/domain'
 import { useRepos } from './context'
-import type { ProfileRow } from './rows'
+import type { BadgeRow, ProfileRow } from './rows'
 
 /** The current profile (created on first launch). `undefined` while loading, `null` without storage. */
 export function useCurrentProfile(): ProfileRow | null | undefined {
@@ -76,6 +83,52 @@ export function useJourney(): LoadedJourney | undefined {
   if (profile === null)
     return { profile: null, progress: {}, bossesBeaten: new Set(), seenWorlds: [] }
   return loaded
+}
+
+export interface LoadedWallet {
+  wallet: Wallet
+  /** Missed days settled on this load (spec 008 AC3). */
+  roll: StreakRoll
+}
+
+/** XP, crystals and streak for the current profile; `undefined` while loading (spec 008). */
+export function useWallet(): LoadedWallet | undefined {
+  const repos = useRepos()
+  const profile = useCurrentProfile()
+  const [loaded, setLoaded] = useState<LoadedWallet | undefined>(undefined)
+  useEffect(() => {
+    if (!profile) return
+    let alive = true
+    repos.rewards
+      .wallet(profile.id)
+      .then((w) => alive && setLoaded(w))
+      .catch(() => alive && setLoaded({ wallet: NEW_WALLET, roll: { kind: 'none' } }))
+    return () => {
+      alive = false
+    }
+  }, [repos, profile])
+  if (profile === null) return { wallet: NEW_WALLET, roll: { kind: 'none' } }
+  return loaded
+}
+
+/** Badges earned by the current profile (oldest first); `undefined` while loading. */
+export function useBadges(): BadgeRow[] | undefined {
+  const repos = useRepos()
+  const profile = useCurrentProfile()
+  const [badges, setBadges] = useState<BadgeRow[] | undefined>(undefined)
+  useEffect(() => {
+    if (!profile) return
+    let alive = true
+    repos.rewards
+      .badges(profile.id)
+      .then((b) => alive && setBadges(b))
+      .catch(() => alive && setBadges([]))
+    return () => {
+      alive = false
+    }
+  }, [repos, profile])
+  if (profile === null) return []
+  return badges
 }
 
 /** Best first-try score per skill for the current profile (empty while loading). */

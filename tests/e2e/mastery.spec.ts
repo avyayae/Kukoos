@@ -1,6 +1,6 @@
 import { expect, type Page, test } from '@playwright/test'
 import { composeReview, DAY_MS, newMastery, type Progress, startLesson } from '../../src/domain'
-import { lessonReady, passGate, playThrough } from './helpers'
+import { finishRewards, lessonReady, passGate, playThrough } from './helpers'
 
 // Spec 006 AC11 (on the spec 007 map): starting point → crowns; a new skill starts with
 // blocks; due reviews show on the bottom bar and play as a Review mission.
@@ -70,7 +70,7 @@ test('due reviews appear in the bottom bar and play as a Review mission', async 
   )
 
   // Reviews passed: the next review moves out, so nothing is due any more.
-  await page.getByRole('button', { name: 'Continue' }).click()
+  await finishRewards(page)
   await expect(page).toHaveURL(/\/\?/)
   await expect(page.getByRole('button', { name: 'Review, nothing due' })).toBeVisible()
 })

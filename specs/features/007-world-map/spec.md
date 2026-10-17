@@ -1,6 +1,6 @@
 # Feature 007 — World Map & Kid Navigation
 
-**Status:** Approved (2026-10-17)  ·  **Constitution check:** §1.4 can play without reading (tap-to-hear everywhere, one obvious next step), §2.1 mastery-based progression (nodes unlock on crowns), §1.3 no dark patterns (no endless loop; map is calm), §3.7 accessible & reduced motion
+**Status:** Done (PR #6, merged 2026-10-17)  ·  **Constitution check:** §1.4 can play without reading (tap-to-hear everywhere, one obvious next step), §2.1 mastery-based progression (nodes unlock on crowns), §1.3 no dark patterns (no endless loop; map is calm), §3.7 accessible & reduced motion
 
 ## Why
 A 7-year-old can't use a long text list of 23 missions: too much reading, too many choices, and no sense of "where am I?". F07 replaces it with the thing kids already understand from games: **a journey map**. Kukoos flies from the jungle up into space, and the kid always sees **one bright "play next" step**. Everything a kid can tap **speaks its name**, so reading is optional. The full mission list moves behind a grown-up gate.

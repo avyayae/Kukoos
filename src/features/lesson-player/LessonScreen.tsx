@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, useReducer, useState } from 'react'
+import { useActivity } from '@/app/time'
 import { cancelSpeech, speak } from '@/audio/tts'
 import {
   type Difficulty,
@@ -9,6 +10,7 @@ import {
   lessonReducer,
   type PlannedQuestion,
   type Response,
+  type RewardEffect,
   type SkillId,
   solutionFor,
   type WorldId,
@@ -88,15 +90,23 @@ export function LessonScreen({
   const repos = useRepos()
   const profile = useCurrentProfile()
   const [lessonId] = useState(newId)
-  const saveLesson = (s: typeof state) => {
-    if (!profile) return Promise.resolve()
+  // The rewards to celebrate (spec 008); null until the completed lesson is saved.
+  const [effects, setEffects] = useState<RewardEffect[] | null>(null)
+  const saveLesson = (s: typeof state): Promise<RewardEffect[]> => {
+    if (!profile) return Promise.resolve([])
     return repos.lessons
       .save(s, { lessonId, profileId: profile.id })
-      .then(() => repos.storage.requestPersistence())
-      .then(() => undefined)
-      .catch(() => undefined)
+      .then(async (saved) => {
+        await repos.storage.requestPersistence().catch(() => false)
+        return saved
+      })
+      .catch(() => [])
   }
-  const saveOnComplete = useEffectEvent(() => void saveLesson(state))
+  const saveOnComplete = useEffectEvent(() => {
+    // Still loading the profile: this effect runs again once it's there.
+    if (profile === undefined) return
+    void saveLesson(state).then(setEffects)
+  })
   useEffect(() => {
     if (state.phase === 'complete') saveOnComplete()
   }, [state.phase, profile])
@@ -108,6 +118,8 @@ export function LessonScreen({
 
   const q = state.question
   const { phase } = state
+  // Questions fill the daily goal; the reward screens count only toward the limit (spec 008).
+  useActivity(phase === 'complete' ? 'map' : 'lesson')
   const questionKey = `${state.index}:${q.id}`
   const rendererKey = `${questionKey}:${retries}`
   const feedback = FEEDBACK[phase] ?? 'none'
@@ -179,7 +191,9 @@ export function LessonScreen({
   }, [])
 
   if (phase === 'complete') {
-    return <LessonComplete state={state} autoRead={autoRead} onContinue={onExit} />
+    return (
+      <LessonComplete state={state} effects={effects} autoRead={autoRead} onContinue={onExit} />
+    )
   }
 
   const Renderer = RENDERERS[q.kind]

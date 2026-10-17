@@ -5,6 +5,7 @@ import {
   DataProvider,
   type Repositories,
 } from '@/data'
+import { TimeProvider } from '@/app/TimeProvider'
 import { GrownUpGateProvider } from '@/features/grownups/GrownUpGate'
 import { ReadAloudProvider } from '@/ui'
 import { freshDb } from './data/testDb'
@@ -20,7 +21,9 @@ export function withData(ui: ReactNode, repos: Repositories = createNullReposito
   return (
     <DataProvider repos={repos}>
       <ReadAloudProvider>
-        <GrownUpGateProvider>{ui}</GrownUpGateProvider>
+        <GrownUpGateProvider>
+          <TimeProvider>{ui}</TimeProvider>
+        </GrownUpGateProvider>
       </ReadAloudProvider>
     </DataProvider>
   )

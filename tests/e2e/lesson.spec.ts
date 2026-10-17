@@ -8,7 +8,7 @@ import {
   startLesson,
   wrongResponse,
 } from '../../src/domain'
-import { answer, lessonReady } from './helpers'
+import { answer, finishRewards, lessonReady } from './helpers'
 
 // Spec 005 AC12–AC14: a full seeded lesson on phone, tablet and desktop.
 const SKILL = 'sub.within100.regroup'
@@ -71,7 +71,7 @@ test('plays a full seeded lesson, with one targeted hint, to Mission complete (A
 
   await expect(page.getByRole('heading', { name: 'Mission complete!' })).toBeVisible()
   await expect(page.getByRole('list', { name: 'Lesson results' })).toContainText('90%')
-  await page.getByRole('button', { name: 'Continue' }).click()
+  await finishRewards(page)
   await expect(page).toHaveURL(/\/(\?.*)?$/)
   expect(problems).toEqual([])
 })

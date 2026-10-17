@@ -35,6 +35,10 @@ export interface SettingsRow extends SyncFields {
   persistenceRequested?: boolean
   /** Per-profile: worlds whose unlock moment was already shown (spec 007). */
   seenWorlds?: WorldId[]
+  /** Per-profile daily goal in minutes (spec 008); absent = default. */
+  dailyGoalMin?: number
+  /** Per-profile daily limit in minutes; `null` = off, absent = default. */
+  dailyLimitMin?: number | null
 }
 
 export interface LessonRow extends SyncFields {

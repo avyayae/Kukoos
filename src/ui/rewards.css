@@ -1,0 +1,451 @@
+/* Rewards & daily time (spec 008). Tokens only; motion per the motion-design skill:
+   one celebration at a time, pops and count-ups, static with reduced motion. */
+
+@layer components {
+  /* ---------------------------------------------------------- map header stats */
+  .map-header {
+    flex-wrap: wrap;
+  }
+  .top-stats {
+    display: grid;
+    flex-basis: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--mq-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .top-stats__chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mq-space-1);
+    width: 100%;
+    min-height: var(--mq-tap-kid);
+    padding: 0 var(--mq-space-1);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-pill);
+    background: var(--mq-surface);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-border);
+    color: var(--mq-ink);
+    font-family: var(--mq-font-display);
+    /* Four chips share a 360px phone: shrink with the screen. */
+    font-size: min(var(--mq-text-lg), 4.8vw);
+    font-weight: var(--mq-weight-black);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform var(--mq-dur-press) var(--mq-ease-out);
+  }
+  .top-stats__chip:active {
+    transform: translateY(var(--mq-lip));
+    box-shadow: none;
+  }
+  .top-stats__chip--streak .top-stats__value {
+    color: var(--mq-streak);
+  }
+  .top-stats__chip--gems .top-stats__value {
+    color: var(--mq-gem-lip);
+  }
+  .top-stats__chip--level .top-stats__value {
+    color: var(--mq-primary);
+  }
+  .top-stats__icon {
+    display: inline-flex;
+    font-size: min(var(--mq-text-lg), 4.8vw);
+    line-height: 1;
+  }
+
+  /* ---------------------------------------------------------- goal ring */
+  .goal-ring {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: min(var(--mq-ring), 8vw);
+    height: min(var(--mq-ring), 8vw);
+  }
+  .goal-ring__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .goal-ring__track,
+  .goal-ring__fill {
+    fill: none;
+    stroke-width: 6;
+  }
+  .goal-ring__track {
+    stroke: var(--mq-track);
+  }
+  .goal-ring__fill {
+    stroke: var(--mq-success);
+    stroke-linecap: round;
+    transition: stroke-dashoffset var(--mq-dur-slow) var(--mq-ease-out);
+  }
+  .goal-ring__mark {
+    font-size: min(var(--mq-text-sm), 3.4vw);
+    line-height: 1;
+  }
+  .goal-ring--done .goal-ring__mark {
+    color: var(--mq-success);
+    font-family: var(--mq-font-display);
+    font-weight: var(--mq-weight-black);
+  }
+
+  /* ---------------------------------------------------------- notices (heads-up, streak) */
+  .notice {
+    position: fixed;
+    top: max(var(--mq-space-3), env(safe-area-inset-top));
+    left: 50%;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: var(--mq-space-2);
+    width: max-content;
+    max-width: calc(100vw - 2 * var(--mq-space-4));
+    padding: var(--mq-space-3) var(--mq-space-4);
+    border-radius: var(--mq-radius-card);
+    background: var(--mq-primary);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-primary-lip);
+    color: var(--mq-on-strong);
+    font-size: var(--mq-text-base);
+    font-weight: var(--mq-weight-black);
+    transform: translateX(-50%);
+    animation: mq-drop var(--mq-dur-slow) var(--mq-ease-bounce);
+  }
+
+  /* ---------------------------------------------------------- lesson summary: earned */
+  .earned {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--mq-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .earned__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mq-space-2);
+    min-height: var(--mq-tap-kid);
+    padding: 0 var(--mq-space-4);
+    border-radius: var(--mq-radius-pill);
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+    color: var(--mq-ink);
+    animation: mq-pop var(--mq-dur-slow) var(--mq-ease-bounce) both;
+  }
+  .earned__item--xp {
+    background: var(--mq-sun);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-sun-lip);
+  }
+  .earned__item--gems {
+    background: var(--mq-gem);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-gem-lip);
+    animation-delay: var(--mq-dur-base);
+  }
+
+  /* ---------------------------------------------------------- reward moments */
+  .moment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mq-space-4);
+    text-align: center;
+  }
+  .moment__stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--mq-moment-disc);
+    height: var(--mq-moment-disc);
+  }
+  .moment__burst {
+    position: absolute;
+    inset: calc(-1 * var(--mq-space-8));
+    border-radius: 50%;
+    background: repeating-conic-gradient(
+      from 0deg,
+      color-mix(in srgb, var(--mq-sun) 55%, transparent) 0deg 12deg,
+      transparent 12deg 30deg
+    );
+    mask: radial-gradient(circle, black 40%, transparent 70%);
+    animation: mq-spin 12s linear infinite;
+  }
+  .moment__emoji {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--mq-primary-tint);
+    box-shadow: 0 var(--mq-lip-xl) 0 var(--mq-primary);
+    font-size: calc(var(--mq-moment-disc) / 2);
+    line-height: 1;
+    transform-origin: center;
+    animation: mq-pop var(--mq-dur-slow) var(--mq-ease-bounce) both;
+  }
+  .moment--streakExtended .moment__emoji,
+  .moment--goalMet .moment__emoji {
+    background: var(--mq-secondary-tint);
+    box-shadow: 0 var(--mq-lip-xl) 0 var(--mq-streak);
+  }
+  .moment--chestOpened .moment__emoji,
+  .moment--levelUp .moment__emoji {
+    background: var(--mq-sun);
+    box-shadow: 0 var(--mq-lip-xl) 0 var(--mq-sun-lip);
+  }
+  .moment--freezeEarned .moment__emoji,
+  .moment--streakFrozen .moment__emoji {
+    background: var(--mq-sky-tint);
+    box-shadow: 0 var(--mq-lip-xl) 0 var(--mq-sky);
+  }
+  .moment__title {
+    margin: 0;
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-2xl);
+    font-weight: var(--mq-weight-black);
+    line-height: 1.1;
+    color: var(--mq-primary);
+    text-wrap: balance;
+  }
+  .moment__body {
+    max-width: 28ch;
+    margin: 0;
+    font-size: var(--mq-text-lg);
+    font-weight: var(--mq-weight-bold);
+    color: var(--mq-ink);
+  }
+  .moment__action {
+    width: 100%;
+    max-width: 24rem;
+    margin-top: var(--mq-space-4);
+  }
+
+  /* ---------------------------------------------------------- trophy room */
+  .trophies {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-4);
+    max-width: var(--mq-content-max);
+    margin-inline: auto;
+  }
+  .trophies__header {
+    display: flex;
+    align-items: center;
+    gap: var(--mq-space-3);
+  }
+  .trophies__title-btn {
+    min-height: var(--mq-tap-kid);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--mq-ink);
+    cursor: pointer;
+  }
+  .trophies__title {
+    margin: 0;
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-2xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .trophies__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: var(--mq-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sticker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mq-space-1);
+    width: 100%;
+    min-height: calc(2 * var(--mq-tile-min));
+    justify-content: center;
+    padding: var(--mq-space-3);
+    border: var(--mq-stroke) dashed var(--mq-border);
+    border-radius: var(--mq-radius-card);
+    background: var(--mq-surface-2);
+    color: var(--mq-ink-muted);
+    font-family: var(--mq-font-body);
+    font-size: var(--mq-text-base);
+    font-weight: var(--mq-weight-black);
+    cursor: pointer;
+  }
+  .sticker__emoji {
+    font-size: var(--mq-text-3xl);
+    line-height: 1.1;
+    filter: grayscale(1);
+    opacity: 0.45;
+  }
+  .sticker__hint {
+    font-size: var(--mq-text-sm);
+    font-weight: var(--mq-weight-bold);
+  }
+  .sticker--earned {
+    border-style: solid;
+    border-color: var(--mq-sun-lip);
+    background: var(--mq-surface);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-sun-lip);
+    color: var(--mq-ink);
+  }
+  .sticker--earned .sticker__emoji {
+    filter: none;
+    opacity: 1;
+  }
+
+  /* ---------------------------------------------------------- goodnight */
+  .goodnight {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mq-space-3);
+    overflow: hidden;
+    background: linear-gradient(to bottom, var(--mq-night), var(--mq-world-space));
+    color: var(--mq-on-strong);
+    text-align: center;
+  }
+  .goodnight__sky {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 12% 18%, var(--mq-on-strong) 0 1px, transparent 2px),
+      radial-gradient(circle at 78% 12%, var(--mq-on-strong) 0 1px, transparent 2px),
+      radial-gradient(circle at 64% 32%, var(--mq-sun) 0 1px, transparent 2px),
+      radial-gradient(circle at 24% 46%, var(--mq-on-strong) 0 1px, transparent 2px),
+      radial-gradient(circle at 88% 58%, var(--mq-on-strong) 0 1px, transparent 2px),
+      radial-gradient(circle at 8% 72%, var(--mq-sun) 0 1px, transparent 2px),
+      radial-gradient(circle at 46% 8%, var(--mq-on-strong) 0 1px, transparent 2px);
+    pointer-events: none;
+  }
+  .goodnight__moon {
+    position: absolute;
+    top: 12%;
+    right: 14%;
+    width: var(--mq-tap-xl);
+    height: var(--mq-tap-xl);
+    border-radius: 50%;
+    box-shadow: calc(-1 * var(--mq-space-4)) var(--mq-space-2) 0 0 var(--mq-sun);
+    animation: mq-moonrise 2.4s var(--mq-ease-out) both;
+  }
+  .goodnight__kukoos {
+    position: relative;
+  }
+  .goodnight__zzz {
+    position: absolute;
+    top: 0;
+    right: calc(-1 * var(--mq-space-6));
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+    color: var(--mq-sky);
+    animation: mq-zzz 3s ease-in-out infinite;
+  }
+  .goodnight__title {
+    position: relative;
+    margin: 0;
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-3xl);
+    font-weight: var(--mq-weight-black);
+    line-height: 1.1;
+  }
+  .goodnight__body,
+  .goodnight__today {
+    position: relative;
+    max-width: 30ch;
+    margin: 0;
+    font-size: var(--mq-text-lg);
+    font-weight: var(--mq-weight-bold);
+  }
+  .goodnight__today {
+    color: var(--mq-sky-tint);
+  }
+  .goodnight__grownups {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--mq-tap-parent);
+    margin-top: var(--mq-space-8);
+    padding: 0 var(--mq-space-4);
+    border-radius: var(--mq-radius-pill);
+    color: var(--mq-sky-tint);
+    font-size: var(--mq-text-sm);
+    font-weight: var(--mq-weight-bold);
+    text-decoration: none;
+  }
+
+  /* ---------------------------------------------------------- bottom bar: 4 items */
+  .bottom-bar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  /* Four labels must fit a 360px phone: shrink with the screen, never past 18px. */
+  .bottom-bar__item {
+    padding-inline: var(--mq-space-1);
+    font-size: min(var(--mq-text-base), 3.6vw);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .notice,
+    .earned__item,
+    .moment__emoji,
+    .goodnight__moon,
+    .goodnight__zzz {
+      animation: mq-fade var(--mq-dur-fast) linear both;
+    }
+    .moment__burst {
+      animation: none;
+    }
+    .goal-ring__fill,
+    .top-stats__chip {
+      transition: none;
+    }
+    .top-stats__chip:active {
+      transform: none;
+    }
+  }
+}
+
+@keyframes mq-drop {
+  from {
+    transform: translate(-50%, -150%);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}
+@keyframes mq-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+@keyframes mq-moonrise {
+  from {
+    transform: translateY(60%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes mq-zzz {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-30%);
+    opacity: 1;
+  }
+}

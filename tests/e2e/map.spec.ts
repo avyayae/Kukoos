@@ -1,6 +1,6 @@
 import { expect, type Page, test } from '@playwright/test'
 import { startLesson } from '../../src/domain'
-import { passGate, playThrough } from './helpers'
+import { finishRewards, passGate, playThrough } from './helpers'
 
 // Spec 007 AC11–AC12: the journey map as home, one next step, gate, and kid-size controls.
 
@@ -70,7 +70,7 @@ test('starting point → Play next → finish → back on the map', async ({ pag
   await page.getByTestId('play-next').click()
   await expect(page).toHaveURL(/\/lesson\/pv\.tradeTens\?seed=5$/)
   await playThrough(page, startLesson({ skillId: 'pv.tradeTens', seed: 5, at: 0 }))
-  await page.getByRole('button', { name: 'Continue' }).click()
+  await finishRewards(page)
   await expect(page.getByTestId('journey')).toBeVisible()
 })
 

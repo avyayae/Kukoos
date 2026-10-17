@@ -82,3 +82,54 @@ export {
   type MessageParams,
 } from './engine/hintText'
 export { check } from './generators/check'
+export { addDays, daysBetween, localDate, type LocalDate } from './gamification/dates'
+export {
+  GEM_RULES,
+  isPerfect,
+  LEVEL_STEP,
+  lessonGems,
+  lessonXp,
+  levelFor,
+  XP_RULES,
+  xpForLevel,
+  type LessonSummary,
+} from './gamification/xp'
+export {
+  BONUS_MIN,
+  DEFAULT_GOAL_MIN,
+  DEFAULT_LIMIT_MIN,
+  DEFAULT_TIME_SETTINGS,
+  EMPTY_DAY,
+  GOAL_OPTIONS,
+  LIMIT_OPTIONS,
+  timeBudget,
+  WARN_SECONDS,
+  type DayTime,
+  type TimeBudget,
+  type TimeSettings,
+} from './gamification/timeBudget'
+export {
+  meetGoal,
+  NEW_WALLET,
+  rollStreak,
+  STREAK_RULES,
+  type GoalOutcome,
+  type StreakRoll,
+  type Wallet,
+} from './gamification/streak'
+export {
+  BADGES,
+  getBadge,
+  newBadges,
+  type BadgeDef,
+  type BadgeRule,
+  type BadgeStats,
+} from './gamification/badges'
+export {
+  EFFECT_SOUNDS,
+  lessonRewards,
+  type LessonRewards,
+  type LessonRewardsInput,
+  type RewardEffect,
+  type RewardEffectType,
+} from './gamification/rewards'
