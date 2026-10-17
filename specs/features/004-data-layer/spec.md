@@ -1,6 +1,6 @@
 # Feature 004 — Data Layer: Save Progress (local-first)
 
-**Status:** Draft (awaiting review)  ·  **Constitution check:** §1.5 privacy (data stays on the device), §3.5 local-first and sync-ready (repositories, `id/profileId/updatedAt/version`, outbox), §3.6 offline always works, §3.2 domain stays pure (storage lives in `src/data`)
+**Status:** Approved (2026-10-17)  ·  **Constitution check:** §1.5 privacy (data stays on the device), §3.5 local-first and sync-ready (repositories, `id/profileId/updatedAt/version`, outbox), §3.6 offline always works, §3.2 domain stays pure (storage lives in `src/data`)
 
 ## Why
 Right now every lesson disappears when the tab closes. Before mastery (F06), rewards and streaks (F08) and the parent dashboard (F11) can exist, the app needs a **durable, private record of what the kid did**. That record must be:
@@ -60,6 +60,6 @@ Every syncable row has `id` (UUID), `profileId`, `updatedAt`, `version` (starts 
 - Profile picker, avatar, nickname onboarding (F10). Parent PIN and settings (F11).
 - Cloud sync and the .NET API (Phase 2). The outbox is written but nothing reads it yet.
 
-## Open questions
-1. **Default profile nickname:** "Explorer" until onboarding (F10) asks for her name. *Proposed: yes.*
-2. **Import replaces instead of merging:** simpler and predictable. Merging comes with sync in Phase 2. *Proposed: replace, with a confirm.*
+## Decisions (approved 2026-10-17)
+1. The default profile is "Explorer", grade 2, until onboarding (F10).
+2. Import **replaces** the data on the device, after a confirm. Merging comes with sync in Phase 2.
