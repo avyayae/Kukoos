@@ -3,16 +3,17 @@ import { Link } from 'react-router'
 import { NO_STORAGE_MESSAGE, type TableName, useRepos, validateBackup } from '@/data'
 import { Button3D, ConfirmSheet } from '@/ui'
 import { backupFileName, downloadJson } from './download'
+import { StartingPointSection } from './StartingPointSection'
 
 type Status = { tone: 'ok' | 'error'; text: string } | null
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 
 /**
- * Grown-up screen (spec 004 AC7–AC10): download a backup, restore one, and see whether
- * the browser promised to keep the data. Moves into the Parent zone in F11.
+ * Grown-ups screen: starting point (spec 006 AC10), download / restore a backup and see
+ * whether the browser promised to keep the data (spec 004). Moves into the Parent zone in F11.
  */
-export function BackupScreen({ now = Date.now }: { now?: () => number }) {
+export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
   const repos = useRepos()
   const [counts, setCounts] = useState<Record<TableName, number> | null>(null)
   const [persisted, setPersisted] = useState<boolean | null>(null)
@@ -70,7 +71,7 @@ export function BackupScreen({ now = Date.now }: { now?: () => number }) {
           <Link to="/practice" className="btn3d btn3d--ghost btn3d--md icon-btn" aria-label="Back">
             ←
           </Link>
-          <h1 className="grownup__title">Backup &amp; restore</h1>
+          <h1 className="grownup__title">Grown-ups</h1>
         </header>
 
         {!repos.available ? (
@@ -82,6 +83,8 @@ export function BackupScreen({ now = Date.now }: { now?: () => number }) {
           </section>
         ) : (
           <>
+            <StartingPointSection onDone={(text) => setStatus({ tone: 'ok', text })} />
+
             <section className="grownup__card" aria-label="Storage status">
               <p data-testid="persistence">
                 {persisted
