@@ -1,6 +1,6 @@
 # Feature 008 — Rewards & Daily Time
 
-**Status:** Approved (2026-10-17)  ·  **Constitution check:** §1.1 no reward without math (all rewards come from lesson events), §1.2 no shame (streaks protected by freezes, no guilt copy), §1.3 no dark patterns (parent-set daily limit is respected; no endless loop), §2.3 ~80% success (XP never punishes mistakes), §3.2 pure domain (gamification rules in `src/domain/gamification/`)
+**Status:** Implemented (PR #7, CI green)  ·  **Constitution check:** §1.1 no reward without math (all rewards come from lesson events), §1.2 no shame (streaks protected by freezes, no guilt copy), §1.3 no dark patterns (parent-set daily limit is respected; no endless loop), §2.3 ~80% success (XP never punishes mistakes), §3.2 pure domain (gamification rules in `src/domain/gamification/`)
 
 ## Why
 F05–F07 made practice *work*; F08 makes her *want to come back*, and it keeps the time healthy. Rewards turn real practice into visible progress: XP, levels, star crystals, a streak flame, and badges named after the exact skills she's working on (Carry Captain, Borrow Boss, Zero Hero). The parent sets a **daily goal and a daily limit in minutes**. Only active lesson time counts toward the goal, and when the limit is reached Kukoos says goodnight. See product spec §5.4 and §5.4a, and architecture §5 (event → reward-effect pipeline).

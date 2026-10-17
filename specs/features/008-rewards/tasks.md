@@ -9,4 +9,4 @@ Branch: `feature/008-rewards`. Load `mathquest-ui`, `motion-design` and `fronten
 - [x] **T5 — Map top stats, goal ring, trophy room, streak notice.** · *done when:* AC11 passes.
 - [x] **T6 — Limit lock + Goodnight + grown-ups Daily time card (+10).** · *done when:* AC8 and AC12 pass.
 - [x] **T7 — E2E + visual review** · `rewards.spec.ts`, update existing specs, screenshots on phone/tablet in light/dark. · *done when:* AC13 passes.
-- [ ] **T8 — Wrap-up** · deviations, run locally, push, open a PR, CI green.
+- [x] **T8 — Wrap-up** · deviations, run locally, push, open a PR, CI green.
