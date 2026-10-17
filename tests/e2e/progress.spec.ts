@@ -42,7 +42,7 @@ test('backup → wipe → restore brings progress back', async ({ page }, testIn
   await expect(card(page)).toContainText('⭐ 100%')
 
   // Download a backup.
-  await page.getByRole('link', { name: /back up progress/ }).click()
+  await page.getByRole('link', { name: /For grown-ups/ }).click()
   await expect(page.getByTestId('counts')).toContainText('1 lesson and 10 answers')
   const [download] = await Promise.all([
     page.waitForEvent('download'),
@@ -60,7 +60,7 @@ test('backup → wipe → restore brings progress back', async ({ page }, testIn
   await expect(card(page)).toContainText('New!')
 
   // Restore.
-  await page.goto('/backup')
+  await page.goto('/grown-ups')
   await page.getByTestId('backup-file').setInputFiles(path)
   await page.getByRole('button', { name: 'Replace' }).click()
   await expect(page.getByRole('status')).toContainText('Restored! 1 lesson is back.')

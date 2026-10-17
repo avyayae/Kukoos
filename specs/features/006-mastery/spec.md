@@ -1,6 +1,6 @@
 # Feature 006 — Mastery, Spaced Review & Adaptive Lessons
 
-**Status:** Approved (2026-10-17)  ·  **Constitution check:** §2.1 mastery-based progression, §2.2 spaced review, §2.3 adaptive difficulty (~80% success), §2.4 concrete → pictorial → abstract (kind chosen by mastery), §3.2 pure domain (all rules in `src/domain/engine`), §3.5 sync-ready (`skillProgress` rows via the outbox)
+**Status:** Implemented. All ACs are verified locally; CI is pending on the PR.  ·  **Constitution check:** §2.1 mastery-based progression, §2.2 spaced review, §2.3 adaptive difficulty (~80% success), §2.4 concrete → pictorial → abstract (kind chosen by mastery), §3.2 pure domain (all rules in `src/domain/engine`), §3.5 sync-ready (`skillProgress` rows via the outbox)
 
 ## Why
 Today every lesson for a skill looks the same: blocks, then guided columns, then free practice, starting at difficulty 2, however well she already knows it. And nothing ever says "you've got this one". F06 makes the app **learn the learner**:

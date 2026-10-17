@@ -803,6 +803,7 @@
   .skill-card__ring--crowned .skill-card__order {
     background: var(--mq-sun);
     color: var(--mq-ink);
+    font-size: var(--mq-text-xl);
   }
 
   /* Review mission card */

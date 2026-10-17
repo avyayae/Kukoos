@@ -73,6 +73,15 @@ tests/e2e/mastery.spec.ts
 | AC11 | `mastery.spec.ts` on 3 devices |
 | AC12 | backup from F004 shape imports fine; mapper fallback test |
 
+## Deviations (recorded during implementation)
+- **`lessonPlan.ts` was removed:** the composer replaces it. `startLesson()` without a plan composes the brand-new-skill plan, so new skills now **start at difficulty 1** (F005 started at 2). `?d=` still overrides.
+- **Lesson mode:** `LessonState.mode` and `LessonRow.mode` (`'skill' | 'review'`). Review missions **don't count as a skill's best score**.
+- **Kind fallbacks:** when a skill can't do a wanted kind, the composer uses a fixed fallback chain (e.g. blocks → guided column → numeric), then rotates the skill's own kinds. Solid skills never fall back to blocks unless blocks are all the skill has.
+- **Test clock:** `?now=` is honoured only in dev and in `vite build --mode e2e` (`.env.e2e` sets `VITE_E2E=1`). `npm run test:e2e` builds in that mode, and production builds ignore it.
+- **Praise follows the current question's world** (a jungle review inside a savanna lesson gets jungle praise).
+- **Picker footer:** "For grown-ups: starting point & backup" now goes to `/grown-ups`. `/backup` redirects.
+- **Progress row id:** `${profileId}:${skillId}`, with the profile range queried using Dexie `minKey`/`maxKey`.
+
 ## Risks
 - **Plan depends on async progress:** the lesson must not start before progress loads, or seeds and plans would differ. LessonRoute renders nothing until it's ready (a few ms).
 - **Test clock leaking into production:** `?now` is only honoured in dev/e2e builds (checked via an env flag set by Playwright's webServer).
