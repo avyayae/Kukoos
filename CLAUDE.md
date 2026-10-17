@@ -12,7 +12,7 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-None in progress. Done: 001 project setup (PR #1), 003 domain core (PR #2). Next per roadmap: F04 data layer, F05 lesson player, F06 mastery/SRS.
+`specs/features/005-lesson-player/` on branch `feature/005-lesson-player`. Done: 001 project setup (PR #1), 003 domain core (PR #2). Next after this: F04 data layer, F06 mastery/SRS.
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.
 
 ## Git workflow
