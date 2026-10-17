@@ -4,41 +4,15 @@ import {
   type LessonState,
   lessonReducer,
   type Question,
-  type Response,
   simulateBugs,
   startLesson,
   wrongResponse,
 } from '../../src/domain'
+import { answer, lessonReady } from './helpers'
 
 // Spec 005 AC12–AC14: a full seeded lesson on phone, tablet and desktop.
 const SKILL = 'sub.within100.regroup'
 const SEED = 42
-const SIGN = { '<': 'less than', '=': 'equal to', '>': 'greater than' } as const
-
-async function answer(page: Page, q: Question, r: Response) {
-  switch (r.kind) {
-    case 'number':
-      await page.keyboard.type(String(r.value))
-      return
-    case 'columnDigits':
-      // Column cells fill right to left: type the ones digit first.
-      await page.keyboard.type(r.digits.filter((d) => d !== null).join(''))
-      return
-    case 'choice': {
-      if (q.payload.kind !== 'mcq') throw new Error('choice for non-mcq')
-      await page
-        .getByRole('radio', { name: String(q.payload.choices[r.index]), exact: true })
-        .click()
-      return
-    }
-    case 'boolean':
-      await page.getByRole('radio', { name: r.value ? 'True' : 'False' }).click()
-      return
-    case 'comparison':
-      await page.getByRole('radio', { name: SIGN[r.value] }).click()
-  }
-}
-
 async function expectFitsScreen(page: Page) {
   const overflow = await page.evaluate(() => {
     const lesson = document.querySelector('.lesson') as HTMLElement
@@ -61,6 +35,7 @@ test('plays a full seeded lesson, with one targeted hint, to Mission complete (A
   page.on('pageerror', (e) => problems.push(`pageerror: ${e.message}`))
 
   await page.goto(`/lesson/${SKILL}?seed=${SEED}`)
+  await lessonReady(page)
   let mirror: LessonState = startLesson({ skillId: SKILL, seed: SEED, at: 0 })
   let missedOnPurpose = false
 
@@ -103,6 +78,7 @@ test('plays a full seeded lesson, with one targeted hint, to Mission complete (A
 
 test('kid controls are big enough and keyboard play works (AC12)', async ({ page }) => {
   await page.goto(`/lesson/${SKILL}?seed=${SEED}`)
+  await lessonReady(page)
   const q = startLesson({ skillId: SKILL, seed: SEED, at: 0 }).question
   for (const name of ['1', '0', 'Delete', 'Leave lesson']) {
     const box = await page.getByRole('button', { name, exact: true }).boundingBox()
@@ -120,6 +96,7 @@ test('kid controls are big enough and keyboard play works (AC12)', async ({ page
 test('reduced motion: block trades swap instantly, banners only fade (AC13)', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto(`/lesson/${SKILL}?seed=${SEED}`)
+  await lessonReady(page)
   await page.getByTestId('place-tens').click()
   await expect(page.getByTestId('place-ones').locator('.block--new')).toHaveCount(0)
   const q = startLesson({ skillId: SKILL, seed: SEED, at: 0 }).question
@@ -178,6 +155,7 @@ for (const size of [
       '/lesson/pv.compare3digit?seed=1', // compare tiles
     ]) {
       await page.goto(url)
+      await lessonReady(page)
       await expectNoOverlap(page, url)
     }
     await page.close()
