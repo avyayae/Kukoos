@@ -1,6 +1,6 @@
 # Feature 001 — Project Setup & App Shell
 
-**Status:** Approved  ·  **Constitution check:** §3.2 pure domain core (enforced by lint), §3.6 offline always works, §1.5 privacy (no third-party requests), §4 Definition of Done (tooling makes it checkable)
+**Status:** Implemented. All ACs are verified locally; AC10 (CI) is pending the first push.  ·  **Constitution check:** §3.2 pure domain core (enforced by lint), §3.6 offline always works, §1.5 privacy (no third-party requests), §4 Definition of Done (tooling makes it checkable)
 
 ## Why
 Every later feature depends on a working skeleton: build, type-checking, tests, lint rules that enforce the architecture, offline PWA behavior and CI. Getting this right once means each feature task can be "write code + tests, run one command, done". It's also the guardrail that keeps AI-generated code inside the architecture.
@@ -12,7 +12,7 @@ Every later feature depends on a working skeleton: build, type-checking, tests, 
 - As a **parent**, I want the app to make no network calls to third parties so that nothing about my kid leaves the device.
 
 ## Acceptance criteria
-- **AC1 — Dev server:** Given a fresh clone, when I run `npm ci` then `npm run dev`, then the app opens on `http://localhost:5173` and shows the app shell: a "MathQuest" title in the Baloo 2 font, a placeholder Kukoos SVG and one chunky "Start" button.
+- **AC1 — Dev server:** Given a fresh clone, when I run `npm ci` then `npm run dev`, then the app opens on `http://localhost:5173` and shows the app shell: a "Kukoos Math Quest" title in the Baloo 2 font, a placeholder Kukoos SVG and one chunky "Start" button.
 - **AC2 — Quality gates:** Given the repo, when I run `npm run lint`, `npm run typecheck`, `npm test` and `npm run test:e2e`, then all pass, and each has at least one real sample test (unit, component, e2e smoke).
 - **AC3 — Domain purity:** Given a file in `src/domain/`, when it imports `react`, `react-dom`, `dexie`, anything from `@/ui`, `@/features`, `@/data`, or calls `Math.random`, then `npm run lint` fails with a message pointing to the constitution.
 - **AC4 — Strict TypeScript:** `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and `noImplicitOverride` are enabled, and the `@/` path alias resolves in app, tests and lint.

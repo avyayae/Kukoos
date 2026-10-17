@@ -15,7 +15,13 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 `specs/features/001-project-setup/` (spec → plan → tasks)
 
 ## Commands
-- `npm run dev` · `npm test` · `npm run test:e2e` · `npm run lint` · `npm run typecheck`
+- `npm run dev` · `npm test` · `npm run test:e2e` (builds, then Playwright on phone/tablet/desktop) · `npm run lint` · `npm run typecheck` · `npm run format`
+- `npm run verify`: the Definition-of-Done gate (format check → lint → typecheck → unit → build → e2e)
+- `npm run icons`: regenerate the favicon and PWA icons from `public/kukoos.svg`
+
+## Environment notes (Windows dev machine)
+- Git and Node were installed via winget. If `git`/`node` aren't found in a fresh shell, refresh PATH from the Machine and User environment variables.
+- Windows PowerShell 5.1: `Set-Content` here doesn't accept `-Encoding`, so write files with the editor tools.
 
 ## Reference
 - Product: `specs/01-product-spec.md`

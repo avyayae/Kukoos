@@ -96,6 +96,14 @@ Ubuntu, Node from `.nvmrc`, `npm ci`, `npx playwright install --with-deps chromi
 | AC10 | CI run on a PR | GitHub |
 | AC11 | `tests/unit/structure.test.ts` asserts folders exist | unit |
 
+## Installed versions (2026-10-16)
+Node 24.20.0 · npm 11.19.0 · React 19.3.1 · React Router 8.4.0 · Zustand 5.0.15 · Motion 14.3.0 ·
+Vite 8.3.4 · @vitejs/plugin-react 6.1.2 · TypeScript 6.0.3 · Tailwind CSS 4.3.3 · vite-plugin-pwa 2.0.0 / Workbox 7.4.1 ·
+@vite-pwa/assets-generator 2.0.0 · ESLint 10.13.0 · typescript-eslint 8.71.2 · eslint-plugin-jsx-a11y 6.10.2 (via @eslint/compat 2.1.1) ·
+react-hooks 7.1.1 · react-refresh 0.5.7 · Prettier 3.9.10 · Vitest 5.0.5 · jsdom 30.1.3 · Testing Library React 16.3.3 · fast-check 4.10.2 ·
+Playwright 1.64.1 · @fontsource/baloo-2 5.3.0 · @fontsource-variable/nunito 5.3.0.
+The exact tree is pinned in `package-lock.json`.
+
 ## Deviations (recorded during implementation)
 - `create-vite@9` scaffolds Vite 8, TypeScript 6, React 19.2 and ships **oxlint**. We replaced oxlint with ESLint as planned, because AC3 needs `no-restricted-properties` (to ban `Math.random`) and `jsx-a11y`.
 - The scaffold was generated in the scratchpad and copied in, because the repo folder wasn't empty. Demo assets were dropped.
@@ -107,6 +115,11 @@ Ubuntu, Node from `.nvmrc`, `npm ci`, `npx playwright install --with-deps chromi
 - **Fonts: Latin subsets only** (`src/ui/fonts.css`), which avoids precaching about 700 KB of Devanagari/Cyrillic/Vietnamese files. Revisit for India mode (Hindi).
 - Added tokens: `--mq-on-strong` (white text on strong fills), `--mq-kukoos-*` mascot colors, `--mq-text-3xl`, `--mq-tap-xl`, `--mq-tracking-btn`.
 - React Router is **v8** (`createBrowserRouter` + `RouterProvider` from `react-router`).
+- **`test:e2e` builds first** (`npm run build && playwright test`), and Playwright's webServer only runs `vite preview`. `npm run verify` also runs `format:check`.
+- **Setup file is `tests/setup.ts`** (not `src/test/setup.ts`). Separate `tsconfig.test.json` and `tsconfig.e2e.json` keep test types out of the app build.
+- **App icons are generated** from `public/kukoos.svg` (`npm run icons`, `pwa-assets.config.ts`) rather than hand-made placeholders.
+- The shell title is **"Kukoos Math Quest"** (the product is named after the mascot and the repo), not "MathQuest".
+- `workbox-build` pulls a deprecated `glob@11` transitively (an npm warning only). Re-check when Workbox 8 ships.
 - `.prettierignore` excludes `specs/`, `.claude/` and `*.md` to protect hand-formatted tables and wireframes.
 
 ## Risks
