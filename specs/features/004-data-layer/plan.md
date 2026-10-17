@@ -73,6 +73,16 @@ interface Repositories {
 | AC11 | `progress.spec.ts` on 3 devices |
 | AC12 | lint fixture test (like the domain-purity test) |
 
+## Deviations (recorded during implementation)
+- **No `dexie-react-hooks`:** the picker remounts every time you return to it, so a plain fetch on mount (`useBestScores`) is enough, and one dependency is dropped. The lint rule still bans it outside `src/data`.
+- **`QuestionResult` gained `at`** (domain change, from the answer event), so attempt rows carry real timestamps for F08 time and streak features.
+- **Attempt ids are UUIDs.** Idempotency comes from the lesson id, which is fixed for the whole lesson; `save()` is a no-op if that lesson row already exists.
+- **Settings `global` row uses `profileId: 'device'`.** It's device-level, not per kid.
+- **Import doesn't add outbox entries.** It's a restore, not new changes. The backup carries its own outbox table.
+- **Focus-skill marker changed from ⭐ to 🎯**, so it doesn't clash with the "⭐ 90%" score.
+- **E2E:** the app now renders after IndexedDB opens (a few ms). Shared Playwright helpers (`tests/e2e/helpers.ts`) wait for the lesson and **tap the on-screen keypad**, like a kid would. Typing on the physical keyboard right after the first paint could race the keypad's listener. Keyboard play keeps its own dedicated test, which waits briefly and asserts the typed value.
+- **Grammar:** "1 lesson and 10 answers", "1 lesson is back".
+
 ## Risks
 - **Safari private mode / quota:** detect and fall back to NullRepositories. Wrap every write in try/catch, and log only in dev.
 - **Schema evolution:** later features add tables or indexes via `db.version(2)` with an upgrade function. The pattern is documented in `db.ts`, and schema v1 already includes all known tables to minimise migrations.

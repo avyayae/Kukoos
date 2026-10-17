@@ -18,13 +18,22 @@ export async function lessonReady(page: Page) {
 /** Enters a response through the real UI (keyboard digits, tiles). */
 export async function answer(page: Page, q: Question, r: Response) {
   await lessonReady(page)
+  // Tap the on-screen keypad (how kids play). Physical-keyboard play has its own test.
+  const tap = async (digits: string) => {
+    for (const d of digits) {
+      await page
+        .getByRole('group', { name: 'Number pad' })
+        .getByRole('button', { name: d, exact: true })
+        .click()
+    }
+  }
   switch (r.kind) {
     case 'number':
-      await page.keyboard.type(String(r.value))
+      await tap(String(r.value))
       return
     case 'columnDigits':
-      // Column cells fill right to left: type the ones digit first.
-      await page.keyboard.type(r.digits.filter((d) => d !== null).join(''))
+      // Column cells fill right to left: enter the ones digit first.
+      await tap(r.digits.filter((d) => d !== null).join(''))
       return
     case 'choice': {
       if (q.payload.kind !== 'mcq') throw new Error('choice for non-mcq')

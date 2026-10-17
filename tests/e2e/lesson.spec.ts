@@ -85,7 +85,10 @@ test('kid controls are big enough and keyboard play works (AC12)', async ({ page
     expect(box?.height, name).toBeGreaterThanOrEqual(56)
   }
   // Physical keys + Enter (handled on keyup, so one press doesn't skip the feedback).
+  // Let the keypad's keyboard listener attach after first paint (no human types this fast).
+  await page.waitForTimeout(200)
   await page.keyboard.type(String(q.answer.value))
+  await expect(page.getByTestId('answer-slot')).toHaveText(String(q.answer.value))
   await page.keyboard.press('Enter')
   await expect(page.getByTestId('feedback')).toHaveClass(/banner--correct/)
   await page.keyboard.press('Enter')
@@ -100,7 +103,7 @@ test('reduced motion: block trades swap instantly, banners only fade (AC13)', as
   await page.getByTestId('place-tens').click()
   await expect(page.getByTestId('place-ones').locator('.block--new')).toHaveCount(0)
   const q = startLesson({ skillId: SKILL, seed: SEED, at: 0 }).question
-  await page.keyboard.type(String(q.answer.value))
+  await answer(page, q, correctResponse(q))
   await page.getByRole('button', { name: 'Check' }).click()
   await expect(page.getByTestId('feedback')).toHaveCSS('animation-name', 'mq-fade')
 })
