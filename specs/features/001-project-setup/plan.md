@@ -100,6 +100,8 @@ Ubuntu, Node from `.nvmrc`, `npm ci`, `npx playwright install --with-deps chromi
 - `create-vite@9` scaffolds Vite 8, TypeScript 6, React 19.2 and ships **oxlint**. We replaced oxlint with ESLint as planned, because AC3 needs `no-restricted-properties` (to ban `Math.random`) and `jsx-a11y`.
 - The scaffold was generated in the scratchpad and copied in, because the repo folder wasn't empty. Demo assets were dropped.
 - `paths` is used without `baseUrl` (`baseUrl` is deprecated in TS 6).
+- **ESLint 10** with `eslint-plugin-jsx-a11y@6.10` (which declares a peer of ESLint ≤ 9): an npm `overrides` entry satisfies the peer dependency, and `@eslint/compat` `fixupPluginRules` adapts the rules. Verified that `jsx-a11y/alt-text` fires. ESLint 9 was rejected because npm marks it unsupported. Remove the shim once jsx-a11y ships ESLint 10 support.
+- `.prettierignore` excludes `specs/`, `.claude/` and `*.md` to protect hand-formatted tables and wireframes.
 
 ## Risks
 - **Service worker in dev** can cache stale builds. Keep the PWA `devOptions.enabled = false`, and test the SW only via `preview` in e2e.
