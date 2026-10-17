@@ -64,6 +64,24 @@ export async function playThrough(page: Page, start: LessonState) {
   await expect(page.getByRole('heading', { name: 'Mission complete!' })).toBeVisible()
 }
 
+/**
+ * From "Mission complete!": taps CONTINUE on the summary, then on each reward moment
+ * (chest, badge, level, goal, streak; spec 008), until the lesson screen is gone.
+ */
+export async function finishRewards(page: Page) {
+  const summary = page.getByRole('heading', { name: 'Mission complete!' })
+  await page.getByRole('button', { name: 'Continue' }).click()
+  await expect(summary).toBeHidden()
+  const moment = page.getByTestId('reward-moment')
+  for (let step = 1; await moment.isVisible(); step++) {
+    const current = page.locator(`[data-testid="reward-moment"][data-step="${step}"]`)
+    await current.getByRole('button', { name: 'Continue' }).click()
+    await expect(current).toHaveCount(0)
+  }
+  await expect(summary).toBeHidden()
+  await expect(moment).toBeHidden()
+}
+
 /** Plays a whole seeded lesson on a brand-new skill with correct answers. */
 export async function playPerfectLesson(page: Page, skillId: string, seed: number) {
   await page.goto(`/lesson/${skillId}?seed=${seed}`)
@@ -80,4 +98,49 @@ export async function passGate(page: Page, { wrong = false } = {}) {
   const values = await buttons.allTextContents()
   const index = values.findIndex((v) => (Number(v) === answer) !== wrong)
   await buttons.nth(index).click()
+}
+
+/**
+ * Sets today's active time for the current kid straight in IndexedDB (instead of waiting
+ * real minutes), then reloads so the app picks it up.
+ */
+export async function seedToday(page: Page, totalSeconds: number, lessonSeconds = 0) {
+  await page.goto('/')
+  await expect(page.getByTestId('journey')).toBeVisible()
+  await page.evaluate(
+    ({ totalSeconds, lessonSeconds }) =>
+      new Promise<void>((resolve, reject) => {
+        const open = indexedDB.open('kukoos')
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const db = open.result
+          const tx = db.transaction(['settings', 'dailyActivity'], 'readwrite')
+          const get = tx.objectStore('settings').get('global')
+          get.onsuccess = () => {
+            const profileId = (get.result as { currentProfileId: string }).currentProfileId
+            const d = new Date()
+            const pad = (n: number) => String(n).padStart(2, '0')
+            const date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+            tx.objectStore('dailyActivity').put({
+              id: `${profileId}:${date}`,
+              profileId,
+              date,
+              lessonSeconds,
+              totalSeconds,
+              bonusMinutes: 0,
+              goalMet: false,
+              updatedAt: Date.now(),
+              version: 1,
+            })
+          }
+          tx.oncomplete = () => {
+            db.close()
+            resolve()
+          }
+          tx.onerror = () => reject(tx.error)
+        }
+      }),
+    { totalSeconds, lessonSeconds },
+  )
+  await page.reload()
 }

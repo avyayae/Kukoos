@@ -62,6 +62,17 @@ tests/e2e/rewards.spec.ts (+ helpers: finishRewards, seedToday)
 | AC11–AC12 | MapScreen + DailyTimeSection component tests |
 | AC13 | `rewards.spec.ts`. E2E seeds today's minutes straight into IndexedDB (`seedToday`) instead of waiting real minutes |
 
+## Deviations (recorded during implementation)
+- **Effect order:** the goal comes before the streak (goal met → flame grows → freeze earned). `streakFrozen` also appears if a lesson ends on a new day.
+- **Crystals from badges** are included in the summary's "+N crystals" (one number), not counted separately.
+- **Pre-mastered crowns** from the starting point never award skill badges (§1.1, no reward without practice).
+- **Unfinished lessons** earn no XP or crystals. Their lesson time can still complete the goal, which happens silently on exit.
+- **Tracker files:** `src/app/time.ts` (context + `useActivity` / `useDailyTime`) and `src/app/TimeProvider.tsx`. The reward screens after a lesson count as map time (limit only). Grown-ups and Goodnight don't count.
+- **The null store** keeps today's minutes and settings in memory, so the limit works without IndexedDB. The Daily time card shows even then.
+- **Bottom bar** gained 🏆 Trophies (4 items). Labels and header chips scale down with the screen width so they fit a 360px phone.
+- **Map fix (from F007):** on phones ≤ 400px the "Start here!" bubble sits above Kukoos, because it ran off the left edge for centre-lane nodes.
+- **E2E:** `seedToday()` writes today's minutes into IndexedDB. `finishRewards()` taps through the moments using each moment's `data-step`.
+
 ## Risks
 - **Outbox growth:** a write every 5s adds about 720 outbox rows per hour of play. That's fine locally. Phase 2 sync coalesces by `rowId`.
 - **Existing e2e tests** click Continue once after a lesson. Rewards add moments, so tests use a `finishRewards()` helper.

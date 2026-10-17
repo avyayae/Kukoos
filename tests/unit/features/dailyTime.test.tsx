@@ -135,15 +135,21 @@ describe('grown-ups daily time (AC12)', () => {
     const id = await profileId(repos)
     await repos.time.addActive(id, 120, 60 * 60)
     await renderGrownUp('/grown-ups', repos)
-    expect(await screen.findByTestId('today-minutes')).toHaveTextContent(
-      'Today: 2 min in missions, 60 min in the app. The daily limit is reached.',
+    await waitFor(() =>
+      expect(screen.getByTestId('today-minutes')).toHaveTextContent(
+        'Today: 2 min in missions, 60 min in the app. The daily limit is reached.',
+      ),
     )
     await userEvent.selectOptions(screen.getByRole('combobox', { name: 'Daily goal' }), '15')
     await waitFor(async () => expect((await repos.time.settings(id)).goalMin).toBe(15))
 
     await userEvent.click(screen.getByRole('button', { name: '+10 minutes today' }))
-    expect(await screen.findByRole('status')).toHaveTextContent('Added 10 minutes for today.')
-    expect(screen.getByTestId('today-minutes')).toHaveTextContent('10 min left.')
+    await waitFor(() =>
+      expect(screen.getByRole('status')).toHaveTextContent('Added 10 minutes for today.'),
+    )
+    await waitFor(() =>
+      expect(screen.getByTestId('today-minutes')).toHaveTextContent('10 min left.'),
+    )
     expect((await repos.time.today(id)).bonusMinutes).toBe(10)
 
     await userEvent.selectOptions(screen.getByRole('combobox', { name: 'Daily limit' }), 'off')

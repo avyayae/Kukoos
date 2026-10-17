@@ -29,7 +29,8 @@
     box-shadow: 0 var(--mq-lip) 0 var(--mq-border);
     color: var(--mq-ink);
     font-family: var(--mq-font-display);
-    font-size: var(--mq-text-lg);
+    /* Four chips share a 360px phone: shrink with the screen. */
+    font-size: min(var(--mq-text-lg), 4.8vw);
     font-weight: var(--mq-weight-black);
     white-space: nowrap;
     cursor: pointer;
@@ -50,7 +51,7 @@
   }
   .top-stats__icon {
     display: inline-flex;
-    font-size: var(--mq-text-lg);
+    font-size: min(var(--mq-text-lg), 4.8vw);
     line-height: 1;
   }
 
@@ -59,8 +60,8 @@
     position: relative;
     display: inline-grid;
     place-items: center;
-    width: var(--mq-ring);
-    height: var(--mq-ring);
+    width: min(var(--mq-ring), 8vw);
+    height: min(var(--mq-ring), 8vw);
   }
   .goal-ring__svg {
     position: absolute;
@@ -82,7 +83,7 @@
     transition: stroke-dashoffset var(--mq-dur-slow) var(--mq-ease-out);
   }
   .goal-ring__mark {
-    font-size: var(--mq-text-sm);
+    font-size: min(var(--mq-text-sm), 3.4vw);
     line-height: 1;
   }
   .goal-ring--done .goal-ring__mark {
@@ -183,7 +184,8 @@
     border-radius: 50%;
     background: var(--mq-primary-tint);
     box-shadow: 0 var(--mq-lip-xl) 0 var(--mq-primary);
-    font-size: var(--mq-text-3xl);
+    font-size: calc(var(--mq-moment-disc) / 2);
+    line-height: 1;
     transform-origin: center;
     animation: mq-pop var(--mq-dur-slow) var(--mq-ease-bounce) both;
   }
@@ -209,6 +211,7 @@
     font-weight: var(--mq-weight-black);
     line-height: 1.1;
     color: var(--mq-primary);
+    text-wrap: balance;
   }
   .moment__body {
     max-width: 28ch;
@@ -384,10 +387,11 @@
   .bottom-bar {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-  @media (max-width: 420px) {
-    .bottom-bar__item {
-      font-size: var(--mq-text-sm);
-    }
+  /* Four labels must fit a 360px phone: shrink with the screen, never past 18px. */
+  .bottom-bar__item {
+    padding-inline: var(--mq-space-1);
+    font-size: min(var(--mq-text-base), 3.6vw);
+    white-space: nowrap;
   }
 
   @media (prefers-reduced-motion: reduce) {

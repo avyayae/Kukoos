@@ -6,6 +6,8 @@ import { useAutoFocus } from '@/ui/useAutoFocus'
 import type { MomentCopy } from './copy'
 
 interface RewardMomentProps {
+  /** 1-based position in the queue. */
+  step: number
   effect: RewardEffect
   copy: MomentCopy
   autoRead: boolean
@@ -13,7 +15,7 @@ interface RewardMomentProps {
 }
 
 /** One celebration at a time (spec 008 AC10): a big pop, a title, and the same CONTINUE. */
-export function RewardMoment({ effect, copy, autoRead, onContinue }: RewardMomentProps) {
+export function RewardMoment({ step, effect, copy, autoRead, onContinue }: RewardMomentProps) {
   const continueRef = useAutoFocus<HTMLButtonElement>()
   const speech = `${copy.title} ${copy.body}`
   useEffect(() => {
@@ -24,6 +26,7 @@ export function RewardMoment({ effect, copy, autoRead, onContinue }: RewardMomen
     <main
       className={`screen moment moment--${effect.type}`}
       data-testid="reward-moment"
+      data-step={step}
       data-effect={effect.type}
       data-sound={EFFECT_SOUNDS[effect.type]}
     >

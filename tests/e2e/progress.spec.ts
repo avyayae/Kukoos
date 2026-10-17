@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { expect, type Page, test } from '@playwright/test'
-import { passGate, playPerfectLesson } from './helpers'
+import { finishRewards, passGate, playPerfectLesson } from './helpers'
 
 // Spec 004 AC11: progress survives reloads and a backup → wipe → restore round trip.
 // Since spec 007 the score list lives under Grown-ups → All missions.
@@ -34,7 +34,7 @@ test('a finished lesson is still there after a reload', async ({ page }) => {
   await expect(card(page)).toContainText('New!')
 
   await playPerfectLesson(page, SKILL, 7)
-  await page.getByRole('button', { name: 'Continue' }).click()
+  await finishRewards(page)
   // Back on the map (lesson query params are carried over)
   await expect(page).toHaveURL(/\/(\?.*)?$/)
 
@@ -46,7 +46,7 @@ test('a finished lesson is still there after a reload', async ({ page }) => {
 
 test('backup → wipe → restore brings progress back', async ({ page }, testInfo) => {
   await playPerfectLesson(page, SKILL, 7)
-  await page.getByRole('button', { name: 'Continue' }).click()
+  await finishRewards(page)
 
   // Download a backup.
   await page.goto('/grown-ups')

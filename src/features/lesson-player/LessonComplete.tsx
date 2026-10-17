@@ -39,6 +39,7 @@ export function LessonComplete({ state, effects, autoRead, onContinue }: LessonC
     return (
       <RewardMoment
         key={step}
+        step={step}
         effect={current.effect}
         copy={current.copy}
         autoRead={autoRead}
