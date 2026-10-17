@@ -96,6 +96,13 @@
   --mq-tap-kid: 56px;
   --mq-tap-xl: 64px;
   --mq-content-max: 640px; /* lesson column width on tablet/desktop */
+  --mq-lesson-max: 1040px; /* lesson screen width on large tablets/desktop */
+  --mq-keypad-max: 336px;
+  --mq-tile-min: 96px; /* ChoiceTile min height */
+  --mq-progress-h: 16px;
+  --mq-cell: 56px; /* column-grid digit cell */
+  --mq-cell-small: 28px; /* carry / borrow mark box */
+  --mq-block: 10px; /* one base-ten cube; rods are 1×5, flats 5×5 (scaled for small screens) */
 
   /* Motion */
   --mq-dur-press: 80ms;

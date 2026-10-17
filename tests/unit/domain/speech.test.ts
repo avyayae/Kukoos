@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { equationToSpeech, equationToText, numberToWords } from '@/domain/speech'
+import { equationToSpeech, equationToText, numberToWords, placeWord } from '@/domain/speech'
 
 describe('numberToWords', () => {
   it.each([
@@ -31,6 +31,16 @@ describe('numberToWords', () => {
     expect(() => numberToWords(-1)).toThrow(RangeError)
     expect(() => numberToWords(1001)).toThrow(RangeError)
     expect(() => numberToWords(2.5)).toThrow(RangeError)
+  })
+})
+
+describe('placeWord', () => {
+  it('is singular only for exactly one', () => {
+    expect(placeWord('tens', 1)).toBe('ten')
+    expect(placeWord('hundreds', 1)).toBe('hundred')
+    expect(placeWord('ones', 0)).toBe('ones')
+    expect(placeWord('ones', 16)).toBe('ones')
+    expect(placeWord('tens', null)).toBe('tens')
   })
 })
 

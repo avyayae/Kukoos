@@ -1,0 +1,58 @@
+{
+  "messages": {
+    "misconception:sub.smallerFromLarger": "Can we take {b} from {a}? Trade a ten first!",
+    "misconception:sub.borrowNoDecrement": "You traded a ten. Cross it off next door!",
+    "misconception:sub.acrossZeroSkip": "No tens to trade! Open a hundred first.",
+    "misconception:add.forgotCarry": "{x} is more than 9. Carry the ten!",
+    "misconception:add.wroteWholeSum": "Only one digit fits. Carry the ten!",
+    "misconception:wrongOperation": "Look at the sign. Plus or minus?",
+    "misconception:offByOne": "So close! Count once more.",
+    "misconception:offByTen": "Check your tens!",
+
+    "hint:add.within20.strategy": "Make a ten first, then add the rest!",
+    "hint:sub.within20.strategy": "Count up from the smaller number!",
+    "hint:pv.tradeTens.oneTenIsTenOnes": "One ten is ten ones. Add them!",
+    "hint:pv.tradeHundreds.oneHundredIsTenTens": "One hundred is ten tens!",
+    "hint:pv.hundredsTensOnes.places": "Hundreds, tens, ones. Left to right!",
+    "hint:pv.expandedForm.addTheParts": "Put the hundreds, tens and ones together!",
+    "hint:pv.compare.startWithHundreds": "Compare the hundreds first!",
+    "hint:pv.plus10plus100.onlyOnePlaceChanges": "Only one place changes. Which one?",
+    "hint:column.add": "Start with the ones. More than 9? Carry the ten!",
+    "hint:column.sub": "Start with the ones. Trade a ten if you need to!",
+    "hint:default": "Let's look again together.",
+
+    "guided:sub.trade": "{place}: {a} − {b}. Can we? Trade a ten first!",
+    "guided:sub.tradeAcrossZero": "{place}: {a} − {b}. No tens? Open a hundred first!",
+    "guided:sub.ready": "{place}: {a} − {b} = ?",
+    "guided:add": "{place}: {a} + {b}{plus} = ?",
+    "guided:add.carry": "{place}: {a} + {b}{plus}. More than 9? Carry the ten!",
+
+    "solution:title": "Let's look together",
+    "solution:answer": "The answer is {answer}.",
+
+    "instruction:numeric": "Solve it!",
+    "instruction:mcq": "Pick the answer!",
+    "instruction:trueFalse": "True or false?",
+    "instruction:compare": "Which sign fits?",
+    "instruction:column": "Solve it in columns!",
+    "instruction:tradeBlocks": "Use the blocks!",
+
+    "blocks:nothingToTrade": "Nothing to trade here. Try the next one!",
+    "blocks:onesCantBreak": "Ones can't break. Tap a ten!",
+    "blocks:needTenToBundle": "We need 10 to make a bundle!",
+    "column:nothingToTrade": "Nothing to trade here. Try the next one!",
+
+    "lesson:combo": "You're on fire!",
+    "lesson:complete": "Mission complete!",
+    "lesson:leaveTitle": "Leave this mission?",
+    "lesson:notFound": "Hmm, Kukoos can't find that lesson."
+  },
+  "lists": {
+    "notYet": ["Almost!", "So close!", "Not yet!"],
+    "praise:jungle": ["Awesome!", "You did it!", "Swinging high!", "Math superstar!"],
+    "praise:savanna": ["Roar-some!", "Awesome!", "You did it!", "Wild!"],
+    "praise:ocean": ["Fin-tastic!", "Awesome!", "Making waves!", "You did it!"],
+    "praise:moon": ["Stellar!", "Out of this world!", "Awesome!", "Kukoos is so proud!"],
+    "praise:mars": ["Stellar!", "Rocket math!", "Out of this world!", "You did it!"]
+  }
+}

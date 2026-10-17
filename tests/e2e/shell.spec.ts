@@ -79,15 +79,21 @@ test.describe('app shell', () => {
     const box = await button.boundingBox()
     if (!box) throw new Error('Start button not laid out')
 
+    // Release off the button so the press doesn't click START (which navigates away).
+    const releaseOffButton = () => page.mouse.move(box.x + box.width / 2, box.y - 200)
+
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
     await page.mouse.down()
     await expect(button).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 6)') // xl lip = 6px
+    await releaseOffButton()
     await page.mouse.up()
 
     await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
     await page.mouse.down()
     await page.waitForTimeout(150)
     await expect(button).toHaveCSS('transform', 'none')
+    await releaseOffButton()
     await page.mouse.up()
   })
 

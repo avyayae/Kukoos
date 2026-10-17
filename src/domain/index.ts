@@ -19,4 +19,26 @@ export {
   simulateBugs,
 } from './arithmetic/misconceptions'
 export { generateQuestion } from './generators/registry'
+export { correctResponse, wrongResponse } from './generators/responses'
+export { lessonPlan, LESSON_LENGTH, type PlannedKind } from './engine/lessonPlan'
+export {
+  firstTryAccuracy,
+  lessonMinutes,
+  lessonProgress,
+  lessonReducer,
+  MAX_REQUEUES,
+  startLesson,
+  type LessonEvent,
+  type LessonPhase,
+  type LessonState,
+  type QuestionResult,
+} from './engine/lessonSession'
+export {
+  formatMessage,
+  guidedSteps,
+  hintFor,
+  solutionFor,
+  type Message,
+  type MessageParams,
+} from './engine/hintText'
 export { check } from './generators/check'
