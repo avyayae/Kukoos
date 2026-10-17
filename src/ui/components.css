@@ -627,11 +627,18 @@
     .lesson .cg__carry {
       height: calc(var(--mq-cell-small) * 0.8);
     }
+    /* Column cells shrink with screen height (floor = 48px parent minimum). The ≥ 56px keypad
+       stays the primary input; focus moves through cells automatically. */
+    .lesson .cg {
+      --mq-cell: clamp(var(--mq-tap-parent), 6.5dvh, var(--mq-tap-kid));
+      row-gap: 0;
+    }
     .lesson {
       --mq-block: 8px;
     }
     .lesson .blocks__place {
-      min-height: calc(var(--mq-cell) * 1.8);
+      min-height: calc(var(--mq-cell) * 1.5);
+      gap: var(--mq-space-1);
       padding: var(--mq-space-1);
     }
     /* Hundreds stack like a pile of flats so 9 of them stay short on phones. */
@@ -646,6 +653,21 @@
     }
     .lesson .qa__main--stack .display {
       font-size: var(--mq-text-xl);
+    }
+  }
+
+  /* Very short phones (≤ 760px): trim only spacing — tap targets stay 56px. */
+  @media (max-height: 760px) {
+    .lesson.screen,
+    .lesson .qa,
+    .lesson .qa__main--stack {
+      gap: var(--mq-space-1);
+    }
+    .lesson .keypad {
+      gap: var(--mq-space-1) var(--mq-space-2);
+    }
+    .lesson .btn3d.keypad__key {
+      margin-bottom: var(--mq-space-1);
     }
   }
 

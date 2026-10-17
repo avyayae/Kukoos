@@ -134,6 +134,10 @@ test('reduced motion: block trades swap instantly, banners only fade (AC13)', as
  * because the question area clips instead of scrolling.)
  */
 async function expectNoOverlap(page: Page, label: string) {
+  // Guided questions update Kukoos's bubble right after mount; measure the settled layout.
+  await page.waitForLoadState('networkidle')
+  await page.evaluate(() => document.fonts.ready)
+  await page.waitForTimeout(250)
   const r = await page.evaluate(() => {
     const rect = (el: Element | null) => el?.getBoundingClientRect() ?? null
     const main = [...document.querySelectorAll('.qa__main > *')].map((e) =>
@@ -158,8 +162,10 @@ async function expectNoOverlap(page: Page, label: string) {
   expect(input.bottom, `${label}: keypad under CHECK`).toBeLessThanOrEqual(r.checkTop + 1)
 }
 
+// OVERLAP_HEIGHT lets a local run probe a shorter screen than CI (fonts wrap differently on Linux).
+const shortHeight = Number(process.env.OVERLAP_HEIGHT ?? 740)
 for (const size of [
-  { width: 360, height: 740 },
+  { width: 360, height: shortHeight },
   { width: 390, height: 844 },
 ]) {
   test(`no overlap on a ${size.width}×${size.height} phone (AC12)`, async ({ browser }) => {
