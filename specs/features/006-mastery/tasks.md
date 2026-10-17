@@ -11,4 +11,4 @@ Branch: `feature/006-mastery`. Run `npm run verify` before ticking. Load `mathqu
 - [x] **T7 — Picker** · 👑, review card, mastery ring. · *done when:* AC9 passes.
 - [x] **T8 — Grown-ups screen** · starting point + backup; `/backup` → `/grown-ups`. · *done when:* AC10 passes.
 - [x] **T9 — E2E** · `mastery.spec.ts` + existing suites green; screenshots reviewed. · *done when:* AC11 passes on 3 devices.
-- [ ] **T10 — Wrap-up** · deviations, run locally, push the branch, open a PR, CI green.
+- [x] **T10 — Wrap-up** · deviations, run locally, push the branch, open a PR, CI green. *(PR #5, green: https://github.com/avyayae/Kukoos/actions/runs/39054030948)*
