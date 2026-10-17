@@ -12,7 +12,7 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-None in progress. Done: 001 (PR #1), 003 domain core (PR #2), 005 lesson player (PR #3), 004 data layer (PR #4). Next: F06 mastery/SRS, F08 rewards.
+`specs/features/006-mastery/` on branch `feature/006-mastery`. Done: 001 (PR #1), 003 (PR #2), 005 (PR #3), 004 (PR #4). Next: F07 world map, F08 rewards.
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.
 
