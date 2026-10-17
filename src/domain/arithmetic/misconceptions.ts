@@ -25,18 +25,13 @@ function acrossZeroSkip(top: readonly number[], bottom: readonly number[]): numb
   let triggered = false
   for (let i = 0; i < w.length; i++) {
     if ((w[i] as number) >= (bottom[i] as number)) continue
-    const j = i + 1
-    if (j >= w.length) return undefined
-    if (w[j] === 0 && top[j] === 0) {
-      let k = j
-      while (k < w.length && w[k] === 0) k++
-      if (k >= w.length) return undefined
-      w[k] = (w[k] as number) - 1
-      for (let m = j; m < k; m++) w[m] = 10
-      triggered = true
-    } else {
-      w[j] = (w[j] as number) - 1
-    }
+    // a ≥ b guarantees a non-zero digit to the left to borrow from.
+    let k = i + 1
+    while (w[k] === 0) k++
+    w[k] = (w[k] as number) - 1
+    // The bug: zeros passed over become 10 (correct is 9).
+    for (let m = i + 1; m < k; m++) w[m] = 10
+    if (k > i + 1) triggered = true
     w[i] = (w[i] as number) + 10
   }
   return triggered ? fromDigits(w.map((x, i) => x - (bottom[i] as number))) : undefined

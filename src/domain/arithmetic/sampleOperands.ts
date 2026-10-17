@@ -15,7 +15,7 @@ import { patternOp } from './regroupPattern'
  * | 2 | full             | no                    | near                                    |
  * | 3 | full             | no                    | any                                     |
  * | 4 | full             | yes (across-zero: 50% also zero ones, e.g. 500 − 263) | any     |
- * | 5 | full             | yes                   | far (sum ≥ 15 / borrow gap ≥ 4) when possible |
+ * | 5 | full             | yes                   | far (sum ≥ 15 / borrow gap ≥ 4)         |
  */
 
 type Band = 'near' | 'normal' | 'far'
@@ -101,26 +101,22 @@ export function sampleOperands(
     const bLo = !inB ? 0 : i === bWidth - 1 || !zeros ? 1 : 0
     const bHi = inB ? 9 : 0
 
-    let [tLo, tHi] = targetRange(op, regroup, band)
+    const [baseLo, tHi] = targetRange(op, regroup, band)
     // a − b must stay positive for sub.none: make the top column strictly larger.
-    if (op === '-' && isTop && pattern === 'sub.none') tLo = Math.max(tLo, 1)
+    const tLo = op === '-' && isTop && pattern === 'sub.none' ? Math.max(baseLo, 1) : baseLo
 
-    // a's feasible range given the target on (a ± b ± flow); fall back from near/far if empty.
-    const aRangeFor = (lo: number, hi: number): [number, number] =>
+    // a's feasible range given the target on (a ± b ± flow). The ranges depend only on
+    // (pattern, digits, difficulty), and tests sample every combination, so this is never empty.
+    const [aMin, aMax] =
       op === '+'
-        ? [Math.max(aLo, lo - flow - bHi), Math.min(aHi, hi - flow - bLo)]
-        : [Math.max(aLo, bLo + lo + flow), Math.min(aHi, bHi + hi + flow)]
-    let [aMin, aMax] = aRangeFor(tLo, tHi)
-    if (aMin > aMax && band !== 'normal') {
-      ;[tLo, tHi] = targetRange(op, regroup, 'normal')
-      if (op === '-' && isTop && pattern === 'sub.none') tLo = Math.max(tLo, 1)
-      ;[aMin, aMax] = aRangeFor(tLo, tHi)
-    }
+        ? [Math.max(aLo, tLo - flow - bHi), Math.min(aHi, tHi - flow - bLo)]
+        : [Math.max(aLo, bLo + tLo + flow), Math.min(aHi, bHi + tHi + flow)]
+    /* v8 ignore next 3 -- defensive: unreachable for valid curriculum data */
     if (aMin > aMax) {
       throw new Error(`sampleOperands: no digits for ${pattern} d${difficulty} column ${i}`)
     }
     const a = rng.int(aMin, aMax)
-    const [bMin, bMax] =
+    const [bMin, bMax]: [number, number] =
       op === '+'
         ? [Math.max(bLo, tLo - flow - a), Math.min(bHi, tHi - flow - a)]
         : [Math.max(bLo, a - flow - tHi), Math.min(bHi, a - flow - tLo)]

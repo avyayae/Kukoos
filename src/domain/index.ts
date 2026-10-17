@@ -2,3 +2,21 @@
 // No React, storage, DOM or Math.random here (enforced by ESLint, see eslint.config.js).
 export * from './rng'
 export * from './types'
+export { numberToWords, equationToText, equationToSpeech } from './speech'
+export { WORLDS, getWorld } from './curriculum/worlds'
+export { SKILLS } from './curriculum/skills'
+export {
+  getSkill,
+  skillsInWorld,
+  unlockedSkills,
+  validateCurriculum,
+} from './curriculum/skillGraph'
+export { solveColumns, resultOf } from './arithmetic/solveColumns'
+export { regroupPattern } from './arithmetic/regroupPattern'
+export {
+  detectMisconception,
+  MISCONCEPTION_PRIORITY,
+  simulateBugs,
+} from './arithmetic/misconceptions'
+export { generateQuestion } from './generators/registry'
+export { check } from './generators/check'

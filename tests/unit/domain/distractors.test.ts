@@ -45,7 +45,9 @@ describe('pickDistractors (AC9)', () => {
   it('handles answers at the edges (0 and 999)', () => {
     expect(pickDistractors(0, [], createRng(3)).every((v) => v > 0)).toBe(true)
     expect(pickDistractors(999, [], createRng(3)).every((v) => v < 999)).toBe(true)
-    expect(pickDistractors(5, [], createRng(3), 3, 6)).toHaveLength(3)
+    // Tiny range (max 5): only 4 and 3 survive as near misses, so it fills downward with 2.
+    expect(pickDistractors(5, [], createRng(3), 3, 5).sort((x, y) => x - y)).toEqual([2, 3, 4])
+    expect(pickDistractors(5, [2.5, -1], createRng(3), 3, 9)).not.toContain(2.5)
   })
 
   it('buildChoices contains the answer exactly once', () => {

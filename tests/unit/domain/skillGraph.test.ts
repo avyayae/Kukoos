@@ -6,7 +6,7 @@ import {
   unlockedSkills,
   validateCurriculum,
 } from '@/domain/curriculum/skillGraph'
-import { WORLDS } from '@/domain/curriculum/worlds'
+import { getWorld, WORLDS } from '@/domain/curriculum/worlds'
 import type { Skill } from '@/domain/types'
 
 describe('curriculum data (AC1)', () => {
@@ -82,8 +82,34 @@ describe('unlockedSkills (AC2)', () => {
   })
 })
 
-describe('getSkill', () => {
-  it('throws on unknown ids', () => {
+describe('lookups', () => {
+  it('getSkill throws on unknown ids', () => {
     expect(() => getSkill('nope')).toThrow('Unknown skill: nope')
+  })
+
+  it('getWorld finds worlds and throws on unknown ids', () => {
+    expect(getWorld('mars').title).toBe('Mars Subtraction Crater')
+    expect(() => getWorld('pluto' as 'mars')).toThrow('Unknown world: pluto')
+  })
+})
+
+describe('validateCurriculum edge cases', () => {
+  it('flags a pattern that does not match the operation', () => {
+    const a = getSkill('add.within100.regroup')
+    const bad: Skill = {
+      ...a,
+      spec: { type: 'column', op: '-', digits: 2, pattern: 'add.carryOnes' },
+    }
+    expect(validateCurriculum([bad], WORLDS.slice(1, 2))).toContain(
+      "add.within100.regroup: pattern add.carryOnes doesn't match op -",
+    )
+  })
+
+  it('flags empty worlds and prereqs that point to a later world', () => {
+    const early = { ...getSkill('add.within20'), prereqs: ['sub.3digit.noregroup'] }
+    const late = getSkill('sub.3digit.noregroup')
+    const problems = validateCurriculum([early, { ...late, prereqs: [] }], WORLDS)
+    expect(problems).toContain('world savanna has no skills')
+    expect(problems).toContain('add.within20: prereq sub.3digit.noregroup is in a later world')
   })
 })
