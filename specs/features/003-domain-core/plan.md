@@ -75,6 +75,19 @@ type Response = { kind: 'number'; value: number } | { kind: 'columnDigits'; digi
 | AC11 | `speech.test.ts`: table of known values + property: no "undefined"/double spaces for 0–1000 |
 | AC12 | lint (existing rules) + `vitest --coverage` threshold on `src/domain/arithmetic/**` |
 
+## Deviations (recorded during implementation)
+- **`ColumnStep` shape:** it uses `working`, `lent` and `received` instead of the sketched `topAfterBorrow` and `borrowedFromNext`. A column like the 0 in 403 both receives (+10) and lends (−1), which a single flag can't express. Its working value is 9.
+- **Final carry:** `solveColumns` adds a leading column when the top column carries (47 + 58 = 105). The exhaustive 2-digit test caught this.
+- **Catalog example fixed:** 52 − 27 can't illustrate `borrowNoDecrement`, because when `bᵢ − aᵢ = 5` both subtraction bugs give the same digit (35). The example is now 52 − 28 → 34, and the collision has its own test.
+- **Difficulty 5** uses far regrouping bands instead of forcing internal-zero answers (spec text updated).
+- **No band fallback in the sampler:** every (pattern, digits, difficulty) combination is feasible, and the sweep proves it. The remaining `throw` is a defensive guard excluded from coverage.
+- **±10/±100 carries `arithmetic` metadata,** so 395 + 10 = 305 is diagnosed as `add.forgotCarry`.
+- **`npm test` now runs with coverage** and enforces 100% lines/statements/functions on `src/domain/arithmetic/**`.
+- **Hint text keys** for F09 content: `<skillId>.strategy` (basic facts), `pv.tradeTens.oneTenIsTenOnes`, `pv.tradeHundreds.oneHundredIsTenTens`, `pv.hundredsTensOnes.places`, `pv.expandedForm.addTheParts`, `pv.compare.startWithHundreds`, `pv.plus10plus100.onlyOnePlaceChanges`; column skills use a `workedExample` hint built from solver steps.
+
+## Results
+290 unit tests. The generator sweep covers 23 skills × all kinds × 5 difficulties × 500 seeds (about 290,000 questions), each with an independently recomputed answer. A mutation check (deliberately off-by-one subtraction answers) made 38 sweep tests fail, which confirms the sweep detects wrong answers.
+
 ## Risks
 - **Over-constraining difficulty 1** could leave an empty digit range for a pattern (e.g., borrowBoth with no zeros and a one-digit-shorter `b`). Mitigation: the sampler asserts non-empty ranges, and the property sweep covers every (pattern, difficulty) combination.
 - **Bug collisions:** two bugs can yield the same number. The priority order is fixed and tested.

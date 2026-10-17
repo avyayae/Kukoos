@@ -1,6 +1,6 @@
 # Feature 003 — Domain Core: Curriculum, Column Arithmetic, Misconceptions & Generators
 
-**Status:** Approved (2026-10-16)  ·  **Constitution check:** §2.4 concrete → pictorial → abstract (question kinds per skill), §2.5 curriculum fidelity (every skill has a CCSS code), §3.2 pure domain (no React/storage), §3.3 correctness is provable (seeded + property-tested), §3.4 code computes every answer
+**Status:** Implemented. All ACs are verified locally; CI is pending on the PR.  ·  **Constitution check:** §2.4 concrete → pictorial → abstract (question kinds per skill), §2.5 curriculum fidelity (every skill has a CCSS code), §3.2 pure domain (no React/storage), §3.3 correctness is provable (seeded + property-tested), §3.4 code computes every answer
 
 ## Why
 Everything a kid sees in a lesson comes from this layer: which skills exist, how they unlock, the questions, the right answer, and **why** a wrong answer is wrong. The focus area for our first player is regrouping (`36 − 28`, `403 − 178`). The engine has to (a) produce problems that regroup in exactly the columns a skill targets, and (b) recognize the classic regrouping bugs, so that Kukoos can give a targeted hint rather than "try again".
@@ -89,7 +89,7 @@ Which kind to use when (blocks → guided column → free) is decided by the les
 - **1:** friendliest numbers. The second operand has one fewer digit (e.g., 652 − 38), digits avoid 0, and regrouping columns are "near" (e.g., 6 + 5).
 - **2–3:** full range for the skill's pattern.
 - **4:** zeros allowed inside operands (e.g., 405 + 278), and missing-number forms for `mixed` skills.
-- **5:** hardest in-pattern cases (answers with internal zeros, e.g., 512 − 307 = 205; compare with reversed digits, e.g., 452 vs 425).
+- **5:** hardest in-pattern cases. Column skills use "far" regrouping (column sums ≥ 15, borrow gaps ≥ 4) with zeros allowed, so internal-zero answers like 512 − 307 = 205 occur naturally rather than being forced. Compare uses swapped digits (452 vs 425) or equal numbers.
 
 Each generator documents its exact difficulty table in code, and AC5 tests that the table holds.
 
