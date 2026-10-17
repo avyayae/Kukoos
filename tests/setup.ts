@@ -1,4 +1,6 @@
 import '@testing-library/jest-dom/vitest'
+// In-memory IndexedDB for data tests (spec 004). Tests use unique DB names to stay isolated.
+import 'fake-indexeddb/auto'
 import { cleanup } from '@testing-library/react'
 import { afterEach, vi } from 'vitest'
 
