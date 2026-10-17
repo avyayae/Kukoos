@@ -1,0 +1,234 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Token-only palette: wipe Tailwind's default colors so `bg-red-500` etc. don't exist.
+   Every color utility must come from tokens.css. */
+@theme {
+  --color-*: initial;
+}
+
+@theme inline {
+  --color-primary: var(--mq-primary);
+  --color-primary-lip: var(--mq-primary-lip);
+  --color-primary-tint: var(--mq-primary-tint);
+  --color-secondary: var(--mq-secondary);
+  --color-secondary-lip: var(--mq-secondary-lip);
+  --color-secondary-tint: var(--mq-secondary-tint);
+  --color-sky: var(--mq-sky);
+  --color-sky-lip: var(--mq-sky-lip);
+  --color-sky-tint: var(--mq-sky-tint);
+  --color-sun: var(--mq-sun);
+  --color-gem: var(--mq-gem);
+  --color-streak: var(--mq-streak);
+  --color-success: var(--mq-success);
+  --color-success-lip: var(--mq-success-lip);
+  --color-success-tint: var(--mq-success-tint);
+  --color-success-ink: var(--mq-success-ink);
+  --color-danger: var(--mq-danger);
+  --color-danger-lip: var(--mq-danger-lip);
+  --color-danger-tint: var(--mq-danger-tint);
+  --color-danger-ink: var(--mq-danger-ink);
+  --color-ink: var(--mq-ink);
+  --color-ink-muted: var(--mq-ink-muted);
+  --color-on-strong: var(--mq-on-strong);
+  --color-bg: var(--mq-bg);
+  --color-surface: var(--mq-surface);
+  --color-surface-2: var(--mq-surface-2);
+  --color-border: var(--mq-border);
+  --color-track: var(--mq-track);
+  --color-disabled: var(--mq-disabled);
+  --color-disabled-ink: var(--mq-disabled-ink);
+  --color-focus: var(--mq-focus);
+
+  --font-display: var(--mq-font-display);
+  --font-body: var(--mq-font-body);
+
+  --text-kid: var(--mq-text-base);
+  --text-kid-lg: var(--mq-text-lg);
+  --text-kid-xl: var(--mq-text-xl);
+  --text-kid-2xl: var(--mq-text-2xl);
+  --text-kid-3xl: var(--mq-text-3xl);
+  --text-math: var(--mq-text-math);
+
+  --radius-btn: var(--mq-radius-btn);
+  --radius-card: var(--mq-radius-card);
+  --radius-sheet: var(--mq-radius-sheet);
+
+  --tracking-btn: var(--mq-tracking-btn);
+
+  --container-content: var(--mq-content-max);
+
+  --shadow-lip-border: 0 var(--mq-lip) 0 var(--mq-border);
+  --shadow-lip-primary: 0 var(--mq-lip) 0 var(--mq-primary-lip);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--mq-bg);
+    color: var(--mq-ink);
+    font-family: var(--mq-font-body);
+    font-weight: var(--mq-weight-bold);
+    font-size: var(--mq-text-base);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: var(--mq-stroke) solid var(--mq-focus);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Full-height screen that respects phone notches / home indicators. */
+  .screen {
+    min-height: 100dvh;
+    padding: max(var(--mq-space-4), env(safe-area-inset-top))
+      max(var(--mq-space-4), env(safe-area-inset-right))
+      max(var(--mq-space-4), env(safe-area-inset-bottom))
+      max(var(--mq-space-4), env(safe-area-inset-left));
+    box-sizing: border-box;
+  }
+
+  .num {
+    font-family: var(--mq-font-display);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Button3D — chunky pressable button. Variant/size classes only set custom properties. */
+  .btn3d {
+    --btn-lip: var(--mq-lip);
+    --btn-height: var(--mq-tap-kid);
+    --btn-font: var(--mq-text-base);
+    --btn-bg: var(--mq-primary);
+    --btn-fg: var(--mq-on-strong);
+    --btn-lip-color: var(--mq-primary-lip);
+    --btn-border: transparent;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mq-space-2);
+    min-width: var(--btn-height);
+    height: var(--btn-height);
+    padding-inline: var(--mq-space-6);
+    margin-bottom: var(--btn-lip);
+    border: var(--mq-stroke) solid var(--btn-border);
+    border-radius: var(--mq-radius-btn);
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    box-shadow: 0 var(--btn-lip) 0 var(--btn-lip-color);
+    font-family: var(--mq-font-body);
+    font-size: var(--btn-font);
+    font-weight: var(--mq-weight-black);
+    letter-spacing: var(--mq-tracking-btn);
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform var(--mq-dur-press) var(--mq-ease-out),
+      box-shadow var(--mq-dur-press) var(--mq-ease-out),
+      filter var(--mq-dur-fast) var(--mq-ease-out);
+  }
+  .btn3d:hover:not(:disabled) {
+    filter: brightness(1.05);
+  }
+  .btn3d:active:not(:disabled),
+  .btn3d[data-pressed='true'] {
+    transform: translateY(var(--btn-lip));
+    box-shadow: 0 0 0 var(--btn-lip-color);
+  }
+  .btn3d:disabled {
+    --btn-bg: var(--mq-disabled);
+    --btn-fg: var(--mq-disabled-ink);
+    --btn-lip-color: transparent;
+    --btn-border: transparent;
+    cursor: not-allowed;
+  }
+
+  /* Sizes */
+  .btn3d--md {
+    --btn-height: var(--mq-tap-parent);
+    --btn-font: var(--mq-text-sm);
+  }
+  .btn3d--lg {
+    --btn-height: var(--mq-tap-kid);
+    --btn-font: var(--mq-text-base);
+  }
+  .btn3d--xl {
+    --btn-height: var(--mq-tap-xl);
+    --btn-font: var(--mq-text-lg);
+    --btn-lip: var(--mq-lip-xl);
+  }
+  .btn3d--block {
+    width: 100%;
+  }
+
+  /* Variants */
+  .btn3d--primary {
+    --btn-bg: var(--mq-primary);
+    --btn-fg: var(--mq-on-strong);
+    --btn-lip-color: var(--mq-primary-lip);
+  }
+  .btn3d--secondary {
+    --btn-bg: var(--mq-secondary);
+    --btn-fg: var(--mq-ink);
+    --btn-lip-color: var(--mq-secondary-lip);
+  }
+  .btn3d--sky {
+    --btn-bg: var(--mq-sky);
+    --btn-fg: var(--mq-ink);
+    --btn-lip-color: var(--mq-sky-lip);
+  }
+  .btn3d--success {
+    --btn-bg: var(--mq-success);
+    --btn-fg: var(--mq-on-strong);
+    --btn-lip-color: var(--mq-success-lip);
+  }
+  .btn3d--danger-soft {
+    --btn-bg: var(--mq-danger);
+    --btn-fg: var(--mq-on-strong);
+    --btn-lip-color: var(--mq-danger-lip);
+  }
+  .btn3d--ghost {
+    --btn-bg: var(--mq-surface);
+    --btn-fg: var(--mq-ink);
+    --btn-lip-color: var(--mq-border);
+    --btn-border: var(--mq-border);
+  }
+
+  .btn3d__spinner {
+    width: 1em;
+    height: 1em;
+    border-radius: var(--mq-radius-pill);
+    border: var(--mq-stroke) solid currentColor;
+    border-right-color: transparent;
+    animation: btn3d-spin 0.8s linear infinite;
+  }
+
+  /* Reduced motion: the button never moves; pressing only dims it (Constitution §3.7). */
+  @media (prefers-reduced-motion: reduce) {
+    .btn3d {
+      transition: filter var(--mq-dur-fast) linear;
+    }
+    .btn3d:active:not(:disabled),
+    .btn3d[data-pressed='true'] {
+      transform: none;
+      box-shadow: 0 var(--btn-lip) 0 var(--btn-lip-color);
+      filter: brightness(0.92);
+    }
+    .btn3d__spinner {
+      animation-duration: 2.4s;
+    }
+  }
+}
+
+@keyframes btn3d-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

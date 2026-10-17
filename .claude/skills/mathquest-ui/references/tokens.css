@@ -1,31 +1,32 @@
-/* MathQuest design tokens — single source of truth.
-   Copied to src/ui/tokens.css. Components must use these (via Tailwind @theme), never raw values.
-   Contrast notes: white text is AA-large-safe only on primary, success-strong, danger-strong.
-   Use --mq-ink text on secondary (orange), sky, gem, sun. */
+/* MathQuest design tokens — the single source of truth for raw values.
+   Mirrored at .claude/skills/mathquest-ui/references/tokens.css (keep identical).
+   Tailwind utilities are mapped from these in src/ui/index.css (@theme).
+   Contrast: white text (--mq-on-strong) is AA-large-safe only on primary, success, danger.
+   Use --mq-ink text on secondary (orange), sky, gem and sun. */
 
 :root {
   /* Brand */
-  --mq-primary: #7c4dff;          /* cosmic purple — Kukoos */
+  --mq-primary: #7c4dff; /* cosmic purple — Kukoos */
   --mq-primary-lip: #5b2edb;
   --mq-primary-tint: #efe8ff;
-  --mq-secondary: #ff9f1c;        /* sunset orange */
+  --mq-secondary: #ff9f1c; /* sunset orange */
   --mq-secondary-lip: #d97a00;
   --mq-secondary-tint: #fff1dc;
-  --mq-sky: #38bdf8;              /* space / info */
+  --mq-sky: #38bdf8; /* space / info */
   --mq-sky-lip: #0b8fcc;
   --mq-sky-tint: #e0f5ff;
-  --mq-sun: #ffd23f;              /* stars, crowns */
+  --mq-sun: #ffd23f; /* stars, crowns */
   --mq-sun-lip: #e0a800;
-  --mq-gem: #22d3ee;              /* star crystals */
+  --mq-gem: #22d3ee; /* star crystals */
   --mq-gem-lip: #0aa5bf;
-  --mq-streak: #ff7a00;           /* streak flame */
+  --mq-streak: #ff7a00; /* streak flame */
 
   /* Feedback */
   --mq-success: #16a06a;
   --mq-success-lip: #0e7a50;
   --mq-success-tint: #d7f7e8;
   --mq-success-ink: #0e6b45;
-  --mq-danger: #e5484d;           /* soft coral "not yet" — never harsh red */
+  --mq-danger: #e5484d; /* soft coral "not yet" — never harsh red */
   --mq-danger-lip: #b8323a;
   --mq-danger-tint: #ffe3e3;
   --mq-danger-ink: #9f2a2f;
@@ -33,32 +34,46 @@
   /* Neutrals */
   --mq-ink: #2b2140;
   --mq-ink-muted: #6b6485;
+  --mq-on-strong: #ffffff; /* text on primary / success / danger fills */
   --mq-bg: #f6f3ff;
   --mq-surface: #ffffff;
   --mq-surface-2: #faf8ff;
   --mq-border: #e4def7;
-  --mq-track: #ece7fa;            /* progress bar track */
+  --mq-track: #ece7fa; /* progress bar track */
   --mq-disabled: #d9d4ea;
   --mq-disabled-ink: #9a93b5;
   --mq-focus: #38bdf8;
+
+  /* Kukoos mascot (same in both themes) */
+  --mq-kukoos-body: #ff9f1c;
+  --mq-kukoos-body-shade: #f08a00;
+  --mq-kukoos-belly: #ffe2b0;
+  --mq-kukoos-wing: #7c4dff;
+  --mq-kukoos-crest: #9b7bff;
+  --mq-kukoos-beak: #ffd23f;
+  --mq-kukoos-eye: #ffffff;
+  --mq-kukoos-pupil: #2b2140;
+  --mq-kukoos-cheek: #ff8fa3;
 
   /* World backgrounds */
   --mq-world-jungle: #dff5d8;
   --mq-world-savanna: #ffeccc;
   --mq-world-ocean: #d6efff;
-  --mq-world-space: #141130;      /* Moon / Mars worlds always use space background */
+  --mq-world-space: #141130; /* Moon / Mars worlds always use the space background */
 
   /* Type */
   --mq-font-display: 'Baloo 2', 'Nunito Variable', system-ui, sans-serif;
   --mq-font-body: 'Nunito Variable', 'Nunito', system-ui, sans-serif;
-  --mq-text-sm: 1rem;             /* parent zone only */
-  --mq-text-base: 1.125rem;       /* min for kid screens */
+  --mq-text-sm: 1rem; /* parent zone only */
+  --mq-text-base: 1.125rem; /* min for kid screens */
   --mq-text-lg: 1.375rem;
   --mq-text-xl: 1.75rem;
   --mq-text-2xl: 2.25rem;
+  --mq-text-3xl: 3rem;
   --mq-text-math: clamp(2.5rem, 8vw, 4.5rem);
   --mq-weight-bold: 700;
   --mq-weight-black: 800;
+  --mq-tracking-btn: 0.04em;
 
   /* Shape */
   --mq-radius-btn: 16px;
@@ -77,9 +92,10 @@
   --mq-space-6: 24px;
   --mq-space-8: 32px;
   --mq-space-12: 48px;
-  --mq-tap-kid: 56px;
   --mq-tap-parent: 48px;
-  --mq-content-max: 640px;        /* lesson column width on tablet/desktop */
+  --mq-tap-kid: 56px;
+  --mq-tap-xl: 64px;
+  --mq-content-max: 640px; /* lesson column width on tablet/desktop */
 
   /* Motion */
   --mq-dur-press: 80ms;
@@ -90,7 +106,7 @@
   --mq-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Dark ("night sky") theme — explicit opt-in or OS preference */
+/* Dark ("night sky") theme — OS preference unless the app forces light */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     --mq-primary: #9b7bff;
@@ -138,30 +154,3 @@
     --mq-ease-bounce: linear;
   }
 }
-
-/* ---- Tailwind v4 mapping (goes in src/ui/index.css after importing this file) ----
-@import 'tailwindcss';
-@import './tokens.css';
-@theme inline {
-  --color-primary: var(--mq-primary);       --color-primary-lip: var(--mq-primary-lip);   --color-primary-tint: var(--mq-primary-tint);
-  --color-secondary: var(--mq-secondary);   --color-secondary-lip: var(--mq-secondary-lip);
-  --color-sky: var(--mq-sky);               --color-sky-lip: var(--mq-sky-lip);
-  --color-sun: var(--mq-sun);               --color-gem: var(--mq-gem);   --color-streak: var(--mq-streak);
-  --color-success: var(--mq-success);       --color-success-lip: var(--mq-success-lip);   --color-success-tint: var(--mq-success-tint); --color-success-ink: var(--mq-success-ink);
-  --color-danger: var(--mq-danger);         --color-danger-lip: var(--mq-danger-lip);     --color-danger-tint: var(--mq-danger-tint);   --color-danger-ink: var(--mq-danger-ink);
-  --color-ink: var(--mq-ink);               --color-ink-muted: var(--mq-ink-muted);
-  --color-bg: var(--mq-bg);                 --color-surface: var(--mq-surface);           --color-surface-2: var(--mq-surface-2);
-  --color-border: var(--mq-border);         --color-track: var(--mq-track);
-  --color-disabled: var(--mq-disabled);     --color-disabled-ink: var(--mq-disabled-ink);
-  --font-display: var(--mq-font-display);   --font-body: var(--mq-font-body);
-  --text-math: var(--mq-text-math);
-  --radius-btn: var(--mq-radius-btn);       --radius-card: var(--mq-radius-card);         --radius-sheet: var(--mq-radius-sheet);
-  --shadow-lip-primary: 0 var(--mq-lip) 0 var(--mq-primary-lip);
-  --shadow-lip-secondary: 0 var(--mq-lip) 0 var(--mq-secondary-lip);
-  --shadow-lip-success: 0 var(--mq-lip) 0 var(--mq-success-lip);
-  --shadow-lip-danger: 0 var(--mq-lip) 0 var(--mq-danger-lip);
-  --shadow-lip-border: 0 var(--mq-lip) 0 var(--mq-border);
-}
-body { background: var(--mq-bg); color: var(--mq-ink); font-family: var(--mq-font-body); font-weight: 700; }
-.num { font-family: var(--mq-font-display); font-variant-numeric: tabular-nums; }
----------------------------------------------------------------------------------- */

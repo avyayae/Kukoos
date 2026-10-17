@@ -10,7 +10,8 @@ MathQuest is a math adventure for a 7–9-year-old. The look is **Duolingo-inspi
 > Copy the *feel*, never the assets. No owl, no Duolingo green as the brand color, no Feather font, no copied illustrations.
 
 ## Reference files (read as needed)
-- `references/tokens.css`: **the only source of colors, type, radii, spacing and motion values.** It's copied to `src/ui/tokens.css`. Never hard-code hex values in components.
+- `references/tokens.css`: **the only source of colors, type, radii, spacing and motion values.** It's an identical mirror of `src/ui/tokens.css` (edit both together). The Tailwind mapping lives in `src/ui/index.css` (`@theme inline`), and Tailwind's default palette is wiped there, so only token colors exist (`bg-primary`, `text-ink-muted`, `text-kid-xl`, `rounded-card`, …). Never hard-code hex values in components.
+- Component styles that need custom properties (e.g. `.btn3d`) live in `@layer components` in `src/ui/index.css`, using only `var(--mq-*)` values.
 - `references/components.md`: specs for every shared component (anatomy, variants, states, sizes, a11y). Read it before creating or changing a component.
 - `references/screens.md`: layout anatomy of the key screens (lesson, world map, lesson complete, parent zone) and copywriting voice.
 
