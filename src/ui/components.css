@@ -787,6 +787,36 @@
   .skill-card__title {
     flex: 1;
   }
+  .skill-card__new,
+  .skill-card__score {
+    flex-shrink: 0;
+    padding: var(--mq-space-1) var(--mq-space-3);
+    border-radius: var(--mq-radius-pill);
+    font-size: var(--mq-text-base);
+    font-weight: var(--mq-weight-black);
+  }
+  .skill-card__new {
+    background: var(--mq-sky-tint);
+    color: var(--mq-ink);
+  }
+  .skill-card__score {
+    background: var(--mq-secondary-tint);
+    color: var(--mq-ink);
+  }
+  .practice__footer {
+    display: flex;
+    justify-content: center;
+    padding-block: var(--mq-space-4);
+  }
+  .practice__grownups {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--mq-tap-parent);
+    padding-inline: var(--mq-space-4);
+    color: var(--mq-ink-muted);
+    font-size: var(--mq-text-sm);
+    text-decoration: underline;
+  }
   @media (prefers-reduced-motion: reduce) {
     .skill-card:active {
       transform: none;

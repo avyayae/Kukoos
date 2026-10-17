@@ -11,6 +11,7 @@ import {
   wrongResponse,
 } from '@/domain'
 import { LessonScreen } from '@/features/lesson-player/LessonScreen'
+import { withData } from '../withData'
 import { answerInUi } from './lessonUi'
 
 const SKILL = 'sub.within100.regroup'
@@ -18,7 +19,7 @@ const SEED = 42
 
 function setup() {
   const onExit = vi.fn()
-  render(<LessonScreen skillId={SKILL} seed={SEED} onExit={onExit} now={() => 0} />)
+  render(withData(<LessonScreen skillId={SKILL} seed={SEED} onExit={onExit} now={() => 0} />))
   // Mirror of the session to know which question is on screen.
   let mirror: LessonState = startLesson({ skillId: SKILL, seed: SEED, at: 0 })
   const step = (event: Parameters<typeof lessonReducer>[1]) => {
