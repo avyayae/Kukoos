@@ -1,4 +1,4 @@
-import type { Difficulty, MisconceptionKey, QuestionKind, SkillId } from '@/domain'
+import type { Difficulty, MisconceptionKey, QuestionKind, SkillId, SrsBox } from '@/domain'
 
 /**
  * Row shapes stored in IndexedDB (spec 004). The same shapes become SQL tables when the
@@ -29,6 +29,8 @@ export interface SettingsRow extends SyncFields {
 
 export interface LessonRow extends SyncFields {
   skillId: SkillId
+  /** 'review' = a Review mission (spec 006); absent on rows saved before F006. */
+  mode?: 'skill' | 'review'
   seed: number
   startedAt: number
   endedAt: number
@@ -55,14 +57,16 @@ export interface AttemptRow extends SyncFields {
 
 // ---- schema-only tables (written by F06 / F08 / F10)
 
+/** id = `${profileId}:${skillId}` — one row per kid per skill (spec 006). */
 export interface SkillProgressRow extends SyncFields {
   skillId: SkillId
   mastery: number
   attempts: number
   sessionsSeen: number
-  srsBox: number
+  srsBox: SrsBox
   nextReviewAt: number
   crowned: boolean
+  preMastered: boolean
 }
 
 export interface WalletRow extends SyncFields {

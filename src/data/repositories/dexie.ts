@@ -2,6 +2,7 @@ import type { SkillId } from '@/domain'
 import { exportBackup, importBackup, tableCounts } from '../backup'
 import type { KukoosDb } from '../db'
 import { lessonToRows } from '../mappers'
+import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
 import type { ProfileRow } from '../rows'
 import { newId, writeRows } from '../write'
@@ -49,11 +50,14 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       save: async (state, meta) => {
         if (state.results.length === 0) return
         const at = now()
-        await db.transaction('rw', [db.lessons, db.attempts, db.outbox], async () => {
+        const tables = [db.lessons, db.attempts, db.skillProgress, db.outbox]
+        await db.transaction('rw', tables, async () => {
+          // Idempotency first, so a re-save never double-counts progress.
           if (await db.lessons.get(meta.lessonId)) return
           const { lesson, attempts } = lessonToRows(state, meta, at)
           await writeRows(db, 'lessons', [lesson], at)
           await writeRows(db, 'attempts', attempts, at)
+          await applyLessonProgress(db, state, meta.profileId, at)
         })
       },
 
@@ -61,12 +65,18 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
         const lessons = await db.lessons.where('profileId').equals(profileId).toArray()
         const best: Partial<Record<SkillId, number>> = {}
         for (const l of lessons) {
-          if (!l.completed || l.questionCount === 0) continue
+          if (!l.completed || l.questionCount === 0 || l.mode === 'review') continue
           const score = Math.round((l.firstTryCorrect / l.questionCount) * 100)
           best[l.skillId] = Math.max(best[l.skillId] ?? 0, score)
         }
         return best
       },
+    },
+
+    progress: {
+      forProfile: (profileId) => progressForProfile(db, profileId),
+      applyStartingPoint: (profileId, skillId) =>
+        applyStartingPointProgress(db, profileId, skillId, now()),
     },
 
     backup: {
