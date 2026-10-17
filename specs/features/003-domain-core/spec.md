@@ -1,6 +1,6 @@
 # Feature 003 — Domain Core: Curriculum, Column Arithmetic, Misconceptions & Generators
 
-**Status:** Implemented. All ACs are verified locally; CI is pending on the PR.  ·  **Constitution check:** §2.4 concrete → pictorial → abstract (question kinds per skill), §2.5 curriculum fidelity (every skill has a CCSS code), §3.2 pure domain (no React/storage), §3.3 correctness is provable (seeded + property-tested), §3.4 code computes every answer
+**Status:** Done. All ACs verified, and CI is green on PR #2.  ·  **Constitution check:** §2.4 concrete → pictorial → abstract (question kinds per skill), §2.5 curriculum fidelity (every skill has a CCSS code), §3.2 pure domain (no React/storage), §3.3 correctness is provable (seeded + property-tested), §3.4 code computes every answer
 
 ## Why
 Everything a kid sees in a lesson comes from this layer: which skills exist, how they unlock, the questions, the right answer, and **why** a wrong answer is wrong. The focus area for our first player is regrouping (`36 − 28`, `403 − 178`). The engine has to (a) produce problems that regroup in exactly the columns a skill targets, and (b) recognize the classic regrouping bugs, so that Kukoos can give a targeted hint rather than "try again".

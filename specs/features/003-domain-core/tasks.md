@@ -15,4 +15,4 @@ Branch: `feature/003-domain-core`. Run `npm run verify` before ticking any task.
 - [x] **T11 — Generators: place value** · `pv.*` (incl. trade tens/hundreds, compare). · *done when:* their part of the sweep is green.
 - [x] **T12 — check()** · numeric/choice/boolean/comparison + column `stepErrors` + misconception. · *done when:* `check.test.ts` is green (AC8, AC10).
 - [x] **T13 — Registry & full sweep** · `registry.ts`, `generateQuestion`, completeness guard (every MVP skill has a generator for each declared kind), determinism, performance test, coverage threshold. · *done when:* AC5, AC6, AC7 and AC12 are green.
-- [ ] **T14 — Docs & wrap-up** · Update the skill map's misconception catalog and the product spec example, record deviations, push the branch and open a PR. · *done when:* CI is green on the PR.
+- [x] **T14 — Docs & wrap-up** · Update the skill map's misconception catalog and the product spec example, record deviations, push the branch and open a PR. · *done when:* CI is green on the PR. *(Green on PR #2: https://github.com/avyayae/Kukoos/actions/runs/38992039573)*
