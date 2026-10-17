@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { NO_STORAGE_MESSAGE, type TableName, useRepos, validateBackup } from '@/data'
 import { Button3D, ConfirmSheet } from '@/ui'
 import { backupFileName, downloadJson } from './download'
+import { DailyTimeSection } from './DailyTimeSection'
 import { StartingPointSection } from './StartingPointSection'
 
 type Status = { tone: 'ok' | 'error'; text: string } | null
@@ -73,6 +74,8 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
           </Link>
           <h1 className="grownup__title">Grown-ups</h1>
         </header>
+
+        <DailyTimeSection onDone={(text) => setStatus({ tone: 'ok', text })} />
 
         {!repos.available ? (
           <section className="grownup__card">
