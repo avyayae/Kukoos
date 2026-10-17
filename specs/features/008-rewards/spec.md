@@ -1,6 +1,6 @@
 # Feature 008 — Rewards & Daily Time
 
-**Status:** Draft  ·  **Constitution check:** §1.1 no reward without math (all rewards come from lesson events), §1.2 no shame (streaks protected by freezes, no guilt copy), §1.3 no dark patterns (parent-set daily limit is respected; no endless loop), §2.3 ~80% success (XP never punishes mistakes), §3.2 pure domain (gamification rules in `src/domain/gamification/`)
+**Status:** Approved (2026-10-17)  ·  **Constitution check:** §1.1 no reward without math (all rewards come from lesson events), §1.2 no shame (streaks protected by freezes, no guilt copy), §1.3 no dark patterns (parent-set daily limit is respected; no endless loop), §2.3 ~80% success (XP never punishes mistakes), §3.2 pure domain (gamification rules in `src/domain/gamification/`)
 
 ## Why
 F05–F07 made practice *work*; F08 makes her *want to come back*, and it keeps the time healthy. Rewards turn real practice into visible progress: XP, levels, star crystals, a streak flame, and badges named after the exact skills she's working on (Carry Captain, Borrow Boss, Zero Hero). The parent sets a **daily goal and a daily limit in minutes**. Only active lesson time counts toward the goal, and when the limit is reached Kukoos says goodnight. See product spec §5.4 and §5.4a, and architecture §5 (event → reward-effect pipeline).
@@ -16,13 +16,13 @@ F05–F07 made practice *work*; F08 makes her *want to come back*, and it keeps 
 | Rule | Value |
 |---|---|
 | XP per completed lesson | base 10, +5 perfect (all first-try), +1 per 3 in the best combo (max +5); boss pass +20 |
-| Level | level n needs `50·n·(n+1)/2` total XP (50, 150, 300, 500, …) |
+| Level | start at level 1; reaching level n+1 needs `50·n·(n+1)/2` total XP (50, 150, 300, 500, …) |
 | Star crystals 💎 | 5 per completed lesson, +5 perfect (treasure chest), +10 per badge, +10 boss pass |
 | Streak | a local date counts when **goal minutes** are met. Next day → +1. Missing a day: use a freeze if held (streak kept), else reset to 0 with a gentle line |
 | Freezes | +1 every 7 streak days, hold max 2 |
 | Streak milestones | 3 / 7 / 14 / 30 / 50 / 100 days → rocket climbs higher |
-| Daily goal | 5 / 10 / **10 default** / 15 / 20 min of **active lesson time** |
-| Daily limit | 15 / 20 / **30 default** / 45 min / off. Counts active time on map + lessons. +10 min parent bonus |
+| Daily goal | 5 / **10 default** / 15 / 20 min of **active lesson time** |
+| Daily limit | 15 / 20 / 30 / 45 / **60 default** min / off. Counts active time on map + lessons. +10 min parent bonus |
 | Active time | ticks every 5s only while the page is visible and the last input was < 60s ago |
 | Heads-up | at 2 minutes left: "2 more minutes of space travel today!" |
 
@@ -58,7 +58,7 @@ F05–F07 made practice *work*; F08 makes her *want to come back*, and it keeps 
 - Parent PIN and the full dashboard (F11). The existing math gate guards settings and +10.
 - Weekly reports, leaderboards, push notifications.
 
-## Open questions
-- Defaults: daily goal **10 min** and limit **30 min**. OK for her, or different?
-- Should finishing a lesson after the limit is reached be allowed to finish the current *question set* (as specced) or stop right at the next question? The spec says finish the lesson.
-- Should review missions and bosses count toward the goal? Proposed: yes, all lesson time counts.
+## Decisions (parent, 2026-10-17)
+- Default daily limit is **60 min** (picker: 15 / 20 / 30 / 45 / 60 / off). Daily goal default stays **10 min**.
+- When the limit is reached mid-mission, she **finishes the whole mission**, then the goodnight screen shows.
+- Review missions and boss challenges **count toward the goal** (all lesson time counts).

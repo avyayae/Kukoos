@@ -5,6 +5,8 @@ import { bossesBeaten, markWorldsSeen, seenWorlds } from '../journey'
 import { lessonToRows } from '../mappers'
 import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
+import { applyLessonRewards, badgesFor, rollWallet } from '../rewards'
+import { addActive, addBonus, readToday, saveTimeSettings, timeSettings } from '../time'
 import type { ProfileRow } from '../rows'
 import { newId, writeRows } from '../write'
 import type { Repositories } from './types'
@@ -49,16 +51,26 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
 
     lessons: {
       save: async (state, meta) => {
-        if (state.results.length === 0) return
+        if (state.results.length === 0) return []
         const at = now()
-        const tables = [db.lessons, db.attempts, db.skillProgress, db.outbox]
-        await db.transaction('rw', tables, async () => {
-          // Idempotency first, so a re-save never double-counts progress.
-          if (await db.lessons.get(meta.lessonId)) return
+        const tables = [
+          db.lessons,
+          db.attempts,
+          db.skillProgress,
+          db.wallet,
+          db.badges,
+          db.dailyActivity,
+          db.settings,
+          db.outbox,
+        ]
+        return db.transaction('rw', tables, async () => {
+          // Idempotency first, so a re-save never double-counts progress or rewards.
+          if (await db.lessons.get(meta.lessonId)) return []
           const { lesson, attempts } = lessonToRows(state, meta, at)
           await writeRows(db, 'lessons', [lesson], at)
           await writeRows(db, 'attempts', attempts, at)
           await applyLessonProgress(db, state, meta.profileId, at)
+          return applyLessonRewards(db, state, meta.profileId, at)
         })
       },
 
@@ -85,6 +97,20 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       bossesBeaten: (profileId) => bossesBeaten(db, profileId),
       seenWorlds: (profileId) => seenWorlds(db, profileId),
       markWorldsSeen: (profileId, worlds) => markWorldsSeen(db, profileId, worlds, now()),
+    },
+
+    time: {
+      today: (profileId) => readToday(db, profileId, now()),
+      addActive: (profileId, lessonSeconds, totalSeconds) =>
+        addActive(db, profileId, lessonSeconds, totalSeconds, now()),
+      addBonus: (profileId, minutes) => addBonus(db, profileId, minutes, now()),
+      settings: (profileId) => timeSettings(db, profileId),
+      setSettings: (profileId, settings) => saveTimeSettings(db, profileId, settings, now()),
+    },
+
+    rewards: {
+      wallet: (profileId) => rollWallet(db, profileId, now()),
+      badges: (profileId) => badgesFor(db, profileId),
     },
 
     backup: {

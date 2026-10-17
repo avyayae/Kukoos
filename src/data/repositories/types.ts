@@ -1,6 +1,16 @@
-import type { LessonState, Progress, SkillId, WorldId } from '@/domain'
+import type {
+  LessonState,
+  Progress,
+  RewardEffect,
+  SkillId,
+  StreakRoll,
+  TimeSettings,
+  Wallet,
+  WorldId,
+} from '@/domain'
 import type { LessonMeta } from '../mappers'
-import type { ProfileRow, RowsByTable, TableName } from '../rows'
+import type { BadgeRow, ProfileRow, RowsByTable, TableName } from '../rows'
+import type { TodayTime } from '../time'
 
 export interface BackupFile {
   app: 'kukoos'
@@ -24,8 +34,11 @@ export interface Repositories {
     ensureCurrent(): Promise<ProfileRow | null>
   }
   lessons: {
-    /** Saves a finished or exited lesson once; no-op when nothing was answered. */
-    save(state: LessonState, meta: LessonMeta): Promise<void>
+    /**
+     * Saves a finished or exited lesson once, with its rewards (spec 008), and returns the
+     * effects to celebrate. Re-saving, or saving with nothing answered, returns `[]`.
+     */
+    save(state: LessonState, meta: LessonMeta): Promise<RewardEffect[]>
     /** Best first-try score (0–100) of completed lessons per skill. */
     bestFirstTryBySkill(profileId: string): Promise<Partial<Record<SkillId, number>>>
   }
@@ -40,6 +53,21 @@ export interface Repositories {
     bossesBeaten(profileId: string): Promise<Set<WorldId>>
     seenWorlds(profileId: string): Promise<WorldId[]>
     markWorldsSeen(profileId: string, worlds: readonly WorldId[]): Promise<void>
+  }
+  /** Today's active minutes and the parent's daily goal / limit (spec 008). */
+  time: {
+    today(profileId: string): Promise<TodayTime>
+    /** Adds active seconds to today (lesson seconds also count toward the goal). */
+    addActive(profileId: string, lessonSeconds: number, totalSeconds: number): Promise<TodayTime>
+    /** The grown-up "+10 minutes today". */
+    addBonus(profileId: string, minutes: number): Promise<TodayTime>
+    settings(profileId: string): Promise<TimeSettings>
+    setSettings(profileId: string, settings: TimeSettings): Promise<void>
+  }
+  rewards: {
+    /** XP, crystals and streak, with missed days settled (saved once). */
+    wallet(profileId: string): Promise<{ wallet: Wallet; roll: StreakRoll }>
+    badges(profileId: string): Promise<BadgeRow[]>
   }
   backup: {
     export(): Promise<BackupFile>

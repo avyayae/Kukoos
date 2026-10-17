@@ -55,8 +55,8 @@ describe('progress saved with the lesson (AC7)', () => {
       version: 1,
     })
     expect(focus?.mastery).toBeGreaterThan(0)
-    // lesson + attempts + 2 progress rows, each with an outbox entry
-    expect(await db.outbox.count()).toBe(1 + s.results.length + 2)
+    // lesson + attempts + 2 progress rows + wallet + First Flight badge, each with an outbox entry
+    expect(await db.outbox.count()).toBe(1 + s.results.length + 2 + 2)
   })
 
   it('re-saving the same lesson does not double-count', async () => {

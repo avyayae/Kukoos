@@ -4,15 +4,19 @@ export { useRepos } from './context'
 export {
   type LoadedJourney,
   type LoadedProgress,
+  type LoadedWallet,
+  useBadges,
   useBestScores,
   useCurrentProfile,
   useJourney,
   useProgress,
+  useWallet,
 } from './hooks'
+export type { TodayTime } from './time'
 export { createRepositories } from './createRepositories'
 export { createDexieRepositories, DEFAULT_PROFILE } from './repositories/dexie'
 export { createNullRepositories, NO_STORAGE_MESSAGE } from './repositories/null'
 export type { BackupFile, ImportResult, Repositories } from './repositories/types'
-export type { ProfileRow, TableName } from './rows'
+export type { BadgeRow, ProfileRow, TableName } from './rows'
 export { newId } from './write'
 export { BACKUP_ERRORS, validateBackup } from './backup'
