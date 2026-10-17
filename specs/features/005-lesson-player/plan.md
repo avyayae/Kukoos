@@ -64,6 +64,18 @@ tests/e2e/lesson.spec.ts                seeded full lesson on 3 devices
 | AC12–AC13 | e2e on 3 viewports: no scroll, ≥56px targets, keyboard play, reduced motion, console clean |
 | AC14 | `lesson.spec.ts` |
 
+## Deviations (recorded during implementation)
+- **`useReducer` instead of a Zustand store.** The session is already a pure reducer, so a store added nothing.
+- **Enter is handled on keyup.** On keydown, CHECK showed the banner and focused CONTINUE before the same key press finished, and that press then clicked CONTINUE, skipping the feedback. Found by a unit test; there's a regression test in unit and e2e.
+- **No manual `useCallback` in LessonScreen.** The React Compiler lint can't preserve it there. Enter uses `useEffectEvent` (React 19.2), and renderers get the stable state setters directly.
+- **Carry boxes toggle on tap** (instead of keypad-editable): simpler for a 7-year-old, and they're scratch marks anyway.
+- **Blocks:** each place (hundreds/tens/ones) is one big tap target, with tool chips (Break / Take away / Bundle) instead of tapping individual 10px blocks. That keeps skill rule 1 (≥ 56px targets). Addition starts with both numbers on the mat and uses Bundle.
+- **SHOW ME shows the numbers as base-ten blocks**, not the worked solution, so it doesn't give the answer away. The worked steps appear only on the second miss.
+- **Compact phone mode (≤ 860px tall):** 56px keys and CHECK (still the kid minimum), a smaller Kukoos and bubble, 8px blocks, and stacked hundreds. An e2e **overlap guard** at 360×740 and 390×844 checks five question types: nothing under Kukoos, keypad below the question and above CHECK. The original overflow check missed this because the question area clips rather than scrolls.
+- **Found in screenshot review and fixed:** the keypad covered the question on phones; `.icon-btn` padding lost to `.btn3d` (the speak icon was squeezed to a dot); "1 tens"/"1 ones" grammar (new `placeWord`); the generic hint said "trade" on addition (now `hint:column.add`/`hint:column.sub`).
+- **Domain additions:** `correctResponse`/`wrongResponse` (solution reveal + tests + e2e), `placeWord`.
+- **The domain-purity lint test timeout was raised to 30s.** ESLint's first run loads the React Compiler rules and was slow under parallel load.
+
 ## Risks
 - **Web Speech quirks** (voices load async; Safari needs a user gesture): speak only after a user gesture (START/tile tap), and fail silently.
 - **Column grid complexity:** keep scratch state separate from the answer, so grading stays simple and robust.
