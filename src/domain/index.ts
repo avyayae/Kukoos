@@ -20,7 +20,30 @@ export {
 } from './arithmetic/misconceptions'
 export { generateQuestion } from './generators/registry'
 export { correctResponse, wrongResponse } from './generators/responses'
-export { lessonPlan, LESSON_LENGTH, type PlannedKind } from './engine/lessonPlan'
+export {
+  bandFor,
+  composeLesson,
+  composeReview,
+  dueSkills,
+  kindsForMastery,
+  LESSON_LENGTH,
+  startDifficulty,
+  type ComposedLesson,
+  type PlannedQuestion,
+  type Progress,
+  type QuestionRole,
+} from './engine/lessonComposer'
+export {
+  applyLesson,
+  isDue,
+  MASTERY_RULES,
+  newMastery,
+  SRS_INTERVAL_DAYS,
+  DAY_MS,
+  type SkillMastery,
+  type SrsBox,
+} from './engine/mastery'
+export { applyStartingPoint, prereqClosure } from './engine/startingPoint'
 export {
   firstTryAccuracy,
   lessonMinutes,
@@ -29,6 +52,7 @@ export {
   MAX_REQUEUES,
   startLesson,
   type LessonEvent,
+  type LessonMode,
   type LessonPhase,
   type LessonState,
   type QuestionResult,

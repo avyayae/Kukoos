@@ -1,4 +1,3 @@
-import { getSkill } from '../curriculum/skillGraph'
 import { check } from '../generators/check'
 import { generateQuestion } from '../generators/registry'
 import type {
@@ -10,23 +9,16 @@ import type {
   Response,
   SkillId,
 } from '../types'
-import { LESSON_LENGTH, lessonPlan } from './lessonPlan'
+import { composeLesson, LESSON_LENGTH, type PlannedQuestion } from './lessonComposer'
 
-export { LESSON_LENGTH }
+export { LESSON_LENGTH, type PlannedQuestion }
 
 /** A missed question comes back at most this many times per lesson (10 + 2 = 12 max). */
 export const MAX_REQUEUES = 2
 
-export interface PlannedQuestion {
-  kind: QuestionKind
-  guided: boolean
-  seed: number
-  /** Re-queued questions keep their original difficulty so they regenerate identically. */
-  fixedDifficulty?: Difficulty
-  isRequeue: boolean
-}
-
 export interface QuestionResult {
+  /** The skill this question practised (reviews differ from the lesson's focus skill). */
+  skillId: SkillId
   questionId: string
   kind: QuestionKind
   difficulty: Difficulty
@@ -41,7 +33,9 @@ export interface QuestionResult {
 export type LessonPhase = 'answering' | 'correct' | 'notYet' | 'solution' | 'complete'
 
 export interface LessonState {
+  /** The focus skill (for a Review mission: the first reviewed skill). */
   skillId: SkillId
+  mode: LessonMode
   seed: number
   plan: readonly PlannedQuestion[]
   index: number
@@ -69,17 +63,22 @@ export type LessonEvent =
   | { type: 'retry' }
   | { type: 'continue'; at: number }
 
+export type LessonMode = 'skill' | 'review'
+
 export interface StartLessonOptions {
   skillId: SkillId
   seed: number
-  difficulty?: Difficulty
   at: number
+  /** A composed plan (spec 006). Without one, the plan for a brand-new skill is used. */
+  plan?: readonly PlannedQuestion[]
+  difficulty?: Difficulty
+  mode?: LessonMode
 }
 
 const clamp = (d: number): Difficulty => Math.min(5, Math.max(1, d)) as Difficulty
 
-function questionAt(skillId: SkillId, planned: PlannedQuestion, difficulty: Difficulty): Question {
-  return generateQuestion(skillId, {
+function questionAt(planned: PlannedQuestion, difficulty: Difficulty): Question {
+  return generateQuestion(planned.skillId, {
     difficulty: planned.fixedDifficulty ?? difficulty,
     kind: planned.kind,
     seed: planned.seed,
@@ -94,26 +93,27 @@ const freshQuestionState = {
   lastCheck: null,
 } as const
 
-/** Starts a lesson. Question i uses seed `seed * 1000 + i`, so a seeded lesson is reproducible. */
-export function startLesson({
-  skillId,
-  seed,
-  difficulty = 2,
-  at,
-}: StartLessonOptions): LessonState {
-  const plan: PlannedQuestion[] = lessonPlan(getSkill(skillId)).map((p, i) => ({
-    ...p,
-    seed: seed * 1000 + i,
-    isRequeue: false,
-  }))
-  const first = plan[0] as PlannedQuestion
+/**
+ * Starts a lesson from a composed plan (spec 006). Seeds come from the plan, so a seeded
+ * lesson is reproducible. Without a plan, the brand-new-skill plan is composed.
+ */
+export function startLesson(options: StartLessonOptions): LessonState {
+  const { skillId, seed, at, mode = 'skill' } = options
+  const composed = options.plan
+    ? null
+    : composeLesson({ focusSkillId: skillId, progress: {}, now: at, seed })
+  const plan = options.plan ?? composed?.plan ?? []
+  const difficulty = options.difficulty ?? composed?.startDifficulty ?? 2
+  const first = plan[0]
+  if (!first) throw new Error('Cannot start a lesson with an empty plan')
   return {
     ...freshQuestionState,
     skillId,
+    mode,
     seed,
     plan,
     index: 0,
-    question: questionAt(skillId, first, difficulty),
+    question: questionAt(first, difficulty),
     guided: first.guided,
     difficulty,
     firstTryStreak: 0,
@@ -132,6 +132,7 @@ function resultOf(
   at: number,
 ): QuestionResult {
   return {
+    skillId: state.question.skillId,
     questionId: state.question.id,
     kind: state.question.kind,
     difficulty: state.question.difficulty,
@@ -209,7 +210,7 @@ function onContinue(state: LessonState, at: number): LessonState {
     ...freshQuestionState,
     plan,
     index,
-    question: questionAt(state.skillId, next, state.difficulty),
+    question: questionAt(next, state.difficulty),
     guided: next.guided,
   }
 }

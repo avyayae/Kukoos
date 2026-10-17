@@ -4,9 +4,9 @@ import { Button3D, Kukoos } from '@/ui'
 import { t } from './copy'
 import { LessonScreen } from './LessonScreen'
 
-function parseDifficulty(raw: string | null): Difficulty {
+function parseDifficulty(raw: string | null): Difficulty | undefined {
   const d = Number(raw)
-  return d >= 1 && d <= 5 && Number.isInteger(d) ? (d as Difficulty) : 2
+  return raw !== null && d >= 1 && d <= 5 && Number.isInteger(d) ? (d as Difficulty) : undefined
 }
 
 function parseSeed(raw: string | null): number {
@@ -20,6 +20,7 @@ export function LessonRoute() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const exit = () => navigate('/practice')
+  const difficulty = parseDifficulty(params.get('d'))
 
   if (!SKILLS.some((s) => s.id === skillId)) {
     return (
@@ -40,7 +41,7 @@ export function LessonRoute() {
       key={`${skillId}:${params.get('seed') ?? ''}`}
       skillId={skillId}
       seed={parseSeed(params.get('seed'))}
-      startDifficulty={parseDifficulty(params.get('d'))}
+      {...(difficulty ? { startDifficulty: difficulty } : {})}
       onExit={exit}
     />
   )

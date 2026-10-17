@@ -50,13 +50,18 @@ const FEEDBACK: Record<string, FeedbackState> = {
 export function LessonScreen({
   skillId,
   seed,
-  startDifficulty = 2,
+  startDifficulty,
   onExit,
   now = Date.now,
 }: LessonScreenProps) {
   const skill = getSkill(skillId)
   const [state, dispatch] = useReducer(lessonReducer, undefined, () =>
-    startLesson({ skillId, seed, difficulty: startDifficulty, at: now() }),
+    startLesson({
+      skillId,
+      seed,
+      at: now(),
+      ...(startDifficulty ? { difficulty: startDifficulty } : {}),
+    }),
   )
   const [response, setResponse] = useState<Response | null>(null)
   const [bubble, setBubble] = useState<string | null>(null)
