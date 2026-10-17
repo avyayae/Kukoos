@@ -12,7 +12,9 @@ async function ruleIdsFor(code: string, filePath: string) {
 }
 
 // Constitution §3.2 / §3.3, spec 001 AC3
-describe('domain purity lint rules', () => {
+// ESLint's first lint loads every plugin (incl. the React Compiler rules): slow under a
+// parallel test run, so this file gets a generous timeout.
+describe('domain purity lint rules', { timeout: 30_000 }, () => {
   it('rejects React imports and Math.random inside src/domain', async () => {
     const code = "import React from 'react'\nexport const x = Math.random() + (React ? 1 : 0)\n"
     const ids = await ruleIdsFor(code, 'src/domain/__fixture__.ts')

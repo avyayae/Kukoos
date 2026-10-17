@@ -1,4 +1,5 @@
 import type { Blocks } from '@/domain'
+import { placeWord } from '@/domain/speech'
 
 /** Base-ten blocks scratchpad (spec 005 AC8). Scratch only — the typed answer is graded. */
 export type Place = 'hundreds' | 'tens' | 'ones'
@@ -79,10 +80,12 @@ export function apply(s: BlocksState, tool: Tool, place: Place): BlocksResult {
 
 /** "2 tens 16 ones" — what's left on the mat. */
 export function blocksLabel(s: BlocksState, showHundreds: boolean): string {
-  const parts = [
-    ...(showHundreds ? [`${available(s, 'hundreds')} hundreds`] : []),
-    `${available(s, 'tens')} tens`,
-    `${available(s, 'ones')} ones`,
-  ]
-  return parts.join(' ')
+  const places: Place[] = showHundreds ? ['hundreds', 'tens', 'ones'] : ['tens', 'ones']
+  return places.map((p) => countLabel(s, p)).join(' ')
+}
+
+/** "1 ten", "16 ones". */
+export function countLabel(s: BlocksState, place: Place): string {
+  const n = available(s, place)
+  return `${n} ${placeWord(place, n)}`
 }

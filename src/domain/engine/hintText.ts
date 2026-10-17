@@ -43,7 +43,7 @@ export function hintFor(q: Question, result: CheckResult | null): Message {
   }
   const textHint = q.hints.find((h) => h.type === 'text')
   if (textHint) return msg(`hint:${textHint.key}`)
-  if (q.arithmetic) return msg('hint:column')
+  if (q.arithmetic) return msg(q.arithmetic.op === '+' ? 'hint:column.add' : 'hint:column.sub')
   return msg('hint:default')
 }
 

@@ -1,5 +1,5 @@
 import { usePrefersReducedMotion } from '@/ui/usePrefersReducedMotion'
-import { available, type BlocksState, type Place, type Tool } from './blocksScratch'
+import { available, type BlocksState, countLabel, type Place, type Tool } from './blocksScratch'
 
 const SHAPE: Record<Place, string> = { hundreds: 'flat', tens: 'rod', ones: 'cube' }
 const ACTION: Record<Tool, string> = {
@@ -54,9 +54,7 @@ export function BaseTenBlocks({ state, tool, showHundreds, locked, onTap }: Base
                 )
               })}
             </span>
-            <span className="blocks__count num">
-              {left} {place}
-            </span>
+            <span className="blocks__count num">{countLabel(state, place)}</span>
           </button>
         )
       })}

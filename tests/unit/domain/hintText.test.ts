@@ -61,7 +61,7 @@ describe('hintFor (targeted hints)', () => {
     expect(hintFor(withText as Question, { correct: false }).key).toBe(
       'hint:pv.compare.startWithHundreds',
     )
-    expect(hintFor(q(36, 28, '-'), null).key).toBe('hint:column')
+    expect(hintFor(q(36, 28, '-'), null).key).toBe('hint:column.sub')
     const plain = { ...q(36, 28, '-') }
     delete plain.arithmetic
     expect(hintFor(plain, null).key).toBe('hint:default')
@@ -70,7 +70,7 @@ describe('hintFor (targeted hints)', () => {
   it('falls back when a targeted hint has no column to point at', () => {
     // A forgot-carry diagnosis on a problem with no carry can't name a column.
     expect(hintFor(q(32, 41, '+'), { correct: false, misconception: 'add.forgotCarry' }).key).toBe(
-      'hint:column',
+      'hint:column.add',
     )
   })
 })

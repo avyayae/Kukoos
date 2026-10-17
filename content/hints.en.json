@@ -17,7 +17,8 @@
     "hint:pv.expandedForm.addTheParts": "Put the hundreds, tens and ones together!",
     "hint:pv.compare.startWithHundreds": "Compare the hundreds first!",
     "hint:pv.plus10plus100.onlyOnePlaceChanges": "Only one place changes. Which one?",
-    "hint:column": "Start with the ones. Trade if you need to!",
+    "hint:column.add": "Start with the ones. More than 9? Carry the ten!",
+    "hint:column.sub": "Start with the ones. Trade a ten if you need to!",
     "hint:default": "Let's look again together.",
 
     "guided:sub.trade": "{place}: {a} − {b}. Can we? Trade a ten first!",

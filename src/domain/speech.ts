@@ -55,6 +55,14 @@ export function numberToWords(n: number): string {
   return rest === 0 ? hundreds : `${hundreds} ${below100(rest)}`
 }
 
+export type PlaceWord = 'hundreds' | 'tens' | 'ones'
+const SINGULAR: Record<PlaceWord, string> = { hundreds: 'hundred', tens: 'ten', ones: 'one' }
+
+/** "1 ten", "2 tens", "? tens": singular only for exactly one. */
+export function placeWord(place: PlaceWord, count: number | null): string {
+  return count === 1 ? SINGULAR[place] : place
+}
+
 export const OP_SYMBOL: Record<Op, string> = { '+': '+', '-': '−' }
 const OP_WORD: Record<Op, string> = { '+': 'plus', '-': 'minus' }
 

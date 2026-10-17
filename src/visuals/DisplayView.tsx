@@ -1,5 +1,5 @@
 import type { Display, Equation, Slot } from '@/domain'
-import { OP_SYMBOL } from '@/domain/speech'
+import { OP_SYMBOL, type PlaceWord, placeWord } from '@/domain/speech'
 
 export type SlotState = 'default' | 'correct' | 'incorrect'
 
@@ -45,11 +45,11 @@ function EquationView({ equation, value, state }: { equation: Equation } & SlotP
 type Units = Extract<Display, { type: 'units' }>
 
 function UnitsView({ units, value, state }: { units: Units } & SlotProps) {
-  const part = (slot: Slot | undefined, name: string) =>
+  const part = (slot: Slot | undefined, place: PlaceWord) =>
     slot === undefined ? null : (
       <span className="units__part">
         <Num slot={slot} value={value} state={state} />
-        <span className="units__name">{name}</span>
+        <span className="units__name">{placeWord(place, slot)}</span>
       </span>
     )
   const parts = (

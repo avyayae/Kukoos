@@ -1,6 +1,12 @@
 import { buildChoices, pickDistractors } from '../arithmetic/distractors'
 import type { Rng } from '../rng'
-import { equationToSpeech, equationToText, numberToWords } from '../speech'
+import {
+  equationToSpeech,
+  equationToText,
+  numberToWords,
+  type PlaceWord,
+  placeWord,
+} from '../speech'
 import type {
   ArithmeticMeta,
   Comparison,
@@ -28,23 +34,23 @@ const BASE_TEN: Hint = { type: 'visual', visual: 'baseTen' }
 
 type Units = Extract<Display, { type: 'units' }>
 
+function unitsParts(u: Units, show: (v: Slot) => string): string[] {
+  const part = (v: Slot, place: PlaceWord) => `${show(v)} ${placeWord(place, v)}`
+  return [
+    ...(u.hundreds === undefined ? [] : [part(u.hundreds, 'hundreds')]),
+    part(u.tens, 'tens'),
+    part(u.ones, 'ones'),
+  ]
+}
+
 function unitsText(u: Units): string {
-  const s = (v: Slot) => (v === null ? '?' : String(v))
-  const parts = [
-    ...(u.hundreds === undefined ? [] : [`${s(u.hundreds)} hundreds`]),
-    `${s(u.tens)} tens`,
-    `${s(u.ones)} ones`,
-  ].join(' ')
+  const parts = unitsParts(u, (v) => (v === null ? '?' : String(v))).join(' ')
   return u.total === null ? `${parts} = ?` : `${u.total} = ${parts}`
 }
 
 function unitsSpeech(u: Units): string {
   const w = (v: Slot) => (v === null ? 'how many' : numberToWords(v))
-  const parts = [
-    ...(u.hundreds === undefined ? [] : [`${w(u.hundreds)} hundreds`]),
-    `${w(u.tens)} tens`,
-    `${w(u.ones)} ones`,
-  ].join(', ')
+  const parts = unitsParts(u, w).join(', ')
   return u.total === null ? `${parts}. What number is that?` : `${w(u.total)} is ${parts}?`
 }
 

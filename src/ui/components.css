@@ -2,7 +2,8 @@
 
 @layer components {
   /* ---------------------------------------------------------- icon button */
-  .icon-btn {
+  /* Doubled class: must beat .btn3d's padding, which is declared later in the same layer. */
+  .btn3d.icon-btn {
     padding-inline: 0;
     width: var(--btn-height);
   }
@@ -44,7 +45,7 @@
     max-width: var(--mq-keypad-max);
     margin-inline: auto;
   }
-  .keypad__key {
+  .btn3d.keypad__key {
     --btn-height: var(--mq-tap-xl);
     font-family: var(--mq-font-display);
     font-size: var(--mq-text-xl);
@@ -499,6 +500,7 @@
   .block {
     position: relative;
     display: block;
+    flex-shrink: 0;
     border-radius: calc(var(--mq-block) / 4);
   }
   .block--cube {
@@ -589,6 +591,62 @@
     margin: 0;
     padding-left: var(--mq-space-6);
     font-size: var(--mq-text-base);
+  }
+
+  /* Compact lessons for phones (≤ 860px tall): everything must fit with no overlap.
+     Kid tap targets stay ≥ 56px (skill rule 1); only spacing, Kukoos and text shrink. */
+  @media (max-height: 860px) {
+    .lesson.screen {
+      gap: var(--mq-space-2);
+      padding-top: max(var(--mq-space-3), env(safe-area-inset-top));
+      padding-bottom: max(var(--mq-space-3), env(safe-area-inset-bottom));
+    }
+    .lesson .qa {
+      gap: var(--mq-space-2);
+    }
+    .lesson .keypad {
+      gap: var(--mq-space-2);
+    }
+    .lesson .btn3d.keypad__key,
+    .lesson__check .btn3d {
+      --btn-height: var(--mq-tap-kid);
+      --btn-lip: var(--mq-lip);
+    }
+    .lesson__check {
+      min-height: calc(var(--mq-tap-kid) + var(--mq-lip));
+    }
+    .lesson__kukoos .kukoos svg {
+      width: var(--mq-tap-parent);
+      height: var(--mq-tap-parent);
+    }
+    .lesson .bubble {
+      padding: var(--mq-space-2) var(--mq-space-3);
+      font-size: var(--mq-text-base);
+    }
+    .lesson .cg__mark,
+    .lesson .cg__carry {
+      height: calc(var(--mq-cell-small) * 0.8);
+    }
+    .lesson {
+      --mq-block: 8px;
+    }
+    .lesson .blocks__place {
+      min-height: calc(var(--mq-cell) * 1.8);
+      padding: var(--mq-space-1);
+    }
+    /* Hundreds stack like a pile of flats so 9 of them stay short on phones. */
+    .lesson .blocks__place--hundreds .blocks__pile {
+      flex-direction: column-reverse;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .lesson .blocks__place--hundreds .block--flat + .block--flat {
+      margin-bottom: calc(var(--mq-block) * -4);
+    }
+    .lesson .qa__main--stack .display {
+      font-size: var(--mq-text-xl);
+    }
   }
 
   /* ---------------------------------------------------------- lesson complete stats */
