@@ -30,9 +30,9 @@ export function KukoosPlaceholder({ size = 160, className }: KukoosPlaceholderPr
       <ellipse cx="100" cy="108" rx="70" ry="68" fill="var(--mq-kukoos-body)" />
       <ellipse
         cx="100"
-        cy="122"
-        rx="70"
-        ry="54"
+        cy="124"
+        rx="64"
+        ry="48"
         fill="var(--mq-kukoos-body-shade)"
         opacity="0.35"
       />
