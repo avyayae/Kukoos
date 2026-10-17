@@ -52,14 +52,14 @@ describe('Lesson route', () => {
     expect(router.state.location.pathname).toBe('/practice')
   })
 
-  it('is reproducible with ?seed', () => {
+  it('is reproducible with ?seed', async () => {
     renderAt('/lesson/sub.within100.regroup?seed=42&d=3')
-    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0')
+    expect(await screen.findByRole('progressbar')).toHaveAttribute('aria-valuenow', '0')
   })
 
   it('leaving a lesson returns to the picker', async () => {
     const router = renderAt('/lesson/add.within20?seed=1')
-    await userEvent.click(screen.getByRole('button', { name: 'Leave lesson' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Leave lesson' }))
     await userEvent.click(screen.getByRole('button', { name: 'Leave' }))
     expect(router.state.location.pathname).toBe('/practice')
   })
