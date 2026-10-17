@@ -50,6 +50,26 @@ export default defineConfig([
     languageOptions: { globals: globals.node },
   },
 
+  // Storage boundary: only src/data talks to IndexedDB (spec 004 AC12).
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/data/**', 'src/domain/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['dexie', 'dexie/*', 'dexie-react-hooks'],
+              message:
+                'Spec 004: use the repositories from @/data (useRepos / data hooks), not Dexie directly.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Domain purity — enforced, not remembered
   {
     files: ['src/domain/**/*.{ts,tsx}'],

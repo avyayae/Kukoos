@@ -4,10 +4,11 @@ import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { routes } from '@/app/routes'
 import { SKILLS, WORLDS } from '@/domain'
+import { withData } from '../withData'
 
 const renderAt = (path: string) => {
   const router = createMemoryRouter(routes, { initialEntries: [path] })
-  render(<RouterProvider router={router} />)
+  render(withData(<RouterProvider router={router} />))
   return router
 }
 

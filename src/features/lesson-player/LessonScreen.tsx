@@ -11,6 +11,7 @@ import {
   solutionFor,
   startLesson,
 } from '@/domain'
+import { newId, useCurrentProfile, useRepos } from '@/data'
 import { RENDERERS } from '@/question-kinds/registry'
 import type { FeedbackState } from '@/question-kinds/types'
 import {
@@ -63,6 +64,28 @@ export function LessonScreen({
   const [autoRead, setAutoRead] = useState(true)
   const [showMe, setShowMe] = useState(false)
   const [confirmExit, setConfirmExit] = useState(false)
+
+  // --- saving (spec 004): one stable id per lesson makes saving idempotent
+  const repos = useRepos()
+  const profile = useCurrentProfile()
+  const [lessonId] = useState(newId)
+  const saveLesson = (s: typeof state) => {
+    if (!profile) return Promise.resolve()
+    return repos.lessons
+      .save(s, { lessonId, profileId: profile.id })
+      .then(() => repos.storage.requestPersistence())
+      .then(() => undefined)
+      .catch(() => undefined)
+  }
+  const saveOnComplete = useEffectEvent(() => void saveLesson(state))
+  useEffect(() => {
+    if (state.phase === 'complete') saveOnComplete()
+  }, [state.phase, profile])
+  const leave = () => {
+    // Early exit keeps answered questions (saved as completed: false).
+    void saveLesson(state)
+    onExit()
+  }
 
   const q = state.question
   const { phase } = state
@@ -246,7 +269,7 @@ export function LessonScreen({
         title={t('lesson:leaveTitle')}
         confirmLabel="Leave"
         cancelLabel="Stay"
-        onConfirm={onExit}
+        onConfirm={leave}
         onCancel={() => setConfirmExit(false)}
       />
     </main>

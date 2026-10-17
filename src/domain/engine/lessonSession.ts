@@ -34,6 +34,8 @@ export interface QuestionResult {
   solved: boolean
   attempts: number
   misconceptions: readonly MisconceptionKey[]
+  /** When the question was finished (ms). */
+  at: number
 }
 
 export type LessonPhase = 'answering' | 'correct' | 'notYet' | 'solution' | 'complete'
@@ -123,7 +125,12 @@ export function startLesson({
   }
 }
 
-function resultOf(state: LessonState, solved: boolean, attempts: number): QuestionResult {
+function resultOf(
+  state: LessonState,
+  solved: boolean,
+  attempts: number,
+  at: number,
+): QuestionResult {
   return {
     questionId: state.question.id,
     kind: state.question.kind,
@@ -132,10 +139,11 @@ function resultOf(state: LessonState, solved: boolean, attempts: number): Questi
     solved,
     attempts,
     misconceptions: state.misconceptions,
+    at,
   }
 }
 
-function onAnswer(state: LessonState, response: Response): LessonState {
+function onAnswer(state: LessonState, response: Response, at: number): LessonState {
   const result = check(state.question, response)
 
   if (result.correct) {
@@ -158,7 +166,7 @@ function onAnswer(state: LessonState, response: Response): LessonState {
       firstTryStreak,
       combo,
       bestCombo,
-      results: [...state.results, resultOf(state, true, state.attempts + 1)],
+      results: [...state.results, resultOf(state, true, state.attempts + 1, at)],
     }
   }
 
@@ -180,7 +188,7 @@ function onAnswer(state: LessonState, response: Response): LessonState {
   return {
     ...missed,
     phase: 'solution',
-    results: [...state.results, resultOf(missed, false, attempts)],
+    results: [...state.results, resultOf(missed, false, attempts, at)],
   }
 }
 
@@ -210,7 +218,7 @@ function onContinue(state: LessonState, at: number): LessonState {
 export function lessonReducer(state: LessonState, event: LessonEvent): LessonState {
   switch (event.type) {
     case 'answer':
-      return state.phase === 'answering' ? onAnswer(state, event.response) : state
+      return state.phase === 'answering' ? onAnswer(state, event.response, event.at) : state
     case 'retry':
       return state.phase === 'notYet' ? { ...state, phase: 'answering' } : state
     case 'continue':
