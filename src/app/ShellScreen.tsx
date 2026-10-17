@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router'
 import { Button3D, KukoosPlaceholder } from '@/ui'
 
-/** F001 placeholder home screen. Replaced by onboarding / world map in later features. */
+/** Home screen. START opens the mission picker (replaced by onboarding / world map later). */
 export function ShellScreen() {
+  const navigate = useNavigate()
   return (
     <main className="screen flex flex-col items-center justify-center gap-6 text-center">
       <KukoosPlaceholder size={168} />
@@ -12,7 +14,7 @@ export function ShellScreen() {
         <p className="text-kid-lg text-ink-muted">From Earth to space! 🚀</p>
       </div>
       <div className="w-full max-w-sm">
-        <Button3D variant="primary" size="xl" block>
+        <Button3D variant="primary" size="xl" block onClick={() => navigate('/practice')}>
           Start
         </Button3D>
       </div>

@@ -625,6 +625,94 @@
     font-size: var(--mq-text-base);
   }
 
+  /* ---------------------------------------------------------- practice picker */
+  .practice__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-6);
+    max-width: var(--mq-content-max);
+    margin-inline: auto;
+  }
+  a.btn3d {
+    text-decoration: none;
+  }
+  .world {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-3);
+    padding: var(--mq-space-4);
+    border-radius: var(--mq-radius-card);
+  }
+  .world--jungle {
+    background: var(--mq-world-jungle);
+  }
+  .world--savanna {
+    background: var(--mq-world-savanna);
+  }
+  .world--ocean {
+    background: var(--mq-world-ocean);
+  }
+  .world--moon,
+  .world--mars {
+    background: var(--mq-world-space);
+    color: var(--mq-on-strong);
+  }
+  .world__title {
+    margin: 0;
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+    color: var(--mq-ink);
+  }
+  .world--moon .world__title,
+  .world--mars .world__title {
+    color: var(--mq-on-strong);
+  }
+  .world__skills {
+    display: grid;
+    gap: var(--mq-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .skill-card {
+    display: flex;
+    align-items: center;
+    gap: var(--mq-space-3);
+    min-height: var(--mq-tap-xl);
+    padding: var(--mq-space-2) var(--mq-space-4);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-card);
+    background: var(--mq-surface);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-border);
+    color: var(--mq-ink);
+    font-size: var(--mq-text-lg);
+    text-decoration: none;
+    transition: transform var(--mq-dur-press) var(--mq-ease-out);
+  }
+  .skill-card:active {
+    transform: translateY(var(--mq-lip));
+    box-shadow: none;
+  }
+  .skill-card__order {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: var(--mq-tap-parent);
+    height: var(--mq-tap-parent);
+    border-radius: var(--mq-radius-pill);
+    background: var(--mq-primary);
+    color: var(--mq-on-strong);
+  }
+  .skill-card__title {
+    flex: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .skill-card:active {
+      transform: none;
+    }
+  }
+
   /* ---------------------------------------------------------- stat pill */
   .pill {
     display: inline-flex;
