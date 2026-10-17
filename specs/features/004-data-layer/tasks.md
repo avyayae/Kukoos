@@ -12,4 +12,4 @@ Branch: `feature/004-data-layer`. Run `npm run verify` before ticking. Load `mat
 - [x] **T8 — Wire into the app** · App provider; LessonScreen saves on complete/early exit; picker shows best score / "New!". · *done when:* component tests pass (AC3/AC4 integration, AC6 UI).
 - [x] **T9 — Backup screen** · `/backup` + footer link (mathquest-ui; parent-zone styling: 48px targets, calmer copy). · *done when:* component tests for export/import/errors/status pass.
 - [x] **T10 — E2E** · `progress.spec.ts`: reload keeps the score; export → clear → import round trip; no console errors. · *done when:* AC11 passes on 3 devices.
-- [ ] **T11 — Wrap-up** · deviations, run locally, push the branch, open a PR, CI green.
+- [x] **T11 — Wrap-up** · deviations, run locally, push the branch, open a PR, CI green. *(PR #4, green: https://github.com/avyayae/Kukoos/actions/runs/39051010368)*

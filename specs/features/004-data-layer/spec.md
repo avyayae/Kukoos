@@ -1,6 +1,6 @@
 # Feature 004 — Data Layer: Save Progress (local-first)
 
-**Status:** Implemented. All ACs are verified locally; CI is pending on the PR.  ·  **Constitution check:** §1.5 privacy (data stays on the device), §3.5 local-first and sync-ready (repositories, `id/profileId/updatedAt/version`, outbox), §3.6 offline always works, §3.2 domain stays pure (storage lives in `src/data`)
+**Status:** Done. All ACs verified, and CI is green on PR #4.  ·  **Constitution check:** §1.5 privacy (data stays on the device), §3.5 local-first and sync-ready (repositories, `id/profileId/updatedAt/version`, outbox), §3.6 offline always works, §3.2 domain stays pure (storage lives in `src/data`)
 
 ## Why
 Right now every lesson disappears when the tab closes. Before mastery (F06), rewards and streaks (F08) and the parent dashboard (F11) can exist, the app needs a **durable, private record of what the kid did**. That record must be:
