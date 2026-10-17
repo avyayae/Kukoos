@@ -65,6 +65,11 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/main.tsx', 'src/**/*.d.ts'],
+      reporter: ['text-summary', 'html'],
+      thresholds: {
+        // Spec 003 AC12: the arithmetic engine is fully covered.
+        'src/domain/arithmetic/**': { lines: 100, functions: 100, statements: 100 },
+      },
     },
   },
 })

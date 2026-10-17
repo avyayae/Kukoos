@@ -63,15 +63,18 @@ Each 🎯 skill moves through three phases as mastery grows:
 2. **Guided column** (`column` guided, 0.3–0.6): Kukoos highlights each column and asks "Do we need to trade?"
 3. **Free column / numeric** (> 0.6): solve independently. The blocks visual is available as a hint.
 
-## Misconception catalog (generators must detect these)
-| Key | Applies to | Detection rule |
-|---|---|---|
-| `sub.smallerFromLarger` | all borrow skills | answer equals digit-wise \|a−b\| with no borrowing |
-| `sub.borrowNoDecrement` | borrow skills | borrowed but the next column wasn't reduced |
-| `sub.acrossZeroSkip` | `acrossZero` | treated 0 as borrowable without opening the hundred |
-| `add.forgotCarry` | carry skills | answer equals digit-wise sum mod 10 with no carry |
-| `add.carryWrongColumn` | carry skills | carry added to the wrong column |
-| `offByOne` / `offByTen` | all | \|answer − correct\| ∈ {1, 10, 100} |
+## Misconception catalog
+Implemented in `src/domain/arithmetic/misconceptions.ts`. Each bug is *simulated*, and a wrong answer that equals a simulated answer is that misconception. The authoritative table, with priority rules and known collisions, is in `specs/features/003-domain-core/spec.md`.
+
+| Key | Applies to | Simulated answer | Example (correct) |
+|---|---|---|---|
+| `sub.smallerFromLarger` | subtraction | digit-wise \|aᵢ − bᵢ\|, no borrowing | 36 − 28 → 12 (8) |
+| `sub.borrowNoDecrement` | subtraction | borrows 10 but never reduces the next column | 52 − 28 → 34 (24) |
+| `sub.acrossZeroSkip` | borrowing across a 0 | the lending 0 becomes 10 instead of 9 | 403 − 178 → 235 (225) |
+| `add.forgotCarry` | addition | digit-wise sum mod 10, carries dropped | 47 + 38 → 75 (85) |
+| `add.wroteWholeSum` | addition | writes each column's full sum side by side | 47 + 38 → 715 (85) |
+| `wrongOperation` | add & sub | added instead of subtracted, or vice versa | 36 − 28 → 64 (8) |
+| `offByOne` / `offByTen` | all numeric | \|answer − correct\| = 1, or ∈ {10, 100} | — |
 
 ## Mastery rules (applies to all skills)
 - `mastery ∈ [0,1]`, updated after each attempt: `m ← m + α·(score − m)` with α = 0.15; score = 1 (first try), 0.5 (correct after hint), 0 (wrong). Weighted up for higher difficulty.
