@@ -5,6 +5,7 @@ import {
   DataProvider,
   type Repositories,
 } from '@/data'
+import { GrownUpGateProvider } from '@/features/grownups/GrownUpGate'
 import { ReadAloudProvider } from '@/ui'
 import { freshDb } from './data/testDb'
 
@@ -18,7 +19,9 @@ export function testStore() {
 export function withData(ui: ReactNode, repos: Repositories = createNullRepositories()) {
   return (
     <DataProvider repos={repos}>
-      <ReadAloudProvider>{ui}</ReadAloudProvider>
+      <ReadAloudProvider>
+        <GrownUpGateProvider>{ui}</GrownUpGateProvider>
+      </ReadAloudProvider>
     </DataProvider>
   )
 }

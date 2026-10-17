@@ -2,7 +2,14 @@ import { useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { clockNow } from '@/app/clock'
 import { useProgress } from '@/data'
-import { composeLesson, composeReview, type Difficulty, SKILLS } from '@/domain'
+import {
+  composeBoss,
+  composeLesson,
+  composeReview,
+  type Difficulty,
+  SKILLS,
+  WORLDS,
+} from '@/domain'
 import { Button3D, Kukoos } from '@/ui'
 import { t } from './copy'
 import { LessonScreen } from './LessonScreen'
@@ -34,25 +41,44 @@ function Message({ text, onBack }: { text: string; onBack: () => void }) {
 }
 
 /**
- * /lesson/:skillId (or /lesson/review) builds the lesson from saved progress (spec 006):
- * kinds by mastery, due reviews, stretch. `?seed=` makes it reproducible, `?d=` overrides
- * the start difficulty, and `?now=` sets the clock in dev/e2e builds.
+ * /lesson/:skillId, /lesson/review and /lesson/boss/:worldId build the lesson from saved
+ * progress (specs 006, 007). `?seed=` makes it reproducible, `?d=` overrides the start
+ * difficulty, and `?now=` sets the clock in dev/e2e builds. Exits return to the map.
  */
 export function LessonRoute() {
-  const { skillId = '' } = useParams()
+  const { skillId = '', worldId = '' } = useParams()
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const loaded = useProgress()
   const [seed] = useState(() => parseSeed(params.get('seed')))
-  const exit = () => navigate('/practice')
+  // Keep dev/e2e test-clock params on the way back to the map.
+  const exit = () => navigate({ pathname: '/', search: params.toString() })
 
   const isReview = skillId === REVIEW_ROUTE_ID
-  if (!isReview && !SKILLS.some((s) => s.id === skillId)) {
+  const bossWorld = WORLDS.find((w) => w.id === worldId)
+  if (worldId && !bossWorld) return <Message text={t('lesson:notFound')} onBack={exit} />
+  if (!bossWorld && !isReview && !SKILLS.some((s) => s.id === skillId)) {
     return <Message text={t('lesson:notFound')} onBack={exit} />
   }
   // The plan depends on progress, so wait for it (a few ms) before starting.
   if (!loaded) return null
   const now = clockNow(params)
+
+  if (bossWorld) {
+    const plan = composeBoss(bossWorld.id, seed)
+    return (
+      <LessonScreen
+        key={`boss:${bossWorld.id}:${seed}`}
+        skillId={plan[0]?.skillId ?? ''}
+        seed={seed}
+        plan={plan}
+        mode="boss"
+        worldId={bossWorld.id}
+        startDifficulty={3}
+        onExit={exit}
+      />
+    )
+  }
 
   if (isReview) {
     const plan = composeReview(loaded.progress, now, seed)

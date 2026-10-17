@@ -11,6 +11,7 @@ import {
   type Response,
   type SkillId,
   solutionFor,
+  type WorldId,
   startLesson,
 } from '@/domain'
 import { newId, useCurrentProfile, useRepos } from '@/data'
@@ -37,6 +38,8 @@ interface LessonScreenProps {
   /** A composed plan (spec 006); without one, the new-skill plan is used. */
   plan?: readonly PlannedQuestion[]
   mode?: LessonMode
+  /** Boss challenges (spec 007). */
+  worldId?: WorldId
   onExit: () => void
   /** Injectable clock for tests. */
   now?: () => number
@@ -59,6 +62,7 @@ export function LessonScreen({
   startDifficulty,
   plan,
   mode,
+  worldId,
   onExit,
   now = Date.now,
 }: LessonScreenProps) {
@@ -70,6 +74,7 @@ export function LessonScreen({
       ...(startDifficulty ? { difficulty: startDifficulty } : {}),
       ...(plan ? { plan } : {}),
       ...(mode ? { mode } : {}),
+      ...(worldId ? { worldId } : {}),
     }),
   )
   const [response, setResponse] = useState<Response | null>(null)

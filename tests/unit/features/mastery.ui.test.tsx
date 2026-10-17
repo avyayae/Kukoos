@@ -1,17 +1,10 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it } from 'vitest'
-import { routes } from '@/app/routes'
 import type { Repositories } from '@/data'
 import { DAY_MS } from '@/domain'
-import { testStore, withData } from '../withData'
-
-const renderAt = (path: string, repos: Repositories) => {
-  const router = createMemoryRouter(routes, { initialEntries: [path] })
-  render(withData(<RouterProvider router={router} />, repos))
-  return router
-}
+import { testStore } from '../withData'
+import { renderGrownUp } from './nav'
 
 async function preMasterJungle(repos: Repositories) {
   const profile = await repos.profiles.ensureCurrent()
@@ -22,7 +15,7 @@ describe('picker: crowns and review (AC9)', () => {
   it('shows 👑 on crowned skills and no review card when nothing is due', async () => {
     const { repos } = testStore()
     await preMasterJungle(repos)
-    renderAt('/practice', repos)
+    await renderGrownUp('/grown-ups/missions', repos)
     const card = screen.getByRole('link', { name: /Add within 20/ })
     await waitFor(() =>
       expect(within(card).getByRole('img', { name: 'Mastered' })).toBeInTheDocument(),
@@ -37,7 +30,7 @@ describe('picker: crowns and review (AC9)', () => {
     const { repos } = testStore()
     await preMasterJungle(repos)
     const later = Date.now() + 5 * DAY_MS
-    const router = renderAt(`/practice?now=${later}`, repos)
+    const router = await renderGrownUp(`/grown-ups/missions?now=${later}`, repos)
     const review = await screen.findByTestId('review-card')
     expect(review).toHaveTextContent('4 skills to practise again')
     await userEvent.click(review)
@@ -64,7 +57,7 @@ describe('picker: crowns and review (AC9)', () => {
       updatedAt: 1,
       version: 1,
     })
-    renderAt('/practice', repos)
+    await renderGrownUp('/grown-ups/missions', repos)
     const card = screen.getByRole('link', { name: /Add within 20/ })
     await waitFor(() =>
       expect(card.querySelector('.skill-card__ring')?.getAttribute('style')).toContain('--p: 42'),
@@ -75,7 +68,7 @@ describe('picker: crowns and review (AC9)', () => {
 describe('grown-ups: starting point (AC10)', () => {
   it('lists missions in path order and pre-masters earlier ones after confirming', async () => {
     const { db, repos } = testStore()
-    renderAt('/grown-ups', repos)
+    await renderGrownUp('/grown-ups', repos)
     const select = await screen.findByRole('combobox', { name: 'Start at' })
     const options = within(select)
       .getAllByRole('option')
@@ -103,7 +96,7 @@ describe('grown-ups: starting point (AC10)', () => {
 
   it('the first mission has nothing before it', async () => {
     const { repos } = testStore()
-    renderAt('/grown-ups', repos)
+    await renderGrownUp('/grown-ups', repos)
     await userEvent.selectOptions(
       await screen.findByRole('combobox', { name: 'Start at' }),
       'add.within20',
@@ -113,7 +106,7 @@ describe('grown-ups: starting point (AC10)', () => {
 
   it('/backup redirects to /grown-ups', async () => {
     const { repos } = testStore()
-    const router = renderAt('/backup', repos)
+    const router = await renderGrownUp('/backup', repos)
     expect(await screen.findByRole('heading', { name: 'Grown-ups' })).toBeInTheDocument()
     expect(router.state.location.pathname).toBe('/grown-ups')
   })

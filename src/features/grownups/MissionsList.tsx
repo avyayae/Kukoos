@@ -3,16 +3,14 @@ import { Link, useSearchParams } from 'react-router'
 import { clockNow } from '@/app/clock'
 import { useBestScores, useProgress } from '@/data'
 import { dueSkills, skillsInWorld, WORLDS } from '@/domain'
-import { Kukoos } from '@/ui'
 
 const WORLD_EMOJI = { jungle: '🐒', savanna: '🦁', ocean: '🐠', moon: '🌙', mars: '🔴' } as const
 
 /**
- * Temporary mission picker (spec 005 AC1): every skill grouped by world in path order, with
- * the best saved score (spec 004), crowns, mastery rings and the Review mission (spec 006).
- * Replaced by the world map in F07.
+ * All missions, open-access (grown-ups only since spec 007): every skill grouped by world in
+ * path order, with best score, crowns, mastery rings and the Review mission.
  */
-export function PracticeScreen() {
+export function MissionsList() {
   const [params] = useSearchParams()
   const best = useBestScores()
   const loaded = useProgress()
@@ -25,12 +23,10 @@ export function PracticeScreen() {
     <main className="screen practice">
       <div className="practice__inner">
         <header className="flex items-center gap-3">
-          <Link to="/" className="btn3d btn3d--ghost btn3d--lg icon-btn" aria-label="Back home">
+          <Link to="/grown-ups" className="btn3d btn3d--ghost btn3d--lg icon-btn" aria-label="Back">
             ←
           </Link>
-          <Kukoos mood="idle" size={56}>
-            Pick a mission!
-          </Kukoos>
+          <h1 className="grownup__title">All missions</h1>
         </header>
 
         {due.length > 0 && (
@@ -102,11 +98,6 @@ export function PracticeScreen() {
             </ul>
           </section>
         ))}
-        <footer className="practice__footer">
-          <Link to="/grown-ups" className="practice__grownups">
-            For grown-ups: starting point &amp; backup
-          </Link>
-        </footer>
       </div>
     </main>
   )
