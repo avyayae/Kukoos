@@ -1,6 +1,6 @@
 # Feature 006 — Mastery, Spaced Review & Adaptive Lessons
 
-**Status:** Draft (awaiting review)  ·  **Constitution check:** §2.1 mastery-based progression, §2.2 spaced review, §2.3 adaptive difficulty (~80% success), §2.4 concrete → pictorial → abstract (kind chosen by mastery), §3.2 pure domain (all rules in `src/domain/engine`), §3.5 sync-ready (`skillProgress` rows via the outbox)
+**Status:** Approved (2026-10-17)  ·  **Constitution check:** §2.1 mastery-based progression, §2.2 spaced review, §2.3 adaptive difficulty (~80% success), §2.4 concrete → pictorial → abstract (kind chosen by mastery), §3.2 pure domain (all rules in `src/domain/engine`), §3.5 sync-ready (`skillProgress` rows via the outbox)
 
 ## Why
 Today every lesson for a skill looks the same: blocks, then guided columns, then free practice, starting at difficulty 2, however well she already knows it. And nothing ever says "you've got this one". F06 makes the app **learn the learner**:
@@ -73,7 +73,7 @@ Today every lesson for a skill looks the same: blocks, then guided columns, then
 - XP, gems, streaks, celebrations for crowns (F08). The 👑 appears statically now.
 - Parent dashboard charts (F11).
 
-## Open questions
-1. **Starting point lives on the grown-up screen** (renamed "Grown-ups") until onboarding (F10) asks it on first launch. *Proposed: yes.*
-2. **Crown hysteresis** (un-crown below 0.70, not 0.85): avoids a crown flickering after one bad answer. *Proposed: yes.*
-3. **Picker stays open-access** (no locks) until the world map in F07. *Proposed: yes.*
+## Decisions (approved 2026-10-17)
+1. The starting point lives on the **Grown-ups** screen until onboarding (F10).
+2. Crown hysteresis: un-crown below **0.70**.
+3. The picker stays open-access (badges only) until the world map (F07).
