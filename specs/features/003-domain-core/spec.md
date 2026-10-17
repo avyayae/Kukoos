@@ -1,6 +1,6 @@
 # Feature 003 — Domain Core: Curriculum, Column Arithmetic, Misconceptions & Generators
 
-**Status:** Draft (awaiting review)  ·  **Constitution check:** §2.4 concrete → pictorial → abstract (question kinds per skill), §2.5 curriculum fidelity (every skill has a CCSS code), §3.2 pure domain (no React/storage), §3.3 correctness is provable (seeded + property-tested), §3.4 code computes every answer
+**Status:** Approved (2026-10-16)  ·  **Constitution check:** §2.4 concrete → pictorial → abstract (question kinds per skill), §2.5 curriculum fidelity (every skill has a CCSS code), §3.2 pure domain (no React/storage), §3.3 correctness is provable (seeded + property-tested), §3.4 code computes every answer
 
 ## Why
 Everything a kid sees in a lesson comes from this layer: which skills exist, how they unlock, the questions, the right answer, and **why** a wrong answer is wrong. The focus area for our first player is regrouping (`36 − 28`, `403 − 178`). The engine has to (a) produce problems that regroup in exactly the columns a skill targets, and (b) recognize the classic regrouping bugs, so that Kukoos can give a targeted hint rather than "try again".
@@ -98,6 +98,6 @@ Each generator documents its exact difficulty table in code, and AC5 tests that 
 - Hint *wording* and TTS voice lines (build-time content, F09). The domain returns hint **keys** plus structured data (e.g., worked-example steps).
 - Word problems (Phase 2).
 
-## Open questions
-1. **Missing-number subtraction** (`? − 28 = 8`): only `offBy*` misconceptions are detected for missing-number forms. Bug simulation for unknown-minuend problems is ambiguous. *Proposed: accept for MVP.*
-2. **`add.wroteWholeSum`** produces big numbers (47 + 38 → 715). *Proposed: keep it for detection, but don't use it as an MCQ distractor* (it looks odd as a choice).
+## Decisions (approved 2026-10-16)
+1. **Missing-number forms** (`? − 28 = 8`): only `offByOne`/`offByTen` are detected. Bug simulation for unknown operands is ambiguous.
+2. **`add.wroteWholeSum`** is detected but never used as an MCQ/true-false distractor.
