@@ -10,4 +10,4 @@ Branch: `feature/007-world-map`. Load `mathquest-ui`, `motion-design` and `front
 - [x] **T6 — Grown-up gate + routes** · `/` map, `/practice` → `/`, guarded `/grown-ups`, `/grown-ups/missions`, boss route, lesson exits to `/`. · *done when:* AC8, AC9 pass.
 - [x] **T7 — World unlock moment** (incl. the rocket between Ocean and Moon). · *done when:* AC10 passes.
 - [x] **T8 — E2E + visual review** · `map.spec.ts`, update existing specs, overlap guard on the map, screenshots in light/dark on phone/tablet. · *done when:* AC11, AC12 pass.
-- [ ] **T9 — Wrap-up** · deviations, run locally, push the branch, open a PR, CI green.
+- [x] **T9 — Wrap-up** · deviations, run locally, push the branch, open a PR, CI green.
