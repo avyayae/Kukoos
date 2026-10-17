@@ -96,6 +96,11 @@ Ubuntu, Node from `.nvmrc`, `npm ci`, `npx playwright install --with-deps chromi
 | AC10 | CI run on a PR | GitHub |
 | AC11 | `tests/unit/structure.test.ts` asserts folders exist | unit |
 
+## Deviations (recorded during implementation)
+- `create-vite@9` scaffolds Vite 8, TypeScript 6, React 19.2 and ships **oxlint**. We replaced oxlint with ESLint as planned, because AC3 needs `no-restricted-properties` (to ban `Math.random`) and `jsx-a11y`.
+- The scaffold was generated in the scratchpad and copied in, because the repo folder wasn't empty. Demo assets were dropped.
+- `paths` is used without `baseUrl` (`baseUrl` is deprecated in TS 6).
+
 ## Risks
 - **Service worker in dev** can cache stale builds. Keep the PWA `devOptions.enabled = false`, and test the SW only via `preview` in e2e.
 - **Tailwind v4 config is CSS-first** (no `tailwind.config.js`), so the token mapping lives in `@theme` inside `index.css`.
