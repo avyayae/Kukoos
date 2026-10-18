@@ -11,10 +11,12 @@ import {
   createProfile,
   listProfiles,
   removeProfile,
+  resetProfile,
   setCurrentProfile,
   updateProfile,
 } from '../profiles'
 import { applyLessonRewards, badgesFor, rollWallet } from '../rewards'
+import { reportInput } from '../report'
 import { addActive, addBonus, readToday, saveTimeSettings, timeSettings } from '../time'
 import type { ProfileRow } from '../rows'
 import { newId, writeRows } from '../write'
@@ -61,6 +63,7 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       update: (id, patch) => updateProfile(db, id, patch, now()),
       setCurrent: (id) => setCurrentProfile(db, id, now()),
       remove: (id) => removeProfile(db, id, now()),
+      reset: (id) => resetProfile(db, id, now()),
     },
 
     lessons: {
@@ -125,6 +128,10 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
     rewards: {
       wallet: (profileId) => rollWallet(db, profileId, now()),
       badges: (profileId) => badgesFor(db, profileId),
+    },
+
+    reports: {
+      forProfile: (profileId) => reportInput(db, profileId, now()),
     },
 
     device: {

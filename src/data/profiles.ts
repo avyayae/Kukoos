@@ -1,5 +1,5 @@
 import type { KukoosDb } from './db'
-import { type OutboxRow, type ProfileRow, SYNC_TABLES } from './rows'
+import { type OutboxRow, type ProfileRow, SYNC_TABLES, type SyncTableName } from './rows'
 import { newId, writeRows } from './write'
 
 /** At most this many kids on one device (spec 010). */
@@ -80,16 +80,7 @@ export async function removeProfile(db: KukoosDb, id: string, at: number): Promi
   return db.transaction('rw', tables, async () => {
     const profiles = await listProfiles(db)
     if (profiles.length <= 1 || !profiles.some((p) => p.id === id)) return false
-    const outbox: OutboxRow[] = []
-    for (const table of SYNC_TABLES) {
-      const keys = (await db
-        .table(table)
-        .filter((row: { profileId: string }) => row.profileId === id)
-        .primaryKeys()) as string[]
-      await db.table(table).bulkDelete(keys)
-      for (const rowId of keys) outbox.push({ id: newId(), table, rowId, op: 'delete', at })
-    }
-    await db.outbox.bulkAdd(outbox)
+    await deleteRows(db, id, SYNC_TABLES, at)
     const global = await db.settings.get(GLOBAL)
     if (global?.currentProfileId === id) {
       const next = profiles.find((p) => p.id !== id)
@@ -100,6 +91,46 @@ export async function removeProfile(db: KukoosDb, id: string, at: number): Promi
         at,
       )
     }
+    return true
+  })
+}
+
+/** Deletes a kid's rows from the given tables, with outbox deletes for sync. */
+async function deleteRows(
+  db: KukoosDb,
+  profileId: string,
+  tables: readonly SyncTableName[],
+  at: number,
+): Promise<void> {
+  const outbox: OutboxRow[] = []
+  for (const table of tables) {
+    const keys = (await db
+      .table(table)
+      .filter((row: { profileId: string }) => row.profileId === profileId)
+      .primaryKeys()) as string[]
+    await db.table(table).bulkDelete(keys)
+    for (const rowId of keys) outbox.push({ id: newId(), table, rowId, op: 'delete', at })
+  }
+  await db.outbox.bulkAdd(outbox)
+}
+
+/** Everything a kid has earned or practised; reset clears these (spec 011 AC8). */
+const PROGRESS_TABLES: readonly SyncTableName[] = [
+  'lessons',
+  'attempts',
+  'skillProgress',
+  'wallet',
+  'inventory',
+  'badges',
+  'dailyActivity',
+]
+
+/** "Start over": clears a kid's progress but keeps the kid, the explorer and settings. */
+export async function resetProfile(db: KukoosDb, id: string, at: number): Promise<boolean> {
+  const tables = [...PROGRESS_TABLES.map((t) => db.table(t)), db.profiles, db.outbox]
+  return db.transaction('rw', tables, async () => {
+    if (!(await db.profiles.get(id))) return false
+    await deleteRows(db, id, PROGRESS_TABLES, at)
     return true
   })
 }

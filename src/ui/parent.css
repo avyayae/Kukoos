@@ -62,4 +62,192 @@
     text-decoration: underline;
     cursor: pointer;
   }
+
+  /* ---------------------------------------------------------- progress dashboard */
+  .grownup__card--hero {
+    border-color: var(--mq-primary);
+    background: var(--mq-primary-tint);
+  }
+  .progress__kids {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mq-space-2);
+  }
+  .progress__kid {
+    min-height: var(--mq-tap-parent);
+    padding: 0 var(--mq-space-4);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-pill);
+    background: var(--mq-surface);
+    color: var(--mq-ink);
+    font: inherit;
+    font-weight: var(--mq-weight-bold);
+    cursor: pointer;
+  }
+  .progress__kid[aria-selected='true'] {
+    border-color: var(--mq-primary);
+    background: var(--mq-primary-tint);
+  }
+  .progress__tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+    gap: var(--mq-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .progress__tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-1);
+    padding: var(--mq-space-3);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-btn);
+    background: var(--mq-surface);
+  }
+  .progress__tile-value {
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .progress__tile-label {
+    color: var(--mq-ink-muted);
+    font-size: var(--mq-text-sm);
+  }
+  .progress__chart {
+    margin: 0;
+  }
+  .progress__chart svg {
+    width: 100%;
+    height: auto;
+  }
+  .progress__bar--total {
+    fill: var(--mq-track);
+  }
+  .progress__bar--lesson {
+    fill: var(--mq-primary);
+  }
+  .progress__goal {
+    stroke: var(--mq-success);
+    stroke-width: 2;
+    stroke-dasharray: 6 4;
+  }
+  .progress__axis {
+    fill: var(--mq-ink-muted);
+    font-size: 10px;
+  }
+  .progress__legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mq-space-2);
+    color: var(--mq-ink-muted);
+    font-size: var(--mq-text-sm);
+  }
+  .progress__key {
+    display: inline-block;
+    width: var(--mq-space-4);
+    height: var(--mq-space-3);
+    border-radius: var(--mq-space-1);
+  }
+  .progress__key--lesson {
+    background: var(--mq-primary);
+  }
+  .progress__key--total {
+    background: var(--mq-track);
+  }
+  .progress__key--goal {
+    height: 0;
+    border-top: var(--mq-stroke) dashed var(--mq-success);
+  }
+  .progress__accuracy {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: var(--mq-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .progress__acc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--mq-space-1);
+    border-radius: var(--mq-space-2);
+    background: var(--mq-success-tint);
+    color: var(--mq-success-ink);
+  }
+  .progress__acc[data-empty='true'] {
+    background: var(--mq-surface-2);
+    color: var(--mq-ink-muted);
+  }
+  .progress__acc-day {
+    font-size: var(--mq-text-sm);
+  }
+  .progress__acc-pct {
+    font-weight: var(--mq-weight-black);
+  }
+  .progress__mistakes,
+  .progress__practice,
+  .progress__badges {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .progress__mistake {
+    padding: var(--mq-space-3);
+    border-left: var(--mq-space-1) solid var(--mq-secondary);
+    border-radius: var(--mq-space-2);
+    background: var(--mq-secondary-tint);
+    color: var(--mq-ink);
+  }
+  .progress__example,
+  .progress__tip {
+    display: block;
+    margin-top: var(--mq-space-1);
+    font-size: var(--mq-text-sm);
+  }
+  .progress__tip {
+    font-weight: var(--mq-weight-bold);
+  }
+  .progress__world h3 {
+    margin: var(--mq-space-3) 0 var(--mq-space-2);
+    font-size: var(--mq-text-base);
+  }
+  .progress__heatmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: var(--mq-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* Mastery fills the chip with green; the text always says it too (never colour alone). */
+  .progress__cell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-1);
+    padding: var(--mq-space-2) var(--mq-space-3);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-space-3);
+    background: color-mix(
+      in srgb,
+      var(--mq-success-tint) calc(var(--p, 0) * 1%),
+      var(--mq-surface)
+    );
+    color: var(--mq-ink);
+  }
+  .progress__cell[data-crowned='true'] {
+    border-color: var(--mq-success);
+  }
+  .progress__cell-title {
+    font-size: var(--mq-text-sm);
+    font-weight: var(--mq-weight-bold);
+  }
+  .progress__cell-value {
+    font-size: var(--mq-text-sm);
+    color: var(--mq-ink-muted);
+  }
 }

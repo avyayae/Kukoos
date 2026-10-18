@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
-import { NO_STORAGE_MESSAGE, type TableName, useRepos, validateBackup } from '@/data'
+import { NO_STORAGE_MESSAGE, type TableName, useProfiles, useRepos, validateBackup } from '@/data'
 import { Button3D, ConfirmSheet } from '@/ui'
 import { backupFileName, downloadJson } from './download'
 import { DailyTimeSection } from './DailyTimeSection'
@@ -20,6 +20,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
   const repos = useRepos()
   const { lock } = useGrownUpGate()
+  const { profile } = useProfiles()
   const [counts, setCounts] = useState<Record<TableName, number> | null>(null)
   const [persisted, setPersisted] = useState<boolean | null>(null)
   const [status, setStatus] = useState<Status>(null)
@@ -82,6 +83,15 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
           </Button3D>
         </header>
 
+        {profile && (
+          <section className="grownup__card grownup__card--hero" aria-label="Progress">
+            <h2>How is {profile.nickname} doing?</h2>
+            <p>Minutes, accuracy, mastery and the mistakes worth practising together.</p>
+            <Link to="/grown-ups/progress" className="btn3d btn3d--primary btn3d--md">
+              See {profile.nickname}&apos;s progress
+            </Link>
+          </section>
+        )}
         <DailyTimeSection onDone={(text) => setStatus({ tone: 'ok', text })} />
         <SoundVoiceSection />
 

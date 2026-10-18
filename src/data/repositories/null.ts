@@ -33,6 +33,7 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
       update: () => Promise.resolve(),
       setCurrent: () => Promise.resolve(),
       remove: () => Promise.resolve(false),
+      reset: () => Promise.resolve(false),
     },
     lessons: {
       save: () => Promise.resolve([]),
@@ -72,6 +73,17 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
     rewards: {
       wallet: () => Promise.resolve({ wallet: NEW_WALLET, roll: { kind: 'none' } }),
       badges: () => Promise.resolve([]),
+    },
+    reports: {
+      forProfile: () =>
+        Promise.resolve({
+          attempts: [],
+          lessons: [],
+          days: [],
+          progress: {},
+          badges: [],
+          now: now(),
+        }),
     },
     device: {
       audio: () => Promise.resolve(audio),
