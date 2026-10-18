@@ -51,6 +51,16 @@ tests/unit/features/soundVoice.test.tsx, tests/e2e/sound.spec.ts
 | AC9 | `lines.test.ts` |
 | AC11 | `sound.spec.ts` using `window.__kukoosSfx` |
 
+## Deviations (recorded during implementation)
+- **Rate constants** live in `src/audio/prefs.ts`, so data code and test mocks don't depend on the speech module.
+- **Settings load:** a change made before the saved settings finish loading wins over them (`AudioProvider`), so a quick tap is never undone.
+- **"Never repeat" by construction:** praise and combo lines rotate by `lessonSeed + questionIndex` (consecutive questions always get different lines) instead of remembering the last line.
+- **Combo banner:** milestone combos (3/5/10) show a combo line ("You're on fire!") with the combo sound.
+- **Moods:** the worked-solution phase now shows `think` (it was `encourage`). `fly` is used in the world-unlock card.
+- **Read-aloud** is on the Grown-ups card too, and the Grown-ups card notes that Edge and iPad have the best voices.
+- **Line bank** moved out of `hints.en.json` into `content/lines.en.json`; `hints.en.json` now holds only messages.
+- **E2E:** `sound.spec.ts` reads `window.__kukoosSfx` (dev/e2e builds only) and waits for the IndexedDB save before reloading.
+
 ## Risks
 - **Autoplay:** browsers block audio until a user gesture. We resume the context on the first input, so the first sound may be silent; that's acceptable.
 - **iOS Safari** only lists voices after `voiceschanged`. The picker shows "Device default" until they arrive.
