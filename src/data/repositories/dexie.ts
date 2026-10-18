@@ -6,6 +6,7 @@ import { lessonToRows } from '../mappers'
 import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
 import { audioPrefs, saveAudioPrefs } from '../device'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
+import { checkPin, hasPin, setPin } from '../pin'
 import {
   createProfile,
   listProfiles,
@@ -129,6 +130,9 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
     device: {
       audio: () => audioPrefs(db),
       setAudio: (prefs) => saveAudioPrefs(db, prefs, now()),
+      hasPin: () => hasPin(db),
+      setPin: (pin) => setPin(db, pin, now()),
+      checkPin: (pin) => checkPin(db, pin),
     },
 
     backup: {

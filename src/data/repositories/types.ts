@@ -83,6 +83,10 @@ export interface Repositories {
   device: {
     audio(): Promise<AudioPrefs>
     setAudio(prefs: AudioPrefs): Promise<void>
+    /** The grown-ups PIN (spec 011): stored only as a salted hash. */
+    hasPin(): Promise<boolean>
+    setPin(pin: string): Promise<void>
+    checkPin(pin: string): Promise<boolean>
   }
   backup: {
     export(): Promise<BackupFile>

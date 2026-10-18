@@ -18,6 +18,7 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
   let today: TodayTime = emptyToday(localDate(now()))
   let settings: TimeSettings = DEFAULT_TIME_SETTINGS
   let audio: AudioPrefs = DEFAULT_AUDIO
+  let pin: string | null = null
   const current = () => {
     const date = localDate(now())
     if (today.date !== date) today = emptyToday(date)
@@ -78,6 +79,13 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
         audio = prefs
         return Promise.resolve()
       },
+      // Without storage the PIN lives in memory for this visit.
+      hasPin: () => Promise.resolve(pin !== null),
+      setPin: (next) => {
+        pin = next
+        return Promise.resolve()
+      },
+      checkPin: (attempt) => Promise.resolve(pin !== null && attempt === pin),
     },
     backup: {
       export: () =>

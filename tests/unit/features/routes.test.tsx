@@ -39,10 +39,14 @@ describe('navigation (spec 007 AC9)', () => {
 })
 
 describe('grown-up gate (AC8)', () => {
-  it('a wrong answer goes back to the map', async () => {
-    const router = renderAt('/grown-ups')
+  it('a wrong PIN is refused and the gate stays', async () => {
+    const { repos } = testStore()
+    await repos.device.setPin('2468')
+    const router = renderAt('/grown-ups', repos)
     await passGate({ wrong: true })
-    expect(router.state.location.pathname).toBe('/')
+    expect(await screen.findByText("That's not it. Try again.")).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/grown-ups')
+    expect(screen.getByRole('heading', { name: 'Enter the grown-up PIN' })).toBeInTheDocument()
   })
 
   it('the right answer opens Grown-ups, and stays open for the visit', async () => {

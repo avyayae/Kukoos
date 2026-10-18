@@ -1,0 +1,65 @@
+/* Parent zone (spec 011): the PIN gate and the progress dashboard. Grown-up density, tokens only. */
+
+@layer components {
+  /* ---------------------------------------------------------- PIN gate */
+  .grownup__lock {
+    margin-left: auto;
+  }
+  .pin-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mq-space-3);
+    text-align: center;
+  }
+  .pin-card .keypad {
+    width: 100%;
+    max-width: var(--mq-keypad-max);
+  }
+  .pin-dots {
+    display: flex;
+    gap: var(--mq-space-4);
+    padding: var(--mq-space-2);
+  }
+  .pin-dot {
+    width: var(--mq-space-6);
+    height: var(--mq-space-6);
+    border: var(--mq-stroke) solid var(--mq-primary);
+    border-radius: 50%;
+    background: transparent;
+    transition: background var(--mq-dur-fast) var(--mq-ease-out);
+  }
+  .pin-dot--on {
+    background: var(--mq-primary);
+  }
+  .pin-question {
+    margin: 0;
+    font-size: var(--mq-text-2xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .pin-answer {
+    min-width: 6ch;
+    padding: var(--mq-space-2) var(--mq-space-4);
+    border: var(--mq-stroke) dashed var(--mq-primary);
+    border-radius: var(--mq-radius-btn);
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .pin-message {
+    min-height: 1.5em;
+    margin: 0;
+    color: var(--mq-ink-muted);
+    font-weight: var(--mq-weight-bold);
+  }
+  .pin-link {
+    min-height: var(--mq-tap-parent);
+    padding: 0 var(--mq-space-3);
+    border: 0;
+    background: transparent;
+    color: var(--mq-primary);
+    font: inherit;
+    font-weight: var(--mq-weight-bold);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

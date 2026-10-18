@@ -4,6 +4,7 @@ import { NO_STORAGE_MESSAGE, type TableName, useRepos, validateBackup } from '@/
 import { Button3D, ConfirmSheet } from '@/ui'
 import { backupFileName, downloadJson } from './download'
 import { DailyTimeSection } from './DailyTimeSection'
+import { useGrownUpGate } from './gate'
 import { ProfilesSection } from './ProfilesSection'
 import { SoundVoiceSection } from './SoundVoiceSection'
 import { StartingPointSection } from './StartingPointSection'
@@ -18,6 +19,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
  */
 export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
   const repos = useRepos()
+  const { lock } = useGrownUpGate()
   const [counts, setCounts] = useState<Record<TableName, number> | null>(null)
   const [persisted, setPersisted] = useState<boolean | null>(null)
   const [status, setStatus] = useState<Status>(null)
@@ -75,6 +77,9 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
             ←
           </Link>
           <h1 className="grownup__title">Grown-ups</h1>
+          <Button3D variant="ghost" size="md" className="grownup__lock" onClick={lock}>
+            🔒 Lock
+          </Button3D>
         </header>
 
         <DailyTimeSection onDone={(text) => setStatus({ tone: 'ok', text })} />
