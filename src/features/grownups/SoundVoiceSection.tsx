@@ -1,4 +1,5 @@
-import { RATE_RANGE, speak } from '@/audio/tts'
+import { RATE_RANGE } from '@/audio/prefs'
+import { speak } from '@/audio/tts'
 import { voiceLabel } from '@/audio/voices'
 import { Button3D } from '@/ui'
 import { useAudioPrefs } from '@/ui/audioPrefs'

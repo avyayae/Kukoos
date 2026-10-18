@@ -3,7 +3,7 @@
 export * from './rng'
 export * from './types'
 export { numberToWords, equationToText, equationToSpeech } from './speech'
-export { WORLDS, getWorld } from './curriculum/worlds'
+export { WORLDS, getWorld, isSpaceWorld } from './curriculum/worlds'
 export { SKILLS } from './curriculum/skills'
 export {
   getSkill,

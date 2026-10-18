@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import hints from '../../../content/hints.en.json'
+import bank from '../../../content/lines.en.json'
 import {
   correctResponse,
   type LessonState,
@@ -45,7 +45,7 @@ describe('LessonScreen: correct flow (AC4)', () => {
     await answerInUi(s.mirror.question, correctResponse(s.mirror.question))
     await check()
     const banner = screen.getByTestId('feedback')
-    expect(hints.lists['praise:savanna']).toContain(
+    expect(bank.lists['praise:savanna']).toContain(
       within(banner).getByRole('heading').textContent?.replace('✓', ''),
     )
     expect(screen.getByRole('status')).not.toBeEmptyDOMElement()
@@ -67,7 +67,7 @@ describe('LessonScreen: not-yet flow (AC5)', () => {
     await check()
 
     const banner = screen.getByTestId('feedback')
-    expect(hints.lists.notYet).toContain(
+    expect(bank.lists.notYet).toContain(
       within(banner).getByRole('heading').textContent?.replace('↺', ''),
     )
     expect(banner).toHaveTextContent(/Can we take \d from \d\? Trade a ten first!/)

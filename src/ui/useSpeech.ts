@@ -19,10 +19,11 @@ function snapshot(): SpeechSynthesisVoice[] {
   return cached
 }
 function subscribeVoices(listener: () => void): () => void {
-  if (!isSpeechSupported()) return () => undefined
-  const synth = window.speechSynthesis
-  synth.addEventListener?.('voiceschanged', listener)
-  return () => synth.removeEventListener?.('voiceschanged', listener)
+  // Older Safari has no addEventListener on speechSynthesis: then voices just don't refresh.
+  const synth = isSpeechSupported() ? window.speechSynthesis : undefined
+  if (typeof synth?.addEventListener !== 'function') return () => undefined
+  synth.addEventListener('voiceschanged', listener)
+  return () => synth.removeEventListener('voiceschanged', listener)
 }
 
 /** English voices on this device, friendliest first; updates when the browser loads them. */

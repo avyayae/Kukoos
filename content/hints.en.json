@@ -48,13 +48,5 @@
     "lesson:notFound": "Hmm, Kukoos can't find that lesson.",
     "lesson:nothingToReview": "Nothing to review right now. Great job!",
     "practice:review": "Review"
-  },
-  "lists": {
-    "notYet": ["Almost!", "So close!", "Not yet!"],
-    "praise:jungle": ["Awesome!", "You did it!", "Swinging high!", "Math superstar!"],
-    "praise:savanna": ["Roar-some!", "Awesome!", "You did it!", "Wild!"],
-    "praise:ocean": ["Fin-tastic!", "Awesome!", "Making waves!", "You did it!"],
-    "praise:moon": ["Stellar!", "Out of this world!", "Awesome!", "Kukoos is so proud!"],
-    "praise:mars": ["Stellar!", "Rocket math!", "Out of this world!", "You did it!"]
   }
 }

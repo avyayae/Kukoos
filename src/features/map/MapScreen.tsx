@@ -7,9 +7,16 @@ import { REWARD_COPY } from '@/features/rewards/copy'
 import { Goodnight } from '@/features/rewards/Goodnight'
 import { Notice } from '@/features/rewards/Notice'
 import { TopStats } from '@/features/rewards/TopStats'
-import { dueSkills, type MapNode, mapNodes, type MissionTarget, nextMission } from '@/domain'
+import {
+  dueSkills,
+  isSpaceWorld,
+  type MapNode,
+  mapNodes,
+  type MissionTarget,
+  nextMission,
+} from '@/domain'
 import { cancelSpeech } from '@/audio/tts'
-import { KukoosPlaceholder, useReadAloud, useSpeakOnTap } from '@/ui'
+import { Kukoos, useReadAloud, useSpeakOnTap } from '@/ui'
 import { usePrefersReducedMotion } from '@/ui/usePrefersReducedMotion'
 import { BottomBar } from './BottomBar'
 import { JourneyCanvas } from './JourneyCanvas'
@@ -63,11 +70,13 @@ function JourneyMap() {
   const search = params.toString() ? `?${params.toString()}` : ''
   const go = (target: MissionTarget) => navigate(`${routeFor(target)}${search}`)
   const nickname = journey.profile?.nickname ?? 'Explorer'
+  const here = nodes.find((n) => n.state === 'current')
+  const inSpace = here ? isSpaceWorld(here.worldId) : false
 
   return (
     <main className="map-screen">
       <header className="map-header">
-        <KukoosPlaceholder size={44} />
+        <Kukoos mood="idle" size={44} talks helmet={inSpace} />
         <button
           type="button"
           className="map-header__hello"

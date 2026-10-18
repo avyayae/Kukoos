@@ -1,3 +1,4 @@
+import { DEFAULT_RATE, RATE_RANGE } from './prefs'
 import { rankVoices } from './voices'
 
 /**
@@ -13,9 +14,6 @@ export function isSpeechSupported(): boolean {
     typeof window.SpeechSynthesisUtterance === 'function'
   )
 }
-
-export const DEFAULT_RATE = 0.9
-export const RATE_RANGE = { min: 0.8, max: 1.1 } as const
 
 const config: { voiceURI: string | null; rate: number } = { voiceURI: null, rate: DEFAULT_RATE }
 

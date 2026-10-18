@@ -1,4 +1,6 @@
-import { DEFAULT_RATE } from './tts'
+/** Speaking speed: slightly slow by default for young listeners. */
+export const DEFAULT_RATE = 0.9
+export const RATE_RANGE = { min: 0.8, max: 1.1 } as const
 
 /** Per-device sound and voice settings (spec 009), saved on the `global` settings row. */
 export interface AudioPrefs {

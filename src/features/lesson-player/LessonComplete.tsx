@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react'
 import { playSfx } from '@/audio/sfx'
 import { speak } from '@/audio/tts'
-import { firstTryAccuracy, type LessonState, lessonMinutes, type RewardEffect } from '@/domain'
+import {
+  firstTryAccuracy,
+  getSkill,
+  isSpaceWorld,
+  type LessonState,
+  lessonMinutes,
+  type RewardEffect,
+} from '@/domain'
 import { momentFor } from '@/features/rewards/copy'
 import { CountUp } from '@/features/rewards/CountUp'
 import { RewardMoment } from '@/features/rewards/RewardMoment'
@@ -78,7 +85,12 @@ function Summary({ state, effects, autoRead, onContinue }: LessonCompleteProps) 
 
   return (
     <main className="screen flex flex-col items-center justify-center gap-6 text-center">
-      <Kukoos mood="cheer" size={160} />
+      <Kukoos
+        mood="cheer"
+        size={160}
+        talks
+        helmet={isSpaceWorld(getSkill(state.question.skillId).worldId)}
+      />
       <h1 className="font-display text-kid-3xl leading-tight font-extrabold text-primary">
         {title}
       </h1>

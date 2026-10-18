@@ -32,3 +32,8 @@ export function getWorld(id: WorldId): World {
   if (!world) throw new Error(`Unknown world: ${id}`)
   return world
 }
+
+/** Moon and Mars: Kukoos wears the space helmet there (spec 009). */
+export function isSpaceWorld(id: WorldId): boolean {
+  return getWorld(id).theme === 'space'
+}
