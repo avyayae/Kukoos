@@ -8,4 +8,4 @@ Branch: `feature/009-kukoos-voice-sound`. Load `mathquest-ui`, `motion-design` a
 - [x] **T4 — Animated Kukoos** · moods, blink, talking, helmet, reduced motion, wired into screens. · *done when:* AC1–AC4 pass.
 - [x] **T5 — Line bank + validation.** · *done when:* AC9 passes.
 - [x] **T6 — E2E + visual review.** · *done when:* AC11 passes.
-- [ ] **T7 — Wrap-up** · deviations, run locally, push, PR, CI green.
+- [x] **T7 — Wrap-up** · deviations, run locally, push, PR, CI green.

@@ -1,6 +1,6 @@
 # Feature 009 — Kukoos Comes Alive: Mascot, Sound & Voice
 
-**Status:** Approved (2026-10-17)  ·  **Constitution check:** §1.2 no shame (soft "not yet" sound, never a buzzer), §1.4 can play without reading (a better voice, Kukoos "talks"), §1.5 privacy (no cloud voice, no network at runtime), §3.4 AI never decides answers (build-time praise lines only, validated by a script), §3.6 offline always works, §3.7 reduced motion
+**Status:** Implemented (PR #8, CI green)  ·  **Constitution check:** §1.2 no shame (soft "not yet" sound, never a buzzer), §1.4 can play without reading (a better voice, Kukoos "talks"), §1.5 privacy (no cloud voice, no network at runtime), §3.4 AI never decides answers (build-time praise lines only, validated by a script), §3.6 offline always works, §3.7 reduced motion
 
 ## Why
 F05–F08 gave her the learning loop and the rewards, but Kukoos is still a static picture, the app is silent apart from a robotic browser voice, and celebrations have no sound. Product spec §5.3 and the mathquest-ui motion/sound table promise a mascot that **reacts** (cheers, encourages, sleeps), sounds that pair with every feedback moment, and a friendlier voice. This is the "it's delightful" milestone (roadmap week 3).
