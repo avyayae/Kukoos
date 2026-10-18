@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useState } from 'react'
 import { createRepositories } from './createRepositories'
 import { RepoContext } from './context'
+import { ProfileProvider } from './ProfileProvider'
 import type { Repositories } from './repositories/types'
 
 interface DataProviderProps {
@@ -26,5 +27,9 @@ export function DataProvider({ repos: injected, children }: DataProviderProps) {
   const repos = injected ?? opened
   // IndexedDB opens in a few milliseconds; render nothing until it's ready.
   if (!repos) return null
-  return <RepoContext value={repos}>{children}</RepoContext>
+  return (
+    <RepoContext value={repos}>
+      <ProfileProvider>{children}</ProfileProvider>
+    </RepoContext>
+  )
 }

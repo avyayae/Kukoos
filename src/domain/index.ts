@@ -84,6 +84,20 @@ export {
 export { check } from './generators/check'
 export { addDays, daysBetween, localDate, type LocalDate } from './gamification/dates'
 export {
+  AVATAR_CATEGORIES,
+  AVATAR_OPTIONS,
+  avatarName,
+  DEFAULT_AVATAR,
+  EARNED_ITEMS,
+  howToEarn,
+  itemUnlocked,
+  parseAvatar,
+  randomAvatar,
+  type Avatar,
+  type AvatarCategory,
+  type UnlockState,
+} from './avatar'
+export {
   GEM_RULES,
   isPerfect,
   LEVEL_STEP,

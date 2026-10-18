@@ -25,7 +25,14 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
   }
   return {
     available: false,
-    profiles: { ensureCurrent: () => Promise.resolve(null) },
+    profiles: {
+      ensureCurrent: () => Promise.resolve(null),
+      list: () => Promise.resolve([]),
+      create: () => Promise.resolve(null),
+      update: () => Promise.resolve(),
+      setCurrent: () => Promise.resolve(),
+      remove: () => Promise.resolve(false),
+    },
     lessons: {
       save: () => Promise.resolve([]),
       bestFirstTryBySkill: () => Promise.resolve({}),

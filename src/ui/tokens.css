@@ -55,6 +55,24 @@
   --mq-kukoos-pupil: #2b2140;
   --mq-kukoos-cheek: #ff8fa3;
 
+  /* Avatar palette (spec 010): skin tones light → deep, hair colors */
+  --mq-av-skin-1: #fbe0cf;
+  --mq-av-skin-2: #f3c7a5;
+  --mq-av-skin-3: #dda27c;
+  --mq-av-skin-4: #bb7d56;
+  --mq-av-skin-5: #8f5b3c;
+  --mq-av-skin-6: #5e3b27;
+  --mq-av-hair-black: #2a1d1a;
+  --mq-av-hair-brown: #5b3a23;
+  --mq-av-hair-auburn: #8e3b24;
+  --mq-av-hair-blonde: #e6bc5c;
+  --mq-av-hair-ginger: #d9733a;
+  --mq-av-hair-purple: #9b7bff;
+  --mq-av-khaki: #d8b878;
+  --mq-av-khaki-dark: #b8954f;
+  --mq-av-metal: #c9cbe0;
+  --mq-avatar-header: 48px;
+
   /* World backgrounds */
   --mq-world-jungle: #dff5d8;
   --mq-world-savanna: #ffeccc;
