@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page } from './fixtures'
 
 // Spec 001 acceptance criteria (the app shell is the journey map since spec 007).
 // Token values mirror src/ui/tokens.css.
@@ -21,11 +21,11 @@ async function waitForServiceWorkerControl(page: Page) {
 }
 
 test.describe('app shell', () => {
-  test('AC1: shows the greeting in Baloo 2, Kukoos and the Play button', async ({ page }) => {
+  test('AC1: shows the greeting in Baloo 2, her explorer and the Play button', async ({ page }) => {
     await page.goto('/')
     const title = page.getByRole('heading', { level: 1, name: 'Hi, Explorer!' })
     await expect(title).toBeVisible()
-    await expect(page.getByRole('img', { name: 'Kukoos the bird' }).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Me, Explorer' })).toBeVisible()
     await expect(startButton(page)).toBeVisible()
 
     const baloLoaded = await page.evaluate(async () => {

@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { clockNow } from '@/app/clock'
 import { useActivity, useDailyTime } from '@/app/time'
-import { useJourney, useWallet } from '@/data'
+import { useJourney, useProfiles, useWallet } from '@/data'
+import { Onboarding } from '@/features/profiles/Onboarding'
+import { WhoIsPlaying } from '@/features/profiles/WhoIsPlaying'
 import { REWARD_COPY } from '@/features/rewards/copy'
 import { Goodnight } from '@/features/rewards/Goodnight'
 import { Notice } from '@/features/rewards/Notice'
@@ -14,9 +16,11 @@ import {
   mapNodes,
   type MissionTarget,
   nextMission,
+  parseAvatar,
 } from '@/domain'
 import { cancelSpeech } from '@/audio/tts'
 import { Kukoos, useReadAloud, useSpeakOnTap } from '@/ui'
+import { AvatarArt } from '@/ui/AvatarArt'
 import { usePrefersReducedMotion } from '@/ui/usePrefersReducedMotion'
 import { BottomBar } from './BottomBar'
 import { JourneyCanvas } from './JourneyCanvas'
@@ -31,6 +35,11 @@ import { WorldUnlockMoment } from './WorldUnlockMoment'
  */
 export function MapScreen() {
   const time = useDailyTime()
+  const { profile, needsPick } = useProfiles()
+  // Several kids share the device: ask who's playing first (spec 010 AC6).
+  if (needsPick) return <WhoIsPlaying />
+  // A new kid makes their explorer before the first mission (spec 010 AC4).
+  if (profile && profile.avatar === null) return <Onboarding />
   // The daily limit is reached: Kukoos sleeps until tomorrow (spec 008 AC8).
   if (time.ready && time.budget.locked) {
     return <Goodnight minutes={Math.floor((time.today?.totalSeconds ?? 0) / 60)} />
@@ -76,7 +85,21 @@ function JourneyMap() {
   return (
     <main className="map-screen">
       <header className="map-header">
-        <Kukoos mood="idle" size={44} talks helmet={inSpace} />
+        {journey.profile?.avatar ? (
+          <button
+            type="button"
+            className="map-header__me"
+            aria-label={`Me, ${nickname}`}
+            onClick={() => {
+              say(nickname)
+              navigate('/me')
+            }}
+          >
+            <AvatarArt avatar={parseAvatar(journey.profile.avatar)} size={48} decorative />
+          </button>
+        ) : (
+          <Kukoos mood="idle" size={44} talks helmet={inSpace} />
+        )}
         <button
           type="button"
           className="map-header__hello"

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 import { startLesson } from '../../src/domain'
 import { finishRewards, passGate, playPerfectLesson, playThrough, seedToday } from './helpers'
 

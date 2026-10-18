@@ -78,9 +78,17 @@ declare global {
 }
 
 let ctx: AudioContext | null = null
+/** Set by the first tap or key press (browsers block audio created before one). */
+let gestured = false
 function context(): AudioContext | null {
   if (ctx) return ctx
   if (typeof window === 'undefined') return null
+  const activated =
+    gestured ||
+    (typeof navigator !== 'undefined' &&
+      (navigator as { userActivation?: { hasBeenActive: boolean } }).userActivation
+        ?.hasBeenActive === true)
+  if (!activated) return null
   const Ctor = window.AudioContext ?? window.webkitAudioContext
   if (!Ctor) return null
   try {
@@ -93,6 +101,7 @@ function context(): AudioContext | null {
 
 /** Browsers start audio suspended until a user gesture: call on the first tap. */
 export function unlockAudio(): void {
+  gestured = true
   const c = context()
   if (c?.state === 'suspended') void c.resume().catch(() => undefined)
 }
@@ -127,6 +136,7 @@ export function playSfx(key: SfxKey): void {
 }
 
 /** Test helper: forget the audio context (each test starts fresh). */
-export function resetSfxForTests(): void {
+export function resetSfxForTests({ gestured: g = true } = {}): void {
   ctx = null
+  gestured = g
 }

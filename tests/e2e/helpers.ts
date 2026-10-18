@@ -144,3 +144,14 @@ export async function seedToday(page: Page, totalSeconds: number, lessonSeconds 
   )
   await page.reload()
 }
+
+/**
+ * After a starting point opens a new world, the map may celebrate it first (spec 007 AC10).
+ * Tap the celebration away if it shows up.
+ */
+export async function dismissWorldUnlock(page: Page) {
+  await page
+    .getByTestId('world-unlock')
+    .click({ timeout: 2000 })
+    .catch(() => undefined)
+}

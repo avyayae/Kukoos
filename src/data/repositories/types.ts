@@ -10,6 +10,7 @@ import type {
   WorldId,
 } from '@/domain'
 import type { LessonMeta } from '../mappers'
+import type { NewProfile, ProfilePatch } from '../profiles'
 import type { BadgeRow, ProfileRow, RowsByTable, TableName } from '../rows'
 import type { TodayTime } from '../time'
 
@@ -33,6 +34,14 @@ export interface Repositories {
   profiles: {
     /** The current profile, creating the default one on first launch. */
     ensureCurrent(): Promise<ProfileRow | null>
+    /** All kids on this device, oldest first (spec 010). */
+    list(): Promise<ProfileRow[]>
+    /** `null` when the device already has the maximum number of kids. */
+    create(input: NewProfile): Promise<ProfileRow | null>
+    update(id: string, patch: ProfilePatch): Promise<void>
+    setCurrent(id: string): Promise<void>
+    /** Deletes a kid and all their data; `false` for the last profile. */
+    remove(id: string): Promise<boolean>
   }
   lessons: {
     /**

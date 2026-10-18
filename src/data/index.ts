@@ -1,6 +1,8 @@
 // Data layer (spec 004). UI code imports from here — never from Dexie directly.
 export { DataProvider } from './DataProvider'
 export { useRepos } from './context'
+export { useProfiles, type ProfileContextValue } from './profileContext'
+export { MAX_PROFILES, type NewProfile, type ProfilePatch } from './profiles'
 export {
   type LoadedJourney,
   type LoadedProgress,

@@ -4,6 +4,7 @@ import { NO_STORAGE_MESSAGE, type TableName, useRepos, validateBackup } from '@/
 import { Button3D, ConfirmSheet } from '@/ui'
 import { backupFileName, downloadJson } from './download'
 import { DailyTimeSection } from './DailyTimeSection'
+import { ProfilesSection } from './ProfilesSection'
 import { SoundVoiceSection } from './SoundVoiceSection'
 import { StartingPointSection } from './StartingPointSection'
 
@@ -88,6 +89,7 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
           </section>
         ) : (
           <>
+            <ProfilesSection onDone={(text) => setStatus({ tone: 'ok', text })} />
             <StartingPointSection onDone={(text) => setStatus({ tone: 'ok', text })} />
 
             <section className="grownup__card" aria-label="All missions">

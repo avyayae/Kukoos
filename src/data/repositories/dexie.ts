@@ -6,6 +6,13 @@ import { lessonToRows } from '../mappers'
 import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
 import { audioPrefs, saveAudioPrefs } from '../device'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
+import {
+  createProfile,
+  listProfiles,
+  removeProfile,
+  setCurrentProfile,
+  updateProfile,
+} from '../profiles'
 import { applyLessonRewards, badgesFor, rollWallet } from '../rewards'
 import { addActive, addBonus, readToday, saveTimeSettings, timeSettings } from '../time'
 import type { ProfileRow } from '../rows'
@@ -48,6 +55,11 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
           )
           return (await db.profiles.get(id)) ?? null
         }),
+      list: () => listProfiles(db),
+      create: (input) => createProfile(db, input, now()),
+      update: (id, patch) => updateProfile(db, id, patch, now()),
+      setCurrent: (id) => setCurrentProfile(db, id, now()),
+      remove: (id) => removeProfile(db, id, now()),
     },
 
     lessons: {

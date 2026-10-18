@@ -1,4 +1,4 @@
-import { expect, type Page, test } from '@playwright/test'
+import { expect, finishOnboarding, type Page, test } from './fixtures'
 import { startLesson } from '../../src/domain'
 import { finishRewards, passGate, playThrough } from './helpers'
 
@@ -76,7 +76,7 @@ test('starting point → Play next → finish → back on the map', async ({ pag
 
 test('map fits a small phone without overlap', async ({ browser }) => {
   const page = await browser.newPage({ viewport: { width: 360, height: 740 } })
-  await page.goto('/')
+  await finishOnboarding(page)
   await expect(page.getByTestId('play-next')).toBeVisible()
   await expectKidSized(page)
   // The Play button and bar sit above the page bottom, not past it.
