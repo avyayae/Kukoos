@@ -1,13 +1,15 @@
 import { Link, useSearchParams } from 'react-router'
 import { useActivity } from '@/app/time'
-import { useBadges } from '@/data'
-import { BADGES } from '@/domain'
+import { useBadges, useProfiles } from '@/data'
+import { BADGES, parseAvatar } from '@/domain'
 import { useSpeakOnTap } from '@/ui'
+import { AvatarArt } from '@/ui/AvatarArt'
 
 /** The trophy room (spec 008): earned badges in color, the rest as soft "not yet" stickers. */
 export function TrophyRoom() {
   useActivity('map')
   const badges = useBadges()
+  const { profile } = useProfiles()
   const say = useSpeakOnTap()
   const [params] = useSearchParams()
   const earned = new Set((badges ?? []).map((b) => b.badgeId))
@@ -27,6 +29,12 @@ export function TrophyRoom() {
           <h1 className="trophies__title">Trophies</h1>
         </button>
       </header>
+      {profile?.avatar && (
+        <div className="trophies__me">
+          <AvatarArt avatar={parseAvatar(profile.avatar)} size={96} decorative />
+          <span>{profile.nickname}</span>
+        </div>
+      )}
       {badges && (
         <ul className="trophies__grid" aria-label="Badges">
           {BADGES.map((b) => {

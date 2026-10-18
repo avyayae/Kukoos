@@ -4,6 +4,7 @@
 @import './map.css';
 @import './rewards.css';
 @import './kukoos.css';
+@import './profiles.css';
 
 /* Token-only palette: wipe Tailwind's default colors so `bg-red-500` etc. don't exist.
    Every color utility must come from tokens.css. */

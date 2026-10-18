@@ -3,7 +3,10 @@ import { Link } from 'react-router'
 import { playSfx } from '@/audio/sfx'
 import { speak } from '@/audio/tts'
 import { useActivity } from '@/app/time'
+import { useProfiles } from '@/data'
+import { parseAvatar } from '@/domain'
 import { Kukoos, useReadAloud } from '@/ui'
+import { AvatarArt } from '@/ui/AvatarArt'
 import { plural, REWARD_COPY } from './copy'
 
 interface GoodnightProps {
@@ -17,6 +20,7 @@ interface GoodnightProps {
  */
 export function Goodnight({ minutes }: GoodnightProps) {
   useActivity(null)
+  const { profile } = useProfiles()
   const { readAloud } = useReadAloud()
   const speech = `${REWARD_COPY.goodnightTitle} ${REWARD_COPY.goodnightBody}`
   const announce = useEffectEvent(() => {
@@ -31,6 +35,14 @@ export function Goodnight({ minutes }: GoodnightProps) {
         <span className="goodnight__moon" />
       </div>
       <div className="goodnight__kukoos">
+        {profile?.avatar && (
+          <AvatarArt
+            avatar={parseAvatar(profile.avatar)}
+            size={96}
+            className="goodnight__avatar"
+            decorative
+          />
+        )}
         <Kukoos mood="sleep" size={140} />
         <span className="goodnight__zzz" aria-hidden="true">
           z z z

@@ -4,6 +4,8 @@ import { GrownUpsScreen } from '@/features/grownups/GrownUpsScreen'
 import { MissionsList } from '@/features/grownups/MissionsList'
 import { LessonRoute } from '@/features/lesson-player/LessonRoute'
 import { MapScreen } from '@/features/map/MapScreen'
+import { ChangeLookScreen, MeScreen } from '@/features/profiles/MeScreen'
+import { WhoIsPlaying } from '@/features/profiles/WhoIsPlaying'
 import { TrophyRoom } from '@/features/rewards/TrophyRoom'
 
 export const routes: RouteObject[] = [
@@ -11,6 +13,9 @@ export const routes: RouteObject[] = [
   { path: '/lesson/boss/:worldId', element: <LessonRoute /> },
   { path: '/lesson/:skillId', element: <LessonRoute /> },
   { path: '/trophies', element: <TrophyRoom /> },
+  { path: '/me', element: <MeScreen /> },
+  { path: '/me/look', element: <ChangeLookScreen /> },
+  { path: '/who', element: <WhoIsPlaying /> },
   {
     path: '/grown-ups',
     element: (
