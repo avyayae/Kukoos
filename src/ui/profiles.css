@@ -37,12 +37,13 @@
     background: radial-gradient(circle, var(--mq-primary-tint) 60%, transparent 61%);
     animation: mq-pop var(--mq-dur-base) var(--mq-ease-bounce);
   }
+  /* All seven tabs stay visible: they wrap onto a second row on narrow phones. */
   .builder__tabs {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: var(--mq-space-2);
-    overflow-x: auto;
     padding-bottom: var(--mq-space-1);
-    scrollbar-width: none;
   }
   .builder__tab {
     flex: 0 0 auto;

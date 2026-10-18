@@ -44,6 +44,14 @@ tests/e2e/profiles.spec.ts (+ helpers: finishOnboarding; existing specs onboard 
 | AC8 | map header / `/me` component test |
 | AC9 | `profiles.spec.ts` |
 
+## Deviations (recorded during implementation)
+- **Kid characters, not animals** (parent decision): skin tone, hair style and color, eyes, outfit, hat, extra. The palette lives in `src/ui/avatarPalette.ts` as token references (`--mq-av-*`).
+- **Onboarding starts whenever `avatar` is null**, so existing installs and newly added kids get it too. The Welcome step is always shown; the name is prefilled with the current nickname.
+- **First-time map visit:** because onboarding now happens first, the first map visit (which silently records open worlds) comes right after it. Later starting points celebrate newly opened worlds as designed.
+- **Audio autoplay:** sounds that fire on page load (e.g. the world-unlock sparkle) no longer create an AudioContext before the first tap. Chrome logged warnings, which the e2e console checks caught.
+- **E2E:** a shared `fixtures.ts` test onboards each fresh device (and waits for the first map visit to be saved). `profiles.spec.ts` uses the plain test, and `dismissWorldUnlock()` handles the celebration after a starting point.
+- **Builder tabs wrap** onto two rows on phones, so all seven categories stay visible.
+
 ## Risks
 - **Every existing e2e** starts on a fresh device, which now shows onboarding. Lessons opened by URL aren't gated (only `/` is), and a `finishOnboarding()` helper covers map tests.
 - **Deleting a profile is destructive.** It needs the typed nickname, and a backup reminder sits next to it.

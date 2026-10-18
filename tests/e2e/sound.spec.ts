@@ -1,4 +1,4 @@
-import { expect, type Page, test } from '@playwright/test'
+import { expect, type Page, test } from './fixtures'
 import { passGate, playPerfectLesson, seedToday } from './helpers'
 
 // Spec 009 AC11: sounds pair with feedback, sound settings persist, Kukoos reacts.

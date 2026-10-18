@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { expect, type Page, test } from '@playwright/test'
+import { expect, type Page, test } from './fixtures'
 import { finishRewards, passGate, playPerfectLesson } from './helpers'
 
 // Spec 004 AC11: progress survives reloads and a backup → wipe → restore round trip.

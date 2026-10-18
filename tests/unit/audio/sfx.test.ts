@@ -74,6 +74,15 @@ describe('sfx engine (AC5)', () => {
     expect(() => unlockAudio()).not.toThrow()
   })
 
+  it('creates no audio before the first tap (browser autoplay rules)', () => {
+    resetSfxForTests({ gestured: false })
+    playSfx('unlock')
+    expect(oscillators).toBe(0)
+    unlockAudio()
+    playSfx('unlock')
+    expect(oscillators).toBe(SOUNDS.unlock.length)
+  })
+
   it('sounds are gentle: short, quiet, nothing harsh', () => {
     for (const [key, notes] of Object.entries(SOUNDS)) {
       for (const note of notes) {

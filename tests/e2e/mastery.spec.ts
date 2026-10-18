@@ -1,6 +1,6 @@
-import { expect, type Page, test } from '@playwright/test'
+import { expect, type Page, test } from './fixtures'
 import { composeReview, DAY_MS, newMastery, type Progress, startLesson } from '../../src/domain'
-import { finishRewards, lessonReady, passGate, playThrough } from './helpers'
+import { dismissWorldUnlock, finishRewards, lessonReady, passGate, playThrough } from './helpers'
 
 // Spec 006 AC11 (on the spec 007 map): starting point → crowns; a new skill starts with
 // blocks; due reviews show on the bottom bar and play as a Review mission.
@@ -29,6 +29,7 @@ test('starting point crowns earlier missions and new skills start with blocks', 
   })
   await setStartingPoint(page)
   await page.goto('/')
+  await dismissWorldUnlock(page)
   for (const [i, title] of JUNGLE.entries()) {
     await expect(
       page.getByRole('button', { name: `Mission ${i + 1}, ${title}, mastered` }),
@@ -49,6 +50,7 @@ test('due reviews appear in the bottom bar and play as a Review mission', async 
   await setStartingPoint(page)
   const later = Date.now() + 5 * DAY_MS
   await page.goto(`/?now=${later}&seed=1`)
+  await dismissWorldUnlock(page)
   // 4 due reviews ≥ 3, so Review is also the Play-next step.
   await expect(page.getByTestId('play-next')).toHaveAccessibleName('Play next: Review')
   await page.getByRole('button', { name: 'Review, 4 due' }).click()
