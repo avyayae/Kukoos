@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
-import type { MapNode as Node } from '@/domain'
-import { KukoosPlaceholder } from '@/ui'
+import { isSpaceWorld, type MapNode as Node } from '@/domain'
+import { KukoosArt } from '@/ui/KukoosArt'
 import { BOSS_EMOJI, nodeLabel } from './labels'
 
 interface MapNodeProps {
@@ -39,7 +39,9 @@ export function MapNode({ node, lane, onSelect }: MapNodeProps) {
       </button>
       {current && (
         <span className="map-node__here" aria-hidden="true">
-          <KukoosPlaceholder size={44} />
+          <span className="kukoos" data-mood="idle">
+            <KukoosArt size={44} helmet={isSpaceWorld(node.worldId)} />
+          </span>
           <span className="map-node__bubble">Start here!</span>
         </span>
       )}

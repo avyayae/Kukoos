@@ -1,7 +1,8 @@
 import { useEffect, useEffectEvent, useState } from 'react'
+import { playSfx } from '@/audio/sfx'
 import { type LoadedJourney, useRepos } from '@/data'
-import { getWorld, type MapNode, type WorldId } from '@/domain'
-import { useSpeakOnTap } from '@/ui'
+import { getWorld, isSpaceWorld, type MapNode, type WorldId } from '@/domain'
+import { Kukoos, useSpeakOnTap } from '@/ui'
 import { openWorlds, WORLD_EMOJI } from './labels'
 
 /**
@@ -31,7 +32,9 @@ export function WorldUnlockMoment({
   const record = useEffectEvent((worlds: WorldId[]) => {
     if (!profileId) return
     void repos.journey.markWorldsSeen(profileId, worlds)
-    if (celebrate) say(`New world! ${getWorld(celebrate).title}`)
+    if (!celebrate) return
+    playSfx('unlock')
+    say(`New world! ${getWorld(celebrate).title}`)
   })
   useEffect(() => {
     if (profileId && key) record(key.split(',') as WorldId[])
@@ -53,6 +56,7 @@ export function WorldUnlockMoment({
         </span>
       )}
       <span className="unlock-moment__card">
+        <Kukoos mood="fly" size={88} helmet={isSpaceWorld(showing)} />
         <span className="unlock-moment__emoji" aria-hidden="true">
           {WORLD_EMOJI[showing]}
         </span>

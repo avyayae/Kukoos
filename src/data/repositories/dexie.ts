@@ -4,6 +4,7 @@ import type { KukoosDb } from '../db'
 import { bossesBeaten, markWorldsSeen, seenWorlds } from '../journey'
 import { lessonToRows } from '../mappers'
 import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
+import { audioPrefs, saveAudioPrefs } from '../device'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
 import { applyLessonRewards, badgesFor, rollWallet } from '../rewards'
 import { addActive, addBonus, readToday, saveTimeSettings, timeSettings } from '../time'
@@ -111,6 +112,11 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
     rewards: {
       wallet: (profileId) => rollWallet(db, profileId, now()),
       badges: (profileId) => badgesFor(db, profileId),
+    },
+
+    device: {
+      audio: () => audioPrefs(db),
+      setAudio: (prefs) => saveAudioPrefs(db, prefs, now()),
     },
 
     backup: {

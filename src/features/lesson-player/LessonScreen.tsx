@@ -1,10 +1,12 @@
 import { useEffect, useEffectEvent, useReducer, useState } from 'react'
 import { useActivity } from '@/app/time'
+import { playSfx } from '@/audio/sfx'
 import { cancelSpeech, speak } from '@/audio/tts'
 import {
   type Difficulty,
   getSkill,
   hintFor,
+  isSpaceWorld,
   type LessonMode,
   lessonProgress,
   lessonReducer,
@@ -31,6 +33,7 @@ import {
 } from '@/ui'
 import { pick, praiseFor, say, t } from './copy'
 import { LessonComplete } from './LessonComplete'
+import { sfxFor } from './sounds'
 import { BlocksPicture, WorkedSteps } from './VisualHint'
 
 interface LessonScreenProps {
@@ -130,12 +133,16 @@ export function LessonScreen({
   if (phase === 'correct')
     banner = {
       variant: 'correct',
-      title: praiseFor(getSkill(q.skillId).worldId, q.seed + state.index),
+      // Combo milestones get a combo line; otherwise praise rotates by question (never twice in a row).
+      title:
+        sfxFor(phase, state.combo) === 'combo'
+          ? pick('combo', state.seed + state.index)
+          : praiseFor(getSkill(q.skillId).worldId, state.seed + state.index),
     }
   if (phase === 'notYet')
     banner = {
       variant: 'notYet',
-      title: pick('notYet', q.seed),
+      title: pick('notYet', state.seed + state.index + state.attempts),
       body: say(hintFor(q, state.lastCheck)),
     }
   if (phase === 'solution')
@@ -152,6 +159,13 @@ export function LessonScreen({
     if (autoRead && announcement) speak(announcement)
   }, [announcement, autoRead])
   useEffect(() => cancelSpeech, [])
+
+  // --- sound (spec 009 AC6): one sound per feedback moment
+  const playFeedback = useEffectEvent(() => {
+    const key = sfxFor(phase, state.combo)
+    if (key) playSfx(key)
+  })
+  useEffect(() => playFeedback(), [rendererKey, phase])
 
   // --- actions
   const submit = () => {
@@ -205,11 +219,13 @@ export function LessonScreen({
       ? state.combo >= 3
         ? 'cheer'
         : 'happy'
-      : phase === 'notYet' || phase === 'solution'
+      : phase === 'notYet'
         ? 'encourage'
-        : state.guided
+        : phase === 'solution'
           ? 'think'
-          : 'idle'
+          : state.guided
+            ? 'think'
+            : 'idle'
 
   return (
     <main className="lesson screen" data-phase={phase}>
@@ -243,7 +259,13 @@ export function LessonScreen({
       </header>
 
       <div className="lesson__kukoos">
-        <Kukoos mood={mood} size={64} beat={`${questionKey}:${phase}`}>
+        <Kukoos
+          mood={mood}
+          size={64}
+          beat={`${questionKey}:${phase}`}
+          talks
+          helmet={isSpaceWorld(getSkill(q.skillId).worldId)}
+        >
           <span data-testid="bubble-text">{bubbleText}</span>
         </Kukoos>
         <SpeakButton text={[q.prompt.speech, bubble].filter(Boolean).join(' ')} />

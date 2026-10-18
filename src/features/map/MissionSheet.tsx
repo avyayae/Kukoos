@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import type { MapNode } from '@/domain'
+import { isSpaceWorld, type MapNode } from '@/domain'
 import { Button3D, Kukoos } from '@/ui'
 import { useAutoFocus } from '@/ui/useAutoFocus'
 import { missionName, targetOf } from './labels'
@@ -42,7 +42,12 @@ export function MissionSheet({ node, onPlay, onClose }: MissionSheetProps) {
         aria-modal="true"
         aria-labelledby="mission-title"
       >
-        <Kukoos mood={locked ? 'think' : node.state === 'crowned' ? 'cheer' : 'happy'} size={72}>
+        <Kukoos
+          mood={locked ? 'think' : node.state === 'crowned' ? 'cheer' : 'happy'}
+          size={72}
+          talks
+          helmet={isSpaceWorld(node.worldId)}
+        >
           {locked
             ? `Not yet! Finish ${node.blockedBy ?? 'the mission before'} first.`
             : STATUS[node.state]}

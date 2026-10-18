@@ -1,3 +1,4 @@
+import type { AudioPrefs } from '@/audio/prefs'
 import type {
   LessonState,
   Progress,
@@ -68,6 +69,11 @@ export interface Repositories {
     /** XP, crystals and streak, with missed days settled (saved once). */
     wallet(profileId: string): Promise<{ wallet: Wallet; roll: StreakRoll }>
     badges(profileId: string): Promise<BadgeRow[]>
+  }
+  /** This device's sound and voice settings (spec 009). */
+  device: {
+    audio(): Promise<AudioPrefs>
+    setAudio(prefs: AudioPrefs): Promise<void>
   }
   backup: {
     export(): Promise<BackupFile>

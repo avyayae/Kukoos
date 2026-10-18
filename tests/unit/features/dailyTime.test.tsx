@@ -7,7 +7,8 @@ import { addDays, correctResponse, lessonReducer, localDate, startLesson } from 
 import { testStore } from '../withData'
 import { renderAt, renderGrownUp } from './nav'
 
-vi.mock('@/audio/tts', () => ({
+vi.mock('@/audio/tts', async (orig) => ({
+  ...(await orig<typeof import('@/audio/tts')>()),
   speak: vi.fn(),
   cancelSpeech: vi.fn(),
   isSpeechSupported: () => true,

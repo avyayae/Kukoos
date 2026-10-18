@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { playSfx } from '@/audio/sfx'
 
 interface KeypadProps {
   onDigit: (digit: number) => void
@@ -39,6 +40,7 @@ export function Keypad({
       type="button"
       className={`btn3d btn3d--ghost btn3d--xl keypad__key ${extra}`}
       onClick={onPress}
+      onPointerDown={() => playSfx('tap')}
       disabled={disabled}
       aria-label={aria ?? label}
     >

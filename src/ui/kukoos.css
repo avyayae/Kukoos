@@ -1,0 +1,172 @@
+/* Kukoos moods (spec 009, motion-design): transform-only part animations, 60fps-friendly.
+   The mood lives on the wrapper: <span class="kukoos" data-mood="happy" data-talking>. */
+
+@layer components {
+  .kk,
+  .kk * {
+    overflow: visible;
+  }
+  .kk__all,
+  .kk__wing,
+  .kk__lid,
+  .kk__pupils,
+  .kk__jaw,
+  .kk__crest {
+    transform-box: fill-box;
+  }
+  .kk__all {
+    transform-origin: 50% 100%;
+  }
+  /* Each wing lifts outward: the left one turns clockwise, the right one counter-clockwise. */
+  .kk__wing--l {
+    --kk-lift: 28deg;
+    transform-origin: 80% 15%;
+  }
+  .kk__wing--r {
+    --kk-lift: -28deg;
+    transform-origin: 20% 15%;
+  }
+  .kk__crest {
+    transform-origin: 50% 100%;
+  }
+  .kk__lid {
+    transform-origin: 50% 0;
+    transform: scaleY(0);
+  }
+  .kk__sleepy {
+    opacity: 0;
+  }
+
+  /* Every awake Kukoos blinks now and then (staggered by the wrapper's own timing). */
+  .kukoos:not([data-mood='sleep']) .kk__lid {
+    animation: kk-blink 5s infinite;
+  }
+
+  .kukoos[data-mood='idle'] .kk__all {
+    animation: mq-bob 3s ease-in-out infinite;
+  }
+  .kukoos[data-mood='happy'] .kk__all {
+    animation: mq-hop var(--mq-dur-slow) var(--mq-ease-bounce);
+  }
+  .kukoos[data-mood='happy'] .kk__wing {
+    animation: kk-flap 160ms ease-in-out 2;
+  }
+  .kukoos[data-mood='cheer'] .kk__all {
+    animation: mq-cheer 700ms var(--mq-ease-bounce);
+  }
+  .kukoos[data-mood='cheer'] .kk__wing {
+    animation: kk-flap 140ms ease-in-out 5;
+  }
+  .kukoos[data-mood='cheer'] .kk__crest {
+    animation: kk-wiggle 350ms ease-in-out 2;
+  }
+  .kukoos[data-mood='think'] .kk__all {
+    transform: rotate(-8deg);
+    transition: transform var(--mq-dur-base) var(--mq-ease-out);
+  }
+  .kukoos[data-mood='think'] .kk__pupils {
+    transform: translate(-6%, -14%);
+  }
+  .kukoos[data-mood='encourage'] .kk__all {
+    animation: mq-nod 600ms var(--mq-ease-out);
+  }
+  .kukoos[data-mood='encourage'] .kk__wing--r {
+    animation: kk-pat 360ms ease-in-out 2;
+  }
+  .kukoos[data-mood='sleep'] .kk__lid {
+    transform: scaleY(1);
+  }
+  .kukoos[data-mood='sleep'] .kk__sleepy {
+    opacity: 1;
+  }
+  .kukoos[data-mood='sleep'] .kk__all {
+    animation: kk-breathe 3.2s ease-in-out infinite;
+  }
+  .kukoos[data-mood='fly'] .kk__all {
+    animation: kk-fly 1.2s ease-in-out infinite;
+  }
+  .kukoos[data-mood='fly'] .kk__wing {
+    animation: kk-flap 180ms ease-in-out infinite;
+  }
+  .kukoos[data-talking] .kk__jaw {
+    animation: kk-talk 220ms ease-in-out infinite alternate;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kukoos .kk__all,
+    .kukoos .kk__wing,
+    .kukoos .kk__lid,
+    .kukoos .kk__crest,
+    .kukoos .kk__jaw {
+      animation: none !important;
+      transition: none;
+    }
+  }
+}
+
+@keyframes kk-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(0);
+  }
+  95% {
+    transform: scaleY(1);
+  }
+}
+@keyframes kk-flap {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(var(--kk-lift));
+  }
+}
+@keyframes kk-pat {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(-40deg) translateX(-10%);
+  }
+}
+@keyframes kk-wiggle {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  33% {
+    transform: rotate(-12deg);
+  }
+  66% {
+    transform: rotate(12deg);
+  }
+}
+@keyframes kk-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03, 0.98);
+  }
+}
+@keyframes kk-fly {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10%);
+  }
+}
+@keyframes kk-talk {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(40%);
+  }
+}

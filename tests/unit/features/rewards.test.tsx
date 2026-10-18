@@ -12,7 +12,11 @@ import { LessonComplete } from '@/features/lesson-player/LessonComplete'
 import { momentFor } from '@/features/rewards/copy'
 import { withData } from '../withData'
 
-vi.mock('@/audio/tts', () => ({ speak: vi.fn(), cancelSpeech: vi.fn() }))
+vi.mock('@/audio/tts', async (orig) => ({
+  ...(await orig<typeof import('@/audio/tts')>()),
+  speak: vi.fn(),
+  cancelSpeech: vi.fn(),
+}))
 
 function finished(): LessonState {
   let s = startLesson({ skillId: 'add.within20', seed: 7, at: 0 })

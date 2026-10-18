@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import hints from '../../../content/hints.en.json'
+import bank from '../../../content/lines.en.json'
 import {
   generateQuestion,
   guidedSteps,
@@ -41,7 +42,8 @@ describe('lesson copy', () => {
   it('rotates praise per world, deterministically', () => {
     for (const w of WORLDS) expect(praiseFor(w.id, 1).length).toBeGreaterThan(0)
     expect(praiseFor('savanna', 0)).toBe('Roar-some!')
-    expect(praiseFor('savanna', 4)).toBe(praiseFor('savanna', 0))
+    expect(praiseFor('savanna', 20)).toBe(praiseFor('savanna', 0))
+    expect(praiseFor('savanna', -1)).toBe(praiseFor('savanna', 19))
     expect(pick('notYet', 1)).toBe('So close!')
   })
 
@@ -51,7 +53,7 @@ describe('lesson copy', () => {
   })
 
   it('keeps every line of kid copy gentle (constitution §1.2)', () => {
-    const lines = [...Object.values(hints.messages), ...Object.values(hints.lists).flat()]
+    const lines = [...Object.values(hints.messages), ...Object.values(bank.lists).flat()]
     expect(lines.length).toBeGreaterThan(40)
     for (const line of lines) {
       expect(line, line).not.toMatch(/\b(wrong|incorrect|fail(ed)?|game over|hurry|bad)\b/i)

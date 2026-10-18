@@ -5,7 +5,11 @@ import { TimeProvider } from '@/app/TimeProvider'
 import { createNullRepositories, DataProvider, type Repositories } from '@/data'
 import { ReadAloudProvider } from '@/ui'
 
-vi.mock('@/audio/tts', () => ({ speak: vi.fn(), cancelSpeech: vi.fn() }))
+vi.mock('@/audio/tts', async (orig) => ({
+  ...(await orig<typeof import('@/audio/tts')>()),
+  speak: vi.fn(),
+  cancelSpeech: vi.fn(),
+}))
 
 let visibility: DocumentVisibilityState = 'visible'
 let clock = 0

@@ -39,6 +39,12 @@ export interface SettingsRow extends SyncFields {
   dailyGoalMin?: number
   /** Per-profile daily limit in minutes; `null` = off, absent = default. */
   dailyLimitMin?: number | null
+  /** Device-level (global row) sound and voice settings (spec 009); absent = default. */
+  readAloud?: boolean
+  soundOn?: boolean
+  volume?: number
+  voiceURI?: string | null
+  speechRate?: number
 }
 
 export interface LessonRow extends SyncFields {

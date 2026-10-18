@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react'
+import { playSfx } from '@/audio/sfx'
 
 export type Button3DVariant = 'primary' | 'secondary' | 'sky' | 'success' | 'danger-soft' | 'ghost'
 export type Button3DSize = 'md' | 'lg' | 'xl'
@@ -28,6 +29,7 @@ export function Button3D({
   className,
   children,
   type = 'button',
+  onPointerDown,
   ...rest
 }: Button3DProps) {
   const classes = [
@@ -46,6 +48,10 @@ export function Button3D({
       className={classes}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
+      onPointerDown={(e) => {
+        playSfx('tap')
+        onPointerDown?.(e)
+      }}
       {...rest}
     >
       {loading ? <span className="btn3d__spinner" aria-hidden="true" /> : icon}

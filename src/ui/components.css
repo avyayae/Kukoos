@@ -177,22 +177,6 @@
     display: inline-flex;
     flex-shrink: 0;
   }
-  .kukoos--idle svg {
-    animation: mq-bob 3s ease-in-out infinite;
-  }
-  .kukoos--happy svg {
-    animation: mq-hop var(--mq-dur-slow) var(--mq-ease-bounce);
-  }
-  .kukoos--cheer svg {
-    animation: mq-cheer 700ms var(--mq-ease-bounce);
-  }
-  .kukoos--think svg {
-    transform: rotate(-8deg);
-    transition: transform var(--mq-dur-base) var(--mq-ease-out);
-  }
-  .kukoos--encourage svg {
-    animation: mq-nod 600ms var(--mq-ease-out);
-  }
   .bubble {
     position: relative;
     flex: 1;
@@ -942,6 +926,25 @@
     color: var(--mq-ink);
     font: inherit;
   }
+  .grownup__check {
+    display: flex;
+    align-items: center;
+    gap: var(--mq-space-3);
+    min-height: var(--mq-tap-parent);
+    color: var(--mq-ink);
+    cursor: pointer;
+  }
+  .grownup__check input,
+  .grownup__field input[type='range'] {
+    accent-color: var(--mq-primary);
+  }
+  .grownup__check input {
+    width: var(--mq-space-6);
+    height: var(--mq-space-6);
+  }
+  .grownup__field input[type='range'] {
+    min-height: var(--mq-tap-parent);
+  }
   .grownup__status {
     margin: 0;
     padding: var(--mq-space-3) var(--mq-space-4);
@@ -979,14 +982,10 @@
   @media (prefers-reduced-motion: reduce) {
     .tile,
     .tile--incorrect,
-    .kukoos svg,
     .pill--streak,
     .progress__fill {
       animation: none !important;
       transition: none;
-    }
-    .kukoos--think svg {
-      transform: none;
     }
     .tile:active:not(:disabled) {
       transform: none;

@@ -5,9 +5,9 @@ import {
   DataProvider,
   type Repositories,
 } from '@/data'
+import { AudioProvider } from '@/app/AudioProvider'
 import { TimeProvider } from '@/app/TimeProvider'
 import { GrownUpGateProvider } from '@/features/grownups/GrownUpGate'
-import { ReadAloudProvider } from '@/ui'
 import { freshDb } from './data/testDb'
 
 /** A real (in-memory) Dexie store plus its repositories, for integration tests. */
@@ -20,11 +20,11 @@ export function testStore() {
 export function withData(ui: ReactNode, repos: Repositories = createNullRepositories()) {
   return (
     <DataProvider repos={repos}>
-      <ReadAloudProvider>
+      <AudioProvider>
         <GrownUpGateProvider>
           <TimeProvider>{ui}</TimeProvider>
         </GrownUpGateProvider>
-      </ReadAloudProvider>
+      </AudioProvider>
     </DataProvider>
   )
 }
