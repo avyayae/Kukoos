@@ -12,7 +12,7 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-`specs/features/010-profiles-avatar/` on branch `feature/010-profiles-avatar` (spec drafted, awaiting approval). Done: 001–009 (PRs #1–#8). Next: F11 parent zone, F12 polish.
+`specs/features/010-profiles-avatar/` on branch `feature/010-profiles-avatar` (implemented, PR #9). Done: 001–009 (PRs #1–#8). Next: F11 parent zone, F12 polish.
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.
 

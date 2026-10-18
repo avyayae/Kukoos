@@ -8,4 +8,4 @@ Branch: `feature/010-profiles-avatar`. Load `mathquest-ui`, `motion-design` and 
 - [x] **T4 — Avatar builder + onboarding.** · *done when:* AC3 and AC4 pass.
 - [x] **T5 — Picker, Me screen, header avatar, grown-ups Profiles.** · *done when:* AC6–AC8 pass.
 - [x] **T6 — E2E + visual review.** · *done when:* AC9 passes.
-- [ ] **T7 — Wrap-up** · deviations, run locally, push, PR, CI green.
+- [x] **T7 — Wrap-up** · deviations, run locally, push, PR, CI green.

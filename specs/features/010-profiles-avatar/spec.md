@@ -1,6 +1,6 @@
 # Feature 010 — Profiles & Avatar Builder
 
-**Status:** Approved (2026-10-18)  ·  **Constitution check:** §1.4 can play without reading (picture-first picker and builder, tap-to-hear), §1.5 privacy (nickname only, no real names, ages or photos needed; nothing leaves the device), §3.5 local-first (all data already keyed by `profileId`), §1.3 no dark patterns (no paid or locked-behind-purchase items)
+**Status:** Implemented (PR #9, CI green)  ·  **Constitution check:** §1.4 can play without reading (picture-first picker and builder, tap-to-hear), §1.5 privacy (nickname only, no real names, ages or photos needed; nothing leaves the device), §3.5 local-first (all data already keyed by `profileId`), §1.3 no dark patterns (no paid or locked-behind-purchase items)
 
 ## Why
 Today there is one hidden profile called "Explorer". Product spec §5 promises that the kid **builds an avatar** and sees it in the top bar, and that a sibling or friend can have **their own profile** on the same device. An avatar she designed herself makes the app feel like *hers*. It's also where future rewards (the v1.1 shop with gems) will be worn.
