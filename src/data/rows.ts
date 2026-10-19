@@ -1,4 +1,5 @@
 import type {
+  CourseId,
   Difficulty,
   LessonMode,
   MisconceptionKey,
@@ -24,7 +25,12 @@ export interface SyncFields {
 
 export interface ProfileRow extends SyncFields {
   nickname: string
+  /** Math only. */
   grade: 2 | 3
+  /** What this kid learns (spec 013); absent = math only. */
+  courses?: CourseId[]
+  /** The course shown at home; absent = the first of `courses`. */
+  currentCourse?: CourseId
   avatar: Record<string, string> | null
   createdAt: number
 }
@@ -39,6 +45,8 @@ export interface SettingsRow extends SyncFields {
   dailyGoalMin?: number
   /** Per-profile daily limit in minutes; `null` = off, absent = default. */
   dailyLimitMin?: number | null
+  /** Per-profile optional chess limit in minutes (spec 013); absent or `null` = off. */
+  chessLimitMin?: number | null
   /** Device-level (global row) sound and voice settings (spec 009); absent = default. */
   readAloud?: boolean
   soundOn?: boolean
@@ -120,6 +128,8 @@ export interface DailyActivityRow extends SyncFields {
   totalSeconds: number
   bonusMinutes: number
   goalMet: boolean
+  /** Chess time (spec 013); absent on older rows = 0. */
+  chessSeconds?: number
 }
 
 export interface OutboxRow {

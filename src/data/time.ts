@@ -13,6 +13,7 @@ import { writeRows } from './write'
 export interface TodayTime extends DayTime {
   date: LocalDate
   goalMet: boolean
+  chessSeconds: number
 }
 
 export const dayId = (profileId: string, date: LocalDate) => `${profileId}:${date}`
@@ -23,6 +24,7 @@ export const emptyToday = (date: LocalDate): TodayTime => ({
   totalSeconds: 0,
   bonusMinutes: 0,
   goalMet: false,
+  chessSeconds: 0,
 })
 
 const toToday = (date: LocalDate, row: DailyActivityRow | undefined): TodayTime =>
@@ -33,6 +35,7 @@ const toToday = (date: LocalDate, row: DailyActivityRow | undefined): TodayTime 
         totalSeconds: row.totalSeconds,
         bonusMinutes: row.bonusMinutes,
         goalMet: row.goalMet,
+        chessSeconds: row.chessSeconds ?? 0,
       }
     : emptyToday(date)
 
@@ -75,6 +78,16 @@ export function addActive(
   }))
 }
 
+/** Chess time (spec 013): only `chessSeconds` grows; the goal and the math limit don't. */
+export function addChess(
+  db: KukoosDb,
+  profileId: string,
+  seconds: number,
+  at: number,
+): Promise<TodayTime> {
+  return updateToday(db, profileId, at, (t) => ({ ...t, chessSeconds: t.chessSeconds + seconds }))
+}
+
 export function addBonus(
   db: KukoosDb,
   profileId: string,
@@ -89,6 +102,7 @@ export async function timeSettings(db: KukoosDb, profileId: string): Promise<Tim
   return {
     goalMin: row?.dailyGoalMin ?? DEFAULT_TIME_SETTINGS.goalMin,
     limitMin: row?.dailyLimitMin === undefined ? DEFAULT_TIME_SETTINGS.limitMin : row.dailyLimitMin,
+    chessLimitMin: row?.chessLimitMin ?? null,
   }
 }
 
@@ -110,6 +124,7 @@ export async function saveTimeSettings(
           profileId,
           dailyGoalMin: settings.goalMin,
           dailyLimitMin: settings.limitMin,
+          chessLimitMin: settings.chessLimitMin ?? null,
         },
       ],
       at,
