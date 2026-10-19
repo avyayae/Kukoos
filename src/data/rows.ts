@@ -45,6 +45,9 @@ export interface SettingsRow extends SyncFields {
   volume?: number
   voiceURI?: string | null
   speechRate?: number
+  /** Device-level (global row): the grown-ups PIN as a salted SHA-256 hash (spec 011). */
+  pinHash?: string
+  pinSalt?: string
 }
 
 export interface LessonRow extends SyncFields {

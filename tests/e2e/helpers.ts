@@ -88,16 +88,31 @@ export async function playPerfectLesson(page: Page, skillId: string, seed: numbe
   await playThrough(page, startLesson({ skillId, seed, at: 0 }))
 }
 
-/** Answers the grown-up check ("What is 13 × 4?") on the current page. */
+/** The PIN every e2e grown-up uses. */
+export const TEST_PIN = '2468'
+
+async function typePin(page: Page, pin: string) {
+  const pad = page.getByRole('group', { name: 'Number pad' })
+  for (const d of pin) await pad.getByRole('button', { name: d, exact: true }).click()
+}
+
+/**
+ * Gets past the grown-ups lock (spec 011): creates the test PIN on first use, otherwise
+ * enters it. `wrong` enters a wrong PIN instead.
+ */
 export async function passGate(page: Page, { wrong = false } = {}) {
-  const heading = page.getByRole('heading', { name: /What is \d+ × \d+\?/ })
-  const text = (await heading.textContent()) ?? ''
-  const [, a, b] = /What is (\d+) × (\d+)/.exec(text) ?? []
-  const answer = Number(a) * Number(b)
-  const buttons = page.locator('.gate-choices button')
-  const values = await buttons.allTextContents()
-  const index = values.findIndex((v) => (Number(v) === answer) !== wrong)
-  await buttons.nth(index).click()
+  const heading = page.getByRole('heading', {
+    name: /Create a grown-up PIN|Enter the grown-up PIN/,
+  })
+  await expect(heading).toBeVisible()
+  if ((await heading.textContent())?.startsWith('Create')) {
+    await typePin(page, TEST_PIN)
+    await expect(page.getByRole('heading', { name: 'Type the PIN again' })).toBeVisible()
+    await typePin(page, TEST_PIN)
+  } else {
+    await typePin(page, wrong ? '1111' : TEST_PIN)
+  }
+  if (!wrong) await expect(page.getByRole('heading', { name: 'Grown-ups only' })).toBeHidden()
 }
 
 /**

@@ -41,12 +41,16 @@ describe('map header stats (AC11)', () => {
     const gems = await screen.findByTestId('stat-gems')
     expect(gems).toHaveAccessibleName('20 star crystals')
     expect(screen.getByTestId('stat-streak')).toHaveAccessibleName(
-      'Meet your daily goal to light your flame!',
+      '0 days. Meet your daily goal to light your flame',
     )
     await waitFor(() =>
-      expect(screen.getByTestId('stat-goal')).toHaveAccessibleName('Daily goal: 4 of 10 minutes'),
+      expect(screen.getByTestId('stat-goal')).toHaveAccessibleName(
+        '4/10 minutes of your daily goal',
+      ),
     )
-    expect(screen.getByTestId('stat-level')).toHaveAccessibleName(/^Level 1\. \d+ XP to level 2\.$/)
+    expect(screen.getByTestId('stat-level')).toHaveAccessibleName(
+      /^Lv 1: level 1, \d+ XP to level 2$/,
+    )
     await userEvent.click(gems)
     expect(speak).toHaveBeenCalledWith('20 star crystals')
   })

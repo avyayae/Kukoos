@@ -43,13 +43,16 @@ test('a fresh kid lands on the map with one obvious next step', async ({ page })
   expect(problems).toEqual([])
 })
 
-test('the grown-up gate turns away a wrong answer', async ({ page }) => {
+test('the grown-up PIN turns away a wrong PIN', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Grown-ups' }).click()
   await expect(page.getByRole('heading', { name: 'Grown-ups only' })).toBeVisible()
+  await passGate(page) // first visit: creates the PIN
+  await page.getByRole('button', { name: /Lock/ }).click()
   await passGate(page, { wrong: true })
-  await expect(page).toHaveURL(/\/$/)
-  await expect(page.getByTestId('journey')).toBeVisible()
+  await expect(page.getByRole('status').first()).toContainText("That's not it")
+  await passGate(page)
+  await expect(page.getByRole('heading', { name: 'Grown-ups', exact: true })).toBeVisible()
 })
 
 test('starting point → Play next → finish → back on the map', async ({ page }) => {

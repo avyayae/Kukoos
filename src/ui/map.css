@@ -284,7 +284,6 @@
   }
   .play-next__label {
     font-size: var(--mq-text-sm);
-    opacity: 0.9;
   }
   .play-next__name {
     overflow: hidden;

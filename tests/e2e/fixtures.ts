@@ -13,7 +13,8 @@ export async function finishOnboarding(page: Page) {
   await expect.poll(() => seenWorldsSaved(page)).toBe(true)
 }
 
-function seenWorldsSaved(page: Page): Promise<boolean> {
+/** True once the first map visit has saved which worlds are open. */
+export function seenWorldsSaved(page: Page): Promise<boolean> {
   return page.evaluate(
     () =>
       new Promise<boolean>((resolve) => {

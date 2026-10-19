@@ -7,7 +7,7 @@ import { finishRewards, passGate, playPerfectLesson, playThrough, seedToday } fr
 test('a finished mission earns XP and crystals that stay after a reload', async ({ page }) => {
   await playPerfectLesson(page, 'add.within20', 7)
   const earned = page.getByTestId('earned')
-  await expect(earned.getByLabel(/^\+\d+$/).first()).toBeVisible()
+  await expect(earned.getByTestId('count-final').first()).toHaveText(/^\+\d+$/)
   await expect(earned).toContainText('XP')
   await expect(earned).toContainText('crystals')
 

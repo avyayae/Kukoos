@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { seenWorldsSaved } from './fixtures'
 import { finishRewards, passGate, playPerfectLesson } from './helpers'
 
 // Spec 010 AC9: a new kid makes an explorer; a second kid gets their own progress.
@@ -30,6 +31,9 @@ test('two kids: "Who\'s playing?" and separate crystals', async ({ page }) => {
   await page.getByRole('button', { name: 'Comet' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: "That's me!" }).click()
+  // Let the explorer and the first map visit save before leaving the page.
+  await expect(page.getByRole('heading', { name: 'Hi, Comet!' })).toBeVisible()
+  await expect.poll(() => seenWorldsSaved(page)).toBe(true)
   await playPerfectLesson(page, 'add.within20', 7)
   await finishRewards(page)
   await expect(page.getByTestId('stat-gems')).toHaveAccessibleName('20 star crystals')

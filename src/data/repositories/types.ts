@@ -1,6 +1,7 @@
 import type { AudioPrefs } from '@/audio/prefs'
 import type {
   LessonState,
+  ParentReportInput,
   Progress,
   RewardEffect,
   SkillId,
@@ -42,6 +43,8 @@ export interface Repositories {
     setCurrent(id: string): Promise<void>
     /** Deletes a kid and all their data; `false` for the last profile. */
     remove(id: string): Promise<boolean>
+    /** Clears a kid's progress but keeps the kid and their explorer (spec 011). */
+    reset(id: string): Promise<boolean>
   }
   lessons: {
     /**
@@ -79,10 +82,18 @@ export interface Repositories {
     wallet(profileId: string): Promise<{ wallet: Wallet; roll: StreakRoll }>
     badges(profileId: string): Promise<BadgeRow[]>
   }
+  /** Raw records for the parent dashboard (spec 011). */
+  reports: {
+    forProfile(profileId: string): Promise<ParentReportInput>
+  }
   /** This device's sound and voice settings (spec 009). */
   device: {
     audio(): Promise<AudioPrefs>
     setAudio(prefs: AudioPrefs): Promise<void>
+    /** The grown-ups PIN (spec 011): stored only as a salted hash. */
+    hasPin(): Promise<boolean>
+    setPin(pin: string): Promise<void>
+    checkPin(pin: string): Promise<boolean>
   }
   backup: {
     export(): Promise<BackupFile>

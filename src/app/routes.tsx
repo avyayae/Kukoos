@@ -2,6 +2,7 @@ import { Navigate, type RouteObject } from 'react-router'
 import { RequireGrownUp } from '@/features/grownups/GrownUpGate'
 import { GrownUpsScreen } from '@/features/grownups/GrownUpsScreen'
 import { MissionsList } from '@/features/grownups/MissionsList'
+import { ProgressScreen } from '@/features/grownups/ProgressScreen'
 import { LessonRoute } from '@/features/lesson-player/LessonRoute'
 import { MapScreen } from '@/features/map/MapScreen'
 import { ChangeLookScreen, MeScreen } from '@/features/profiles/MeScreen'
@@ -21,6 +22,14 @@ export const routes: RouteObject[] = [
     element: (
       <RequireGrownUp>
         <GrownUpsScreen />
+      </RequireGrownUp>
+    ),
+  },
+  {
+    path: '/grown-ups/progress',
+    element: (
+      <RequireGrownUp>
+        <ProgressScreen />
       </RequireGrownUp>
     ),
   },

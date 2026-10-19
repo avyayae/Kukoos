@@ -147,3 +147,18 @@ export {
   type RewardEffect,
   type RewardEffectType,
 } from './gamification/rewards'
+export {
+  parentReport,
+  REPORT_DAYS,
+  STRUGGLE_PCT,
+  type DayReport,
+  type MistakeCount,
+  type ParentReport,
+  type ParentReportInput,
+  type PracticeItem,
+  type ReportAttempt,
+  type ReportBadge,
+  type ReportDay,
+  type ReportLesson,
+  type SkillReport,
+} from './report'

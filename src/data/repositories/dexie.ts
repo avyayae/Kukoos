@@ -6,14 +6,17 @@ import { lessonToRows } from '../mappers'
 import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
 import { audioPrefs, saveAudioPrefs } from '../device'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
+import { checkPin, hasPin, setPin } from '../pin'
 import {
   createProfile,
   listProfiles,
   removeProfile,
+  resetProfile,
   setCurrentProfile,
   updateProfile,
 } from '../profiles'
 import { applyLessonRewards, badgesFor, rollWallet } from '../rewards'
+import { reportInput } from '../report'
 import { addActive, addBonus, readToday, saveTimeSettings, timeSettings } from '../time'
 import type { ProfileRow } from '../rows'
 import { newId, writeRows } from '../write'
@@ -60,6 +63,7 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       update: (id, patch) => updateProfile(db, id, patch, now()),
       setCurrent: (id) => setCurrentProfile(db, id, now()),
       remove: (id) => removeProfile(db, id, now()),
+      reset: (id) => resetProfile(db, id, now()),
     },
 
     lessons: {
@@ -126,9 +130,16 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       badges: (profileId) => badgesFor(db, profileId),
     },
 
+    reports: {
+      forProfile: (profileId) => reportInput(db, profileId, now()),
+    },
+
     device: {
       audio: () => audioPrefs(db),
       setAudio: (prefs) => saveAudioPrefs(db, prefs, now()),
+      hasPin: () => hasPin(db),
+      setPin: (pin) => setPin(db, pin, now()),
+      checkPin: (pin) => checkPin(db, pin),
     },
 
     backup: {

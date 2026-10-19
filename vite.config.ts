@@ -1,17 +1,47 @@
+import { copyFileSync, existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 
 // Manifest colors mirror tokens: --mq-primary (theme) and --mq-bg (background).
 const THEME_COLOR = '#7c4dff'
 const BACKGROUND_COLOR = '#f6f3ff'
 
+/**
+ * Where the app lives (spec 012 AC1). GitHub Pages serves it at /Kukoos/, so the deploy
+ * workflow sets BASE_PATH=/Kukoos/. Local dev, tests and previews use /.
+ */
+const BASE = process.env.BASE_PATH ?? '/'
+
+/**
+ * GitHub Pages has no SPA rewrites: a refresh on /Kukoos/grown-ups would 404. Serving
+ * index.html as 404.html lets the app's router take over (spec 012 AC2).
+ */
+export function spaFallback(): Plugin {
+  let outDir = 'dist'
+  return {
+    name: 'kukoos-spa-404',
+    apply: 'build',
+    configResolved(config) {
+      outDir = resolve(config.root, config.build.outDir)
+    },
+    closeBundle() {
+      const index = resolve(outDir, 'index.html')
+      if (existsSync(index)) copyFileSync(index, resolve(outDir, '404.html'))
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
+  base: BASE,
   plugins: [
     react(),
+    spaFallback(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -25,8 +55,8 @@ export default defineConfig({
         background_color: BACKGROUND_COLOR,
         display: 'standalone',
         orientation: 'any',
-        start_url: '/',
-        scope: '/',
+        start_url: BASE,
+        scope: BASE,
         lang: 'en-US',
         categories: ['education', 'kids', 'games'],
         icons: [

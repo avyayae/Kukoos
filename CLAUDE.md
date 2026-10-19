@@ -12,7 +12,8 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-`specs/features/010-profiles-avatar/` on branch `feature/010-profiles-avatar` (implemented, PR #9). Done: 001–009 (PRs #1–#8). Next: F11 parent zone, F12 polish.
+`specs/features/011-parent-zone/` + `specs/features/012-launch/` on branch `feature/011-012-parent-zone-launch` (implemented, one PR). Done: 001–010 (PRs #1–#9). MVP complete after this; next is the play-test (`docs/PLAYTEST.md`) and Phase 2 in `specs/04-roadmap.md`.
+Deployed by `.github/workflows/pages.yml` to https://avyayae.github.io/Kukoos/ (`BASE_PATH=/Kukoos/`).
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.
 
