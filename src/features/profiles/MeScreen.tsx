@@ -1,19 +1,26 @@
 import { Link, useNavigate } from 'react-router'
+import { useCourses } from '@/app/courses'
 import { useActivity } from '@/app/time'
 import { useProfiles, useRepos, useWallet } from '@/data'
-import { avatarName, DEFAULT_AVATAR, parseAvatar } from '@/domain'
+import { avatarName, DEFAULT_AVATAR, parseAvatar, toggleCourse } from '@/domain'
+import { CourseCards } from '@/features/courses/CourseCards'
 import { Button3D, useSpeakOnTap } from '@/ui'
 import { AvatarArt } from '@/ui/AvatarArt'
 import { AvatarBuilder } from './AvatarBuilder'
 import { useUnlocks } from './useUnlocks'
 
-/** /me (spec 010 AC8): my explorer, name and level, with "Change my look" and "Switch player". */
+/**
+ * /me (spec 010 AC8): my explorer, name and level, with "Change my look" and "Switch player".
+ * With more than one course on offer, "My courses" lets the kid add or drop one: no PIN
+ * (spec 013 AC7). The last course can't be dropped.
+ */
 export function MeScreen() {
   useActivity('map')
   const { profile, profiles } = useProfiles()
   const wallet = useWallet()
   const navigate = useNavigate()
   const say = useSpeakOnTap()
+  const courses = useCourses()
   if (!profile) return null
   const avatar = profile.avatar ? parseAvatar(profile.avatar) : DEFAULT_AVATAR
   const level = wallet?.wallet.level ?? 1
@@ -34,6 +41,25 @@ export function MeScreen() {
         <span className="me__name">{profile.nickname}</span>
         <span className="me__level num">⭐ Level {level}</span>
       </button>
+      {courses.available.length > 1 && (
+        <section className="me__courses" aria-labelledby="my-courses">
+          <h2 id="my-courses" className="me__courses-title">
+            My courses
+          </h2>
+          <CourseCards
+            courses={courses.available}
+            selected={courses.mine}
+            onToggle={(id) => {
+              const next = toggleCourse(courses.mine, id)
+              if (next.length === courses.mine.length && courses.mine.includes(id)) {
+                say('You need at least one course.')
+                return
+              }
+              void courses.setMine(next)
+            }}
+          />
+        </section>
+      )}
       <div className="me__actions">
         <Button3D variant="primary" size="xl" block onClick={() => navigate('/me/look')}>
           Change my look

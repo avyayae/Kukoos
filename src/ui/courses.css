@@ -78,6 +78,19 @@
     font-size: var(--mq-text-lg);
   }
 
+  /* ---------------------------------------------------------- me → my courses */
+  .me__courses {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-3);
+  }
+  .me__courses-title {
+    margin: 0;
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+  }
+
   /* ---------------------------------------------------------- chess home */
   .chess-home__sign {
     display: flex;
