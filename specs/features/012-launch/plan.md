@@ -27,3 +27,14 @@
 | AC5 | `a11y.spec.ts` |
 | AC6 | `perf.spec.ts` |
 | AC7 | docs present |
+
+## Deviations (recorded during implementation)
+- **Accessibility fixes from axe** (`label-content-name-mismatch`, WCAG 2.5.3): each accessible name now starts with the visible text.
+  - Header stat chips: "Lv 1: level 1, …". The spoken line is still the friendly one.
+  - "Play next:" button.
+  - Trophy stickers: the visible name plus hidden hint text, with no `aria-label`.
+  - Count-ups: final value as `sr-only` text instead of an `aria-label` on a span.
+  - Also dropped the 0.9 opacity on "Play next" (contrast).
+- **iOS meta tags** (`apple-mobile-web-app-capable`, title) added so Add to Home Screen opens full-screen with the right name.
+- **AC1–AC2 check:** verified by hand with a `BASE_PATH=/Kukoos/` build. The manifest `start_url`/`scope`, asset URLs, `registerSW.js` scope and `404.html` all match, and `/Kukoos/` and `/Kukoos/grown-ups` render under `vite preview`. The plugin has a unit test (`tests/unit/app/spaFallback.test.ts`). On Windows, build from PowerShell: Git Bash rewrites `/Kukoos/` into a Windows path.
+- **a11y/perf e2e** run on the desktop project only (one layout is enough). The perf test blocks the service worker so precaching doesn't count toward first-visit bytes.

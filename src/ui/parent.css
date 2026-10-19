@@ -250,4 +250,16 @@
     font-size: var(--mq-text-sm);
     color: var(--mq-ink-muted);
   }
+
+  /* ---------------------------------------------------------- install (spec 012) */
+  .install__address {
+    overflow-wrap: anywhere;
+  }
+  .install__steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-2);
+    margin: 0;
+    padding-left: var(--mq-space-6);
+  }
 }

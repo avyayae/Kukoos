@@ -4,6 +4,7 @@ import { NO_STORAGE_MESSAGE, type TableName, useProfiles, useRepos, validateBack
 import { Button3D, ConfirmSheet } from '@/ui'
 import { backupFileName, downloadJson } from './download'
 import { DailyTimeSection } from './DailyTimeSection'
+import { InstallSection } from './InstallSection'
 import { useGrownUpGate } from './gate'
 import { ProfilesSection } from './ProfilesSection'
 import { SoundVoiceSection } from './SoundVoiceSection'
@@ -114,6 +115,8 @@ export function GrownUpsScreen({ now = Date.now }: { now?: () => number }) {
                 Show all missions
               </Link>
             </section>
+
+            <InstallSection />
 
             <section className="grownup__card" aria-label="Storage status">
               <p data-testid="persistence">

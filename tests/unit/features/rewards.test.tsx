@@ -38,6 +38,10 @@ const EFFECTS: RewardEffect[] = [
   { type: 'freezeEarned', freezes: 1 },
 ]
 
+/** The screen-reader text of a count-up (its final value). */
+const finals = (text: string) =>
+  screen.getAllByTestId('count-final').find((el) => el.textContent === text) ?? null
+
 const cont = () => userEvent.click(screen.getByRole('button', { name: 'Continue' }))
 
 describe('celebration orchestrator (AC10)', () => {
@@ -55,8 +59,8 @@ describe('celebration orchestrator (AC10)', () => {
     )
     const earned = screen.getByTestId('earned')
     expect(earned).toHaveTextContent('XP')
-    expect(screen.getByLabelText('+18')).toBeInTheDocument()
-    expect(screen.getByLabelText('+20')).toBeInTheDocument()
+    expect(finals('+18')).toBeInTheDocument()
+    expect(finals('+20')).toBeInTheDocument()
 
     const seen: string[] = []
     for (let i = 0; i < 6; i++) {
@@ -134,7 +138,8 @@ describe('celebration orchestrator (AC10)', () => {
         />,
       ),
     )
-    await waitFor(() => expect(screen.getByLabelText('+18')).toHaveTextContent('+18'))
+    // The visible (animated) digits show the final number straight away.
+    await waitFor(() => expect(finals('+18')?.nextSibling).toHaveTextContent('+18'))
     spy.mockRestore()
   })
 })

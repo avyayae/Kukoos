@@ -16,7 +16,8 @@ export function PlayNextButton({ target, onPlay }: { target: MissionTarget; onPl
         ▶
       </span>
       <span className="play-next__text">
-        <span className="play-next__label">Play next</span>
+        {/* The visible text is part of the accessible name (WCAG 2.5.3, spec 012 AC5). */}
+        <span className="play-next__label">Play next:</span>{' '}
         <span className="play-next__name">{name}</span>
       </span>
     </button>

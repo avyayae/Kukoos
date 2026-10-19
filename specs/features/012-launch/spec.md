@@ -1,6 +1,6 @@
 # Feature 012 — Polish & Launch
 
-**Status:** Approved (2026-10-18)  ·  **Constitution check:** §3.6 offline always works (installed PWA), §3.7 accessible and performant (axe checks, < 2 MB initial load), §1.5 privacy (static hosting, no analytics, no server)
+**Status:** Implemented (PR pending)  ·  **Constitution check:** §3.6 offline always works (installed PWA), §3.7 accessible and performant (axe checks, < 2 MB initial load), §1.5 privacy (static hosting, no analytics, no server)
 
 ## Why
 The app only runs from the development computer. To be played every day it must live at a stable address, **install on the tablet** like an app, and keep working offline. It also needs one last quality pass (accessibility and load size) and a simple kit for the first real play-test with her.

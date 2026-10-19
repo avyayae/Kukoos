@@ -21,9 +21,13 @@ export function CountUp({ value, prefix = '' }: { value: number; prefix?: string
     return () => cancelAnimationFrame(frame)
   }, [value, reduced])
 
-  // The accessible name is always the final value; only the digits animate.
+  // Screen readers get the final value; only the visible digits animate.
   return (
-    <span className="num" aria-label={`${prefix}${value}`}>
+    <span className="num">
+      <span className="sr-only" data-testid="count-final">
+        {prefix}
+        {value}
+      </span>
       <span aria-hidden="true">
         {prefix}
         {reduced ? value : shown}

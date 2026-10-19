@@ -46,14 +46,22 @@ export function TrophyRoom() {
                   className={`sticker${has ? ' sticker--earned' : ''}`}
                   data-testid={`badge-${b.id}`}
                   data-earned={has}
-                  aria-label={has ? `${b.name}. You earned it!` : `${b.name}. Not yet. ${b.howTo}`}
                   onClick={() => say(has ? `${b.name}! You earned it!` : `Not yet. ${b.howTo}`)}
                 >
+                  {/* The name comes from the visible text plus a hidden hint (WCAG 2.5.3). */}
                   <span className="sticker__emoji" aria-hidden="true">
                     {b.emoji}
                   </span>
                   <span className="sticker__name">{b.name}</span>
-                  {!has && <span className="sticker__hint">Not yet</span>}
+                  {has ? (
+                    <span className="sr-only">. You earned it!</span>
+                  ) : (
+                    <>
+                      <span className="sr-only">. </span>
+                      <span className="sticker__hint">Not yet</span>
+                      <span className="sr-only">. {b.howTo}</span>
+                    </>
+                  )}
                 </button>
               </li>
             )
