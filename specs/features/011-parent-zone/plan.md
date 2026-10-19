@@ -25,3 +25,7 @@
 
 ## Risks
 - **Every existing test** uses the multiplication gate. The unit `passGate()` and e2e `passGate()` helpers become "set or enter the PIN" (test PIN 2468), so call sites don't change.
+
+## Deviations (recorded during implementation)
+- **Data hooks are keyed by profile id.** While building the per-kid dashboard, we saw that `useProgress`/`useJourney`/`useWallet`/`useBadges`/`useBestScores` could briefly show the previous kid's data right after a switch. They now share one `useProfileData` loader that reports "loading" until the current kid's data arrives (this fixes spec 010 AC5).
+- **E2E slip:** `parent.spec.ts` drives a seeded `sub.within100.regroup` lesson with a mirror of the lesson reducer, so the smaller-from-larger answer lands exactly on the first column question.
