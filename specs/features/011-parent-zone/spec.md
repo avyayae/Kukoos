@@ -1,6 +1,6 @@
 # Feature 011 — Parent Zone
 
-**Status:** Implemented (PR pending)  ·  **Constitution check:** §1.5 privacy (PIN stored only as a salted hash, on the device), §1.3 no dark patterns (the dashboard is for grown-ups; kids never see scores ranked), §3.2 pure domain (report math in `src/domain/report.ts`), §2.1 mastery (the heatmap reads the real mastery model)
+**Status:** Implemented (PR #10)  ·  **Constitution check:** §1.5 privacy (PIN stored only as a salted hash, on the device), §1.3 no dark patterns (the dashboard is for grown-ups; kids never see scores ranked), §3.2 pure domain (report math in `src/domain/report.ts`), §2.1 mastery (the heatmap reads the real mastery model)
 
 ## Why
 Grown-ups is protected only by a multiplication question a sibling could solve, and you can't yet *see* how she's doing. Product spec §5.5 promises a PIN-protected parent zone with a per-kid dashboard. Above all it promises **top misconceptions**: the app already detects regrouping bugs on every answer ("smaller-from-larger", "forgot the carry", "borrow across zero") but never shows them. That's the signal for whether carry/borrow is sinking in.
