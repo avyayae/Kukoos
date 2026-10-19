@@ -111,6 +111,7 @@ describe('daily time (AC6 data, AC12)', () => {
       totalSeconds: 10,
       bonusMinutes: 0,
       goalMet: false,
+      chessSeconds: 0,
     })
     await repos.time.addBonus('P1', 10)
     expect((await repos.time.today('P1')).bonusMinutes).toBe(10)
@@ -120,10 +121,22 @@ describe('daily time (AC6 data, AC12)', () => {
 
   it('stores goal and limit per profile, with defaults 10 and 60', async () => {
     const { repos } = store()
-    expect(await repos.time.settings('P1')).toEqual({ goalMin: 10, limitMin: 60 })
+    expect(await repos.time.settings('P1')).toEqual({
+      goalMin: 10,
+      limitMin: 60,
+      chessLimitMin: null,
+    })
     await repos.time.setSettings('P1', { goalMin: 15, limitMin: null })
-    expect(await repos.time.settings('P1')).toEqual({ goalMin: 15, limitMin: null })
-    expect(await repos.time.settings('P2')).toEqual({ goalMin: 10, limitMin: 60 })
+    expect(await repos.time.settings('P1')).toEqual({
+      goalMin: 15,
+      limitMin: null,
+      chessLimitMin: null,
+    })
+    expect(await repos.time.settings('P2')).toEqual({
+      goalMin: 10,
+      limitMin: 60,
+      chessLimitMin: null,
+    })
   })
 
   it('the null store keeps today in memory', async () => {
