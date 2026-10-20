@@ -1,6 +1,6 @@
 # Feature 015 — Chess Board & Pieces
 
-**Status:** Draft (2026-10-20)  ·  **Constitution check:**
+**Status:** Approved (2026-10-20)  ·  **Constitution check:**
 - §1.2: no shame. An illegal move gets a gentle shake and a "why not" hint, never a red X.
 - §1.4: tap-first, every square and piece has a spoken name.
 - §2.4: one piece on an empty board first.
@@ -66,7 +66,7 @@ all without reading. The pieces must look like real chess pieces so the skills c
 - Lessons, stars or puzzle goals on the board (F16). The bot, pass-and-play screen, flipping per turn and game history (F17).
 - Board themes and piece sets beyond the one (later, maybe as earned items).
 
-## Open questions
-1. **Drag as well as tap?** I recommend both. Tapping is easiest for small hands and screen readers, and dragging feels natural to kids who've played on other apps. Tap-only would be a little less work.
-2. **Coordinates (a–h, 1–8) always on?** I recommend on: they're needed later for "find e4" lessons, and they're small and quiet. The alternative is a Grown-ups toggle.
-3. **Board colours:** lavender and purple-grey, so the board matches Kukoos. The alternative is classic wood tones (cream and brown), which look more like a real board.
+## Decisions (2026-10-20)
+- **Tap and drag:** both move pieces, with the same rules and hints.
+- **Coordinates always on** (a–h, 1–8 along the edges).
+- **Kukoos lavender board:** soft lavender and purple-grey squares.

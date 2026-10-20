@@ -1,6 +1,6 @@
 # Feature 014 — Chess Rules (pure domain)
 
-**Status:** Draft (2026-10-20)  ·  **Constitution check:**
+**Status:** Approved (2026-10-20)  ·  **Constitution check:**
 - §3.4 (amended): a rules engine decides every legal move, check, mate and draw; AI never decides.
 - §3.2: pure domain, no React or I/O.
 - §3.3: correctness is provable (perft and property tests).
