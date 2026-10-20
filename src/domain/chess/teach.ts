@@ -27,8 +27,17 @@ export function mateInOneMoves(p: Position): ChessMove[] {
   })
 }
 
+/** Stops at the first mate found (solvers call this a lot). */
 export function isMateInOne(p: Position): boolean {
-  return mateInOneMoves(p).length > 0
+  return firstMateInOne(p) !== null
+}
+
+export function firstMateInOne(p: Position): ChessMove | null {
+  for (const m of legalMoves(p)) {
+    const next = play(p, m)
+    if (next !== null && status(next.position).checkmate) return m
+  }
+  return null
 }
 
 /** Squares of `by`'s pieces that attack `square` (for "that square is watched by…"). */

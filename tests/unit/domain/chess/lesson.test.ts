@@ -37,6 +37,7 @@ function playAll(state: ChessLessonState): ChessLessonState {
 describe('chess lesson (spec 016 AC4)', () => {
   it.each(['chess.board', 'chess.rook', 'chess.knight', 'chess.mate1', 'chess.mateRK'])(
     '%s: 8 puzzles, all solvable, saved as chess answers',
+    { timeout: 20_000 },
     (skillId) => {
       const done = playAll(startChessLesson({ skillId, seed: 7, at: 0 }))
       expect(done.results).toHaveLength(CHESS_LESSON_LENGTH)

@@ -20,6 +20,7 @@ export { explainIllegal, PIECE_NAMES, whyNot } from './explain'
 export {
   attackersOf,
   boardFen,
+  firstMateInOne,
   isMateInOne,
   material,
   mateInOneMoves,

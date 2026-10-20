@@ -2,6 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Repositories } from '@/data'
+import { startChessLesson } from '@/domain/chess/lesson'
 import { testStore } from '../withData'
 import { renderAt } from './nav'
 
@@ -139,5 +140,19 @@ describe('mistake patterns from the board (AC8)', () => {
     await waitFor(async () => expect(await db.attempts.count()).toBe(1))
     const [attempt] = await db.attempts.toArray()
     expect(attempt).toMatchObject({ firstTry: true, misconceptions: ['chess.not-how-it-moves:n'] })
+  })
+})
+
+describe('"Is the king in check?" doesn’t give the answer away', () => {
+  it('no check glow or "in check" name on the board', async () => {
+    // A seed whose first puzzle really is check.
+    let seed = 1
+    while (startChessLesson({ skillId: 'chess.check', seed, at: 0 }).puzzle.answer !== 'Check!')
+      seed++
+    const { repos } = testStore()
+    renderAt(`/chess/lesson/chess.check?seed=${seed}&learn`, repos)
+    expect(await screen.findByTestId('bubble-text')).toHaveTextContent('Is the king in check?')
+    expect(screen.queryAllByRole('button', { name: /in check/ })).toHaveLength(0)
+    expect(document.querySelector('.sq--check')).toBeNull()
   })
 })

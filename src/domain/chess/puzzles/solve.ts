@@ -1,5 +1,5 @@
 import { legalMoves, pieceAt, pieces, play, status } from '../position'
-import { mateInOneMoves } from '../teach'
+import { firstMateInOne, isMateInOne } from '../teach'
 import type { MoveInput, Square } from '../types'
 import { fewestMoves } from './generators'
 import type { PuzzleRun } from './run'
@@ -55,14 +55,14 @@ function starsStep(run: PuzzleRun): MoveInput | null {
 /** A move that mates now, or that leaves mate in one after every king reply. */
 function mateStep(run: PuzzleRun): MoveInput | null {
   const p = run.position
-  const now = mateInOneMoves(p)[0]
+  const now = firstMateInOne(p)
   if (now) return { from: now.from, to: now.to }
   for (const m of legalMoves(p)) {
     const after = play(p, m)?.position
     if (!after || status(after).over) continue
     const forced = legalMoves(after).every((r) => {
       const next = play(after, r)?.position
-      return !!next && mateInOneMoves(next).length > 0
+      return !!next && isMateInOne(next)
     })
     if (forced) return { from: m.from, to: m.to }
   }

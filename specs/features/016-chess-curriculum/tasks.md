@@ -7,4 +7,4 @@ Branch: `feature/016-chess-curriculum` (stacked on #12). Load `mathquest-ui` and
 - [x] **T3 — Chess lesson reducer, skip-ahead, saving and mastery** (`markMastered`). · *done when:* AC4 (domain), AC5 and AC8 pass.
 - [x] **T4 — Puzzle screen, lesson route, skip-ahead offer** (board marks, tap mode, choices). · *done when:* AC4 (UI) and AC6 pass.
 - [x] **T5 — Castle map, area stickers, launch** (gate removed). · *done when:* AC7 and AC9 pass.
-- [ ] **T6 — E2E and wrap-up** (deviations, verify, PR). · *done when:* AC10 passes.
+- [x] **T6 — E2E and wrap-up** (deviations, verify, PR). · *done when:* AC10 passes.

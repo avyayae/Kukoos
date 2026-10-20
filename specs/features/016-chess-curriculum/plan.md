@@ -70,3 +70,15 @@
 ## Risks
 - **Scope:** this is the biggest feature since F05. Tasks are ordered so the domain is fully tested before any UI.
 - **Puzzle quality:** generated positions must look sensible to a kid. Practice boards stay sparse (1 piece, ≤ 3 stars, ≤ 2 blockers).
+
+## Deviations (recorded during implementation)
+- **Illegal attempts don't count as misses.** The board already explains them (shake plus a spoken "why not"), so the lesson records them only as mistake patterns (`chess.<reason>:<piece>`). Only legal-but-wrong answers use up the two tries. This matches §1.2 "no shame" and lets kids explore.
+- **The castle map ships in the main bundle**, not lazily. `curriculum.ts` has no chess.js and no positions, so the map costs only a few KB. Lessons (generators, positions, rules) and the board stay lazy: `ChessLessonRoute` is about 24 KB (8.6 KB gzipped), and `perf.spec.ts` still finds no chess rules in the first load.
+- **Area stickers are badges** with a new `crownAll` rule, so the existing lesson-save flow awards and celebrates them. The trophy room shows them only to kids who learn chess. A sticker earned through a skip-ahead crown is awarded at the next saved lesson.
+- **The skip-ahead check isn't saved as a lesson** (no XP). Passing it calls `progress.markMastered`, using the same `preMastered` rule as the math starting point.
+- **Puzzle generator tests** use 25 seeds per skill × kind × difficulty for generated boards and 6 for list-based kinds, not 200. Every generated puzzle is still checked against the engine, and the stars search uses fast geometry (tested equal to the engine on practice boards).
+- **Mate drills:** a search found the forced mate-in-2 positions. Its first version also accepted some mate-in-1 positions; the test caught that, and those were removed (4 queen and 5 rook drills remain).
+- **`nextAnswer` (solver)** powers both "show the answer" after two misses (💡 squares) and the tests that play whole lessons.
+- **The parent report is math-only** (`mathOnly` filter at the top of `parentReport`): chess rows used to crash `getSkill`. Chess joins the dashboard in F18.
+- **Launch:** the `VITE_CHESS` flag and its single-course branches were removed (decision: live when F16 merges). `/chess/board` stays reachable but unlisted, for F17.
+- **No check glow in "which" puzzles:** found in the 360px visual check. The board's check glow and ⚠ gave away the answer to "Is the king in check?", so `ChessBoard` gained `showCheck`, and it's off for `which` puzzles (tested).

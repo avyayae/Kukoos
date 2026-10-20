@@ -49,6 +49,8 @@ export interface ChessBoardProps {
   onlyFrom?: Square | null
   /** "Find the square" puzzles: every square is a button and nothing moves. */
   onTap?: (square: Square) => void
+  /** Show the check glow and ⚠ (off when the question is "is it check?"). */
+  showCheck?: boolean
 }
 
 export interface BoardMarks {
@@ -78,6 +80,7 @@ export function ChessBoard({
   marks,
   onlyFrom = null,
   onTap,
+  showCheck = true,
 }: ChessBoardProps) {
   const say = useSpeakOnTap()
   // Selection and the promotion picker belong to the position they were made on, so a new
@@ -108,9 +111,10 @@ export function ChessBoard({
     () => (selected ? legalMoves(position, selected) : []),
     [position, selected],
   )
-  const checkedKing = st.check
-    ? [...board.values()].find((p) => p.type === 'k' && p.color === toMove)?.square
-    : undefined
+  const checkedKing =
+    st.check && showCheck
+      ? [...board.values()].find((p) => p.type === 'k' && p.color === toMove)?.square
+      : undefined
 
   useEffect(() => {
     if (!hint) return

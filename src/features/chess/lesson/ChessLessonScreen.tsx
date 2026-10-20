@@ -200,6 +200,8 @@ export function ChessLessonScreen({
           lastMove={run.lastMove}
           movable={answering && mode_ === 'move' ? turn(run.position) : 'none'}
           onlyFrom={run.focus}
+          // "Check or not?" puzzles: the glow would give the answer away.
+          showCheck={puzzle.kind !== 'which'}
           marks={marks}
           label={puzzle.prompt.text}
           {...(answering && mode_ === 'tap'
