@@ -72,6 +72,7 @@ export {
   type LessonPhase,
   type LessonState,
   type QuestionResult,
+  type SavedLesson,
 } from './engine/lessonSession'
 export {
   formatMessage,

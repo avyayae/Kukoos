@@ -17,4 +17,12 @@ export {
   withTurn,
 } from './position'
 export { explainIllegal, PIECE_NAMES, whyNot } from './explain'
-export { isMateInOne, material, mateInOneMoves, PIECE_VALUES, reachable } from './teach'
+export {
+  attackersOf,
+  boardFen,
+  isMateInOne,
+  material,
+  mateInOneMoves,
+  PIECE_VALUES,
+  reachable,
+} from './teach'

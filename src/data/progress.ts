@@ -2,7 +2,7 @@ import Dexie from 'dexie'
 import {
   applyLesson,
   applyStartingPoint,
-  type LessonState,
+  type SavedLesson,
   type Progress,
   type SkillId,
   type SkillMastery,
@@ -47,11 +47,11 @@ export async function progressForProfile(db: KukoosDb, profileId: string): Promi
  */
 export async function applyLessonProgress(
   db: KukoosDb,
-  state: LessonState,
+  state: SavedLesson,
   profileId: string,
   at: number,
 ): Promise<void> {
-  const bySkill = new Map<SkillId, LessonState['results'][number][]>()
+  const bySkill = new Map<SkillId, SavedLesson['results'][number][]>()
   for (const r of state.results) {
     const list = bySkill.get(r.skillId) ?? []
     list.push(r)
