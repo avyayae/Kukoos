@@ -38,3 +38,9 @@
 
 ## Risks
 - **Perft through our wrapper is slow** (FEN round-trips). Keep depth 3 (8,902 nodes) and Kiwipete depth 2 (2,039).
+
+## Deviations (recorded during implementation)
+- **Engine cache:** each `Position` value caches its chess.js instance in a `WeakMap`. `play` moves on it, reads the new FEN and undoes the move, so positions stay immutable values. This made the random-games test about 3× faster.
+- **En passant counts as a capture:** chess.js's `isCapture()` is false for en passant, so `ChessMove.capture` also checks `isEnPassant()`.
+- **Random games:** 200 seeded games of up to 40 plies each (60s timeout), instead of 120 plies, to keep CI time reasonable.
+- **AC8 is two checks:** a test that the `@/domain` barrel never re-exports chess here, and the build-chunk check in F015's perf work.
