@@ -42,6 +42,7 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
     progress: {
       forProfile: () => Promise.resolve({}),
       applyStartingPoint: () => Promise.resolve(0),
+      markMastered: () => Promise.resolve(false),
     },
     journey: {
       bossesBeaten: () => Promise.resolve(new Set()),

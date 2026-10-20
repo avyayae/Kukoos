@@ -1,14 +1,6 @@
 import { useProfiles, useRepos } from '@/data'
 import { availableCourses, type CourseId, courseNow, profileCourses } from '@/domain'
 
-/**
- * Chess ships in F16; until then only builds with `VITE_CHESS=1` (dev, e2e) offer it.
- * Read at call time so tests can stub it.
- */
-export function chessAvailable(): boolean {
-  return import.meta.env.VITE_CHESS === '1'
-}
-
 /** Router state that tells home to cross-fade (spec 013 UX: switching courses). */
 export const SWITCHED = { switched: true }
 
@@ -29,7 +21,8 @@ export interface CoursesValue {
 export function useCourses(): CoursesValue {
   const repos = useRepos()
   const { profile, refresh } = useProfiles()
-  const available = availableCourses({ chess: chessAvailable() })
+  // Chess is live for everyone since F16 (decision 2026-10-20).
+  const available = availableCourses({ chess: true })
   const mine = profileCourses(profile?.courses, available)
   const current = courseNow(mine, profile?.currentCourse)
   return {

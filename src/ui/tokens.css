@@ -89,6 +89,9 @@
   --mq-map-twilight: #6c5bb8;
   --mq-map-twilight-deep: #4a3b8f;
   --mq-map-space: #141130;
+  --mq-castle-courtyard: #cfe3b8; /* chess castle (spec 016): grass and stone */
+  --mq-castle-towers: #d8d2ec;
+  --mq-castle-throne: #f5dfa8;
   --mq-map-row: 112px; /* vertical distance between path nodes */
   --mq-map-step: 72px; /* zigzag offset */
   --mq-map-node: 72px;

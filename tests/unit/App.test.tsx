@@ -8,6 +8,9 @@ describe('App', () => {
     render(<App />)
     expect(await screen.findByTestId('onboarding')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: "Let's go!" }))
+    // What do you want to learn? (spec 013)
+    await userEvent.click(screen.getByRole('button', { name: 'Math' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }))
     await userEvent.click(screen.getByRole('button', { name: 'Next' }))
     await userEvent.click(screen.getByRole('button', { name: "That's me!" }))
     expect(

@@ -43,7 +43,7 @@ export {
   type SkillMastery,
   type SrsBox,
 } from './engine/mastery'
-export { applyStartingPoint, prereqClosure } from './engine/startingPoint'
+export { applyStartingPoint, preMastered, prereqClosure } from './engine/startingPoint'
 export {
   BOSS_LENGTH,
   BOSS_PASS_ACCURACY,
@@ -72,6 +72,7 @@ export {
   type LessonPhase,
   type LessonState,
   type QuestionResult,
+  type SavedLesson,
 } from './engine/lessonSession'
 export {
   formatMessage,
@@ -134,6 +135,7 @@ export {
 export {
   BADGES,
   getBadge,
+  isChessBadge,
   newBadges,
   type BadgeDef,
   type BadgeRule,

@@ -2,7 +2,8 @@ import Dexie from 'dexie'
 import {
   applyLesson,
   applyStartingPoint,
-  type LessonState,
+  preMastered,
+  type SavedLesson,
   type Progress,
   type SkillId,
   type SkillMastery,
@@ -47,11 +48,11 @@ export async function progressForProfile(db: KukoosDb, profileId: string): Promi
  */
 export async function applyLessonProgress(
   db: KukoosDb,
-  state: LessonState,
+  state: SavedLesson,
   profileId: string,
   at: number,
 ): Promise<void> {
-  const bySkill = new Map<SkillId, LessonState['results'][number][]>()
+  const bySkill = new Map<SkillId, SavedLesson['results'][number][]>()
   for (const r of state.results) {
     const list = bySkill.get(r.skillId) ?? []
     list.push(r)
@@ -85,5 +86,24 @@ export async function applyStartingPointProgress(
     )
     await writeRows(db, 'skillProgress', rows, at)
     return rows.length
+  })
+}
+
+/**
+ * Crowns one skill the kid proved they know (spec 016: "Already know this?" passed). Same
+ * rule as the starting point: never lowers real progress. True when something changed.
+ */
+export async function markMasteredProgress(
+  db: KukoosDb,
+  profileId: string,
+  skillId: SkillId,
+  at: number,
+): Promise<boolean> {
+  return db.transaction('rw', [db.skillProgress, db.outbox], async () => {
+    const prev = (await progressForProfile(db, profileId))[skillId]
+    const next = preMastered(prev, at)
+    if (next === prev) return false
+    await writeRows(db, 'skillProgress', [masteryToRow(profileId, skillId, next)], at)
+    return true
   })
 }

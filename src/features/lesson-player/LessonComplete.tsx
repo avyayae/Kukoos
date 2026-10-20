@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react'
 import { playSfx } from '@/audio/sfx'
 import { speak } from '@/audio/tts'
-import {
-  firstTryAccuracy,
-  getSkill,
-  isSpaceWorld,
-  type LessonState,
-  lessonMinutes,
-  type RewardEffect,
-} from '@/domain'
+import { firstTryAccuracy, lessonMinutes, type RewardEffect, type SavedLesson } from '@/domain'
 import { momentFor } from '@/features/rewards/copy'
 import { CountUp } from '@/features/rewards/CountUp'
 import { RewardMoment } from '@/features/rewards/RewardMoment'
@@ -17,7 +10,10 @@ import { useAutoFocus } from '@/ui/useAutoFocus'
 import { t } from './copy'
 
 interface LessonCompleteProps {
-  state: LessonState
+  /** Any finished lesson: math or chess (spec 016). */
+  state: SavedLesson
+  /** Kukoos wears the space helmet in space worlds. */
+  helmet?: boolean
   /** The lesson's rewards; `null` while the save is still running. */
   effects: readonly RewardEffect[] | null
   autoRead: boolean
@@ -36,7 +32,13 @@ function formatMinutes(minutes: number): string {
  * AC10): XP and crystals count up on the summary, then each bigger moment (chest, badge,
  * level, goal, streak) gets its own screen, one at a time, with the same CONTINUE.
  */
-export function LessonComplete({ state, effects, autoRead, onContinue }: LessonCompleteProps) {
+export function LessonComplete({
+  state,
+  effects,
+  autoRead,
+  onContinue,
+  helmet = false,
+}: LessonCompleteProps) {
   const [step, setStep] = useState(0)
   const moments = (effects ?? []).flatMap((effect) => {
     const copy = momentFor(effect)
@@ -57,10 +59,18 @@ export function LessonComplete({ state, effects, autoRead, onContinue }: LessonC
       />
     )
   }
-  return <Summary state={state} effects={effects} autoRead={autoRead} onContinue={next} />
+  return (
+    <Summary
+      state={state}
+      effects={effects}
+      autoRead={autoRead}
+      onContinue={next}
+      helmet={helmet}
+    />
+  )
 }
 
-function Summary({ state, effects, autoRead, onContinue }: LessonCompleteProps) {
+function Summary({ state, effects, autoRead, onContinue, helmet }: LessonCompleteProps) {
   const title = t('lesson:complete')
   // Focus CONTINUE once it's enabled (rewards saved).
   const continueRef = useAutoFocus<HTMLButtonElement>(effects === null)
@@ -85,12 +95,7 @@ function Summary({ state, effects, autoRead, onContinue }: LessonCompleteProps) 
 
   return (
     <main className="screen flex flex-col items-center justify-center gap-6 text-center">
-      <Kukoos
-        mood="cheer"
-        size={160}
-        talks
-        helmet={isSpaceWorld(getSkill(state.question.skillId).worldId)}
-      />
+      <Kukoos mood="cheer" size={160} talks helmet={helmet ?? false} />
       <h1 className="font-display text-kid-3xl leading-tight font-extrabold text-primary">
         {title}
       </h1>
