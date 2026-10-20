@@ -52,7 +52,7 @@ describe('course homes and the switcher (spec 013 AC3, AC4, AC6)', () => {
     renderAt('/', repos)
     const math = await screen.findByRole('radio', { name: 'Math' })
     expect(math).toHaveAttribute('aria-checked', 'true')
-    expect(screen.getByTestId('stat-goal')).toBeInTheDocument()
+    expect(await screen.findByTestId('stat-goal')).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('radio', { name: 'Chess' }))
     expect(await screen.findByTestId('chess-home')).toBeInTheDocument()
