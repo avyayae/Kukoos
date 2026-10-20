@@ -56,3 +56,18 @@ test('PIN gate, progress dashboard and goodnight', async ({ page }) => {
   await expect(page.getByTestId('goodnight')).toBeVisible()
   await expectAccessible(page, 'goodnight')
 })
+
+test('My courses, the course switcher and the chess home (spec 013)', async ({ page }) => {
+  desktopOnly()
+  await page.goto('/me')
+  await page.getByRole('button', { name: 'Chess', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Chess', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  await expectAccessible(page, 'me with my courses')
+  await page.goto('/')
+  await page.getByRole('radio', { name: 'Chess' }).click()
+  await expect(page.getByTestId('chess-home')).toBeVisible()
+  await expectAccessible(page, 'chess home')
+})

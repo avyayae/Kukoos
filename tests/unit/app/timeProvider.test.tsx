@@ -16,12 +16,17 @@ let clock = 0
 
 function Probe({ activity }: { activity: Activity | null }) {
   useActivity(activity)
-  const { today, budget, ready } = useDailyTime()
+  const { today, budget, chess, ready } = useDailyTime()
   if (!ready) return null
   return (
-    <p data-testid="probe">
-      {today?.lessonSeconds ?? 0}/{today?.totalSeconds ?? 0}/{budget.locked ? 'locked' : 'open'}
-    </p>
+    <>
+      <p data-testid="probe">
+        {today?.lessonSeconds ?? 0}/{today?.totalSeconds ?? 0}/{budget.locked ? 'locked' : 'open'}
+      </p>
+      <p data-testid="chess">
+        {today?.chessSeconds ?? 0}/{chess.locked ? 'resting' : 'open'}
+      </p>
+    </>
   )
 }
 
@@ -129,5 +134,24 @@ describe('active-time tracker (AC6)', () => {
     await pass(10_000)
     // One tick switches to the new day, the next one counts on it.
     expect(screen.getByTestId('probe').textContent).toBe('5/5/open')
+  })
+
+  it('chess time is only recorded: no goal, no math limit (spec 013 AC3)', async () => {
+    await setup('chess')
+    await pass(15_000)
+    expect(screen.getByTestId('probe').textContent).toBe('0/0/open')
+    expect(screen.getByTestId('chess').textContent).toBe('15/open')
+  })
+
+  it('chess stays open when math is locked, and rests at its own optional limit', async () => {
+    const repos = createNullRepositories(() => clock)
+    await repos.time.setSettings('local', { goalMin: 10, limitMin: 15, chessLimitMin: 15 })
+    await repos.time.addActive('local', 0, 15 * 60)
+    await repos.time.addChess('local', 15 * 60 - 5)
+    await setup('chess', repos)
+    expect(screen.getByTestId('probe').textContent).toContain('locked')
+    expect(screen.getByTestId('chess').textContent).toContain('open')
+    await pass(5000)
+    expect(screen.getByTestId('chess').textContent).toBe('900/resting')
   })
 })

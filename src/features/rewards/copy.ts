@@ -5,6 +5,7 @@ export const REWARD_COPY = {
   headsUp: '2 more minutes of space travel today!',
   goodnightTitle: 'Great job today!',
   goodnightBody: 'Kukoos is going to sleep. See you tomorrow!',
+  chessOffer: 'Math is sleeping. Want to play chess?',
   frozen: 'Kukoos kept your flame warm!',
   newFlame: "Let's start a new flame today!",
 } as const

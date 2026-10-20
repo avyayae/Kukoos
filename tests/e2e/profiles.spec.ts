@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { seenWorldsSaved } from './fixtures'
+import { pickCourses, seenWorldsSaved } from './fixtures'
 import { finishRewards, passGate, playPerfectLesson } from './helpers'
 
 // Spec 010 AC9: a new kid makes an explorer; a second kid gets their own progress.
@@ -10,6 +10,7 @@ test('a fresh device: meet Kukoos, pick a name, build an explorer, see it on the
   await page.goto('/')
   await expect(page.getByTestId('onboarding')).toBeVisible()
   await page.getByRole('button', { name: "Let's go!" }).click()
+  await pickCourses(page)
   await page.getByRole('button', { name: 'Nova' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('tab', { name: 'Hat' }).click()
@@ -28,6 +29,7 @@ test('two kids: "Who\'s playing?" and separate crystals', async ({ page }) => {
   // Kid 1 onboards and earns crystals.
   await page.goto('/')
   await page.getByRole('button', { name: "Let's go!" }).click()
+  await pickCourses(page)
   await page.getByRole('button', { name: 'Comet' }).click()
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: "That's me!" }).click()
@@ -52,6 +54,7 @@ test('two kids: "Who\'s playing?" and separate crystals', async ({ page }) => {
   await page.getByRole('button', { name: "I'm Pixel" }).click()
   await expect(page.getByTestId('onboarding')).toBeVisible()
   await page.getByRole('button', { name: "Let's go!" }).click()
+  await pickCourses(page)
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: "That's me!" }).click()
   await expect(page.getByRole('heading', { name: 'Hi, Pixel!' })).toBeVisible()

@@ -47,6 +47,22 @@ Template: `specs/_templates/`.
 - Ask: "What was your favorite part? What was annoying?"
 - Track: lessons/day, voluntary returns, frustration moments (≥2 wrong in a row on the same skill → tune difficulty).
 
+## v2: Chess course (decided 2026-10-19)
+For **any kid (about 5–12) learning chess from the basics**, not only the original math learner.
+- **One app, named "Kukoos", with two courses.** Kids pick and switch courses themselves (no PIN).
+- **Chess is open play:** no goal, streak or limit. The math goal, streak and limit are unchanged and count math only.
+- **Course depth:** basics to a first win. That means the board, each piece, capture, check, mate, special moves, draws, mate-in-1, basic mates, and a full game against a friendly bot. Each unit opens with skip-ahead checks.
+- **Look and play:** classic pieces with friendly faces, our own small offline bot, and pass-and-play.
+
+| # | Feature |
+|---|---|
+| F13 | Courses: course model, picker, switcher, per-course goal and streak, constitution update |
+| F14 | Chess rules (pure domain; legal moves, check and mate, special moves, draws) |
+| F15 | Board and pieces (tap-to-move, legal-move hints, loaded on demand) |
+| F16 | Chess curriculum and map (`05-chess-skill-map.md`, units, mastery, skip-ahead checks) |
+| F17 | Play: friendly bot levels and pass-and-play |
+| F18 | Chess rewards, Grown-ups dashboard, launch |
+
 ## Phase 2 (after MVP, ~4–6 weeks)
 - Avatar shop, placement quiz.
 - Space worlds: Saturn multiplication, Jupiter division, Space Station money and time, Comet measurement, Pizza Planet fractions, Galaxy shapes and data, plus new question kinds: arrays, number line, clock, coins, fraction bars, graphs.

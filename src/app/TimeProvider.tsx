@@ -2,6 +2,7 @@ import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } fro
 import { type TodayTime, useCurrentProfile, useRepos } from '@/data'
 import {
   BONUS_MIN,
+  chessBudget,
   DEFAULT_TIME_SETTINGS,
   EMPTY_DAY,
   localDate,
@@ -85,10 +86,11 @@ export function TimeProvider({ children, now = Date.now, tickMs = TICK_MS }: Tim
       if (!kind || document.visibilityState !== 'visible' || at - lastInput.current >= IDLE_MS)
         return
       const seconds = tickMs / 1000
-      void repos.time
-        .addActive(profileId, kind === 'lesson' ? seconds : 0, seconds)
-        .then(store)
-        .catch(() => undefined)
+      const saved =
+        kind === 'chess'
+          ? repos.time.addChess(profileId, seconds)
+          : repos.time.addActive(profileId, kind === 'lesson' ? seconds : 0, seconds)
+      void saved.then(store).catch(() => undefined)
     }, tickMs)
     return () => window.clearInterval(id)
   }, [repos, profileId, now, tickMs])
@@ -103,6 +105,7 @@ export function TimeProvider({ children, now = Date.now, tickMs = TICK_MS }: Tim
       today,
       settings,
       budget: timeBudget(today ?? EMPTY_DAY, settings),
+      chess: chessBudget(today?.chessSeconds ?? 0, settings.chessLimitMin),
       setActivity,
       grantBonus: async () => {
         if (!profileId) return

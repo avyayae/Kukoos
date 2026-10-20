@@ -74,7 +74,11 @@ describe('reset progress (spec 011 AC8)', () => {
       nickname: 'Nova',
       avatar: DEFAULT_AVATAR,
     })
-    expect(await repos.time.settings(id)).toEqual({ goalMin: 15, limitMin: 45 })
+    expect(await repos.time.settings(id)).toEqual({
+      goalMin: 15,
+      limitMin: 45,
+      chessLimitMin: null,
+    })
     expect(await repos.profiles.reset('missing')).toBe(false)
     expect(await createNullRepositories().profiles.reset('x')).toBe(false)
   })
