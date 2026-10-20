@@ -92,6 +92,12 @@
   }
 
   /* ---------------------------------------------------------- chess home */
+  .map-screen.chess-home {
+    background: var(--mq-bg);
+  }
+  .chess-home .bottom-bar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .chess-home__sign {
     display: flex;
     flex-direction: column;

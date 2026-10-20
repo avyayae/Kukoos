@@ -75,3 +75,13 @@ Onboarding "What do you want to learn?": Kukoos with a bubble, two big tiles (�
 ## Risks
 - **e2e now builds with chess on.** The onboarded fixture must pick Math in the new step, so existing flows stay identical.
 - **Header crowding on phones:** the switcher takes its own full-width row under the greeting, and the stats grid keeps its row.
+
+## Deviations (recorded during implementation)
+- **No `homePath` on courses:** both homes live at `/` and the profile's `currentCourse` picks one, so every "Back to map" link and deep link still works.
+- **No Dexie version bump:** every new field is optional and unindexed. Tests prove that F012-era rows and backups load as math-only (`tests/unit/data/courses.test.ts`).
+- **The welcome stays the math line when only math is available**, so production is unchanged until chess ships. There's no separate per-course intro.
+- **Shared `HomeHeader`:** the map header (avatar, hello, read-aloud, stats) was extracted so the chess home reuses it. The switcher sits in it on its own full-width row.
+- **`BottomBar`:** the home item is configurable (🏰 Castle in chess) and Review is optional (math only).
+- **e2e builds with `VITE_CHESS=1`:** the onboarded fixture picks Math in the new step (`pickCourses`). The chess-off production path is covered by unit tests with `vi.stubEnv`.
+- **Accessibility:** `a11y.spec.ts` also checks Me → My courses and the chess home.
+- **Grade is still shown for every kid in Grown-ups.** It only affects math, and a kid can add math later.

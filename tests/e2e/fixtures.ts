@@ -1,10 +1,21 @@
 import { test as base, expect, type Page } from '@playwright/test'
 
-/** Completes the first-run welcome (spec 010) with the defaults: name "Explorer", default look. */
+/** "What do you want to learn?" (spec 013; e2e builds offer chess). */
+export async function pickCourses(page: Page, courses: readonly ('Math' | 'Chess')[] = ['Math']) {
+  await expect(page.getByText('What do you want to learn?')).toBeVisible()
+  for (const c of courses) await page.getByRole('button', { name: c, exact: true }).click()
+  await page.getByRole('button', { name: 'Next' }).click()
+}
+
+/**
+ * Completes the first-run welcome (specs 010, 013) with the defaults: math only, name
+ * "Explorer", default look.
+ */
 export async function finishOnboarding(page: Page) {
   await page.goto('/')
   await expect(page.getByTestId('onboarding')).toBeVisible()
   await page.getByRole('button', { name: "Let's go!" }).click()
+  await pickCourses(page)
   await page.getByRole('button', { name: 'Next' }).click()
   await page.getByRole('button', { name: "That's me!" }).click()
   await expect(page.getByTestId('journey')).toBeVisible()

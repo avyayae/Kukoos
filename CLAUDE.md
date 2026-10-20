@@ -1,6 +1,6 @@
-# MathQuest — agent guide
+# Kukoos — agent guide
 
-Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + TS PWA, local-first (Dexie/IndexedDB).
+Kid-focused learning adventure with courses: Math (Common Core Grade 2–3) and Chess (basics to a first win, v2). Vite + React + TS PWA, local-first (Dexie/IndexedDB).
 
 ## Always
 1. Read `specs/00-constitution.md` before any work. It overrides everything else.
@@ -12,7 +12,7 @@ Kid-focused (age 7–9) Common Core Grade 2–3 math adventure. Vite + React + T
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-`specs/features/011-parent-zone/` + `specs/features/012-launch/` on branch `feature/011-012-parent-zone-launch` (implemented, one PR). Done: 001–010 (PRs #1–#9). MVP complete after this; next is the play-test (`docs/PLAYTEST.md`) and Phase 2 in `specs/04-roadmap.md`.
+`specs/features/013-courses/` on branch `feature/013-courses` (v2: Math + Chess courses; chess hidden in production until F16 via `VITE_CHESS=1`). Done: 001–012 (PRs #1–#10). Next: F14 chess rules (see `specs/04-roadmap.md` → v2).
 Deployed by `.github/workflows/pages.yml` to https://avyayae.github.io/Kukoos/ (`BASE_PATH=/Kukoos/`).
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.
