@@ -1,6 +1,6 @@
 # Feature 016 — Chess Curriculum & Castle Map
 
-**Status:** Draft (2026-10-20)  ·  **Constitution check:**
+**Status:** Approved (2026-10-20)  ·  **Constitution check:**
 - §2.1: mastery unlocks the next skill.
 - §2.2: spaced review.
 - §2.3: about 80% success.
@@ -20,7 +20,7 @@ F13–F15 built the course frame, the rules and the board. A kid who picks Chess
    - Each skill generates puzzles at difficulty 1–3 (e.g. rook stars: 1 star → 3 stars with blockers).
    - Hand-written lists cover positions that can't be generated well (mate in 1, the mate drills), and tests validate every entry against the rules engine.
    - Each puzzle carries its prompt, its speech line and its "correct when" rule (see the skill map).
-3. **Chess lessons:** a lesson is **6 puzzles**.
+3. **Chess lessons:** a lesson is **8 puzzles** (same as math).
    - The move (or tap) is the answer: a correct move gets the success banner and sound.
    - A wrong move gets the F15 "why not" hint (illegal), or a puzzle-specific hint ("That square can be taken: try another!"), plus a retry. A second miss shows the answer move highlighted and the puzzle comes back later, like math.
    - Progress bar, Kukoos moods and the end-of-lesson celebration (XP, crystals) are shared with math.
@@ -40,7 +40,7 @@ F13–F15 built the course frame, the rules and the board. A kid who picks Chess
   - Positions are legal (practice boards may omit kings).
   - Each `stars` puzzle can be solved within its move limit (by search).
 - **AC3 (hand-written lists):** every mate-in-1 entry is mate in exactly one, with ≥ 1 mating move and no stalemate. The mate drills (Q+K, R+K) can be mated within their limit against the defender.
-- **AC4 (lesson):** a chess lesson plays 6 puzzles:
+- **AC4 (lesson):** a chess lesson plays 8 puzzles:
   - correct → banner, `correct` sound, progress;
   - illegal → the why-not hint and `notYet`;
   - legal but wrong → the puzzle hint;
@@ -67,6 +67,6 @@ F13–F15 built the course frame, the rules and the board. A kid who picks Chess
 - Bot games, pass-and-play and "Your first game" (F17). Chess badges and the chess dashboard (F18).
 - Openings and tactics beyond mate in 1 (Phase 2).
 
-## Open questions
-1. **Lesson length:** 6 puzzles per lesson (I recommend this: shorter suits younger kids, and chess puzzles take longer than math facts), or 8 to match math?
-2. **Launch:** turn chess on for everyone when F16 merges (I recommend this: there's a full course without the bot game), or wait for F17's bot game?
+## Decisions (2026-10-20)
+- **8 puzzles per lesson**, the same as math.
+- **Chess goes live for everyone when F16 merges.** "Your first game" shows "Coming soon" until F17.

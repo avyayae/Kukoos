@@ -1,6 +1,6 @@
 # Curriculum Skill Map — Chess (basics to a first win)
 
-**Status:** Draft (2026-10-20)
+**Status:** Approved (2026-10-20)
 
 Each **skill** is the smallest teachable unit. Skills are grouped into castle **areas** (map regions) and unlock in order through mastery (constitution §2.1), with a skip-ahead check for learners who already know a skill.
 
