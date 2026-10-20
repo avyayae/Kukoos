@@ -70,8 +70,8 @@ describe('render (spec 015 AC1)', () => {
     expect(sq('g1')).toHaveAccessibleName('g1, White knight')
     expect(sq('e8')).toHaveAccessibleName('e8, Black king')
     expect(sq('e4')).toHaveAccessibleName('e4, empty')
-    expect(sq('a1')).toHaveTextContent('1')
-    expect(sq('a1')).toHaveTextContent('a')
+    expect(sq('a1').parentElement).toHaveTextContent('1')
+    expect(sq('a1').parentElement).toHaveTextContent('a')
   })
 
   it('flipped puts a1 at the top right', () => {

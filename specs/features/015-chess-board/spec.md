@@ -1,6 +1,6 @@
 # Feature 015 — Chess Board & Pieces
 
-**Status:** Approved (2026-10-20)  ·  **Constitution check:**
+**Status:** Implemented (2026-10-20)  ·  **Constitution check:**
 - §1.2: no shame. An illegal move gets a gentle shake and a "why not" hint, never a red X.
 - §1.4: tap-first, every square and piece has a spoken name.
 - §2.4: one piece on an empty board first.

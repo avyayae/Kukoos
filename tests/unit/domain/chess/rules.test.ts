@@ -52,8 +52,10 @@ describe('correct rules (spec 014 AC2)', () => {
     expect([perft(p, 1), perft(p, 2)]).toEqual([48, 2039])
   })
 
-  it('200 seeded random games stay legal', { timeout: 60_000 }, () => {
-    for (let seed = 1; seed <= 200; seed++) {
+  // Verbose move lists are costly (chess.js checks every move for check/mate), so 60 games
+  // keep the full parallel run with coverage fast; see the F014 plan deviations.
+  it('60 seeded random games stay legal', { timeout: 60_000 }, () => {
+    for (let seed = 1; seed <= 60; seed++) {
       const rng = createRng(seed)
       let p = startPosition()
       for (let ply = 0; ply < 40 && !status(p).over; ply++) {

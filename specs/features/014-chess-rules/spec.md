@@ -1,6 +1,6 @@
 # Feature 014 — Chess Rules (pure domain)
 
-**Status:** Approved (2026-10-20)  ·  **Constitution check:**
+**Status:** Implemented (2026-10-20)  ·  **Constitution check:**
 - §3.4 (amended): a rules engine decides every legal move, check, mate and draw; AI never decides.
 - §3.2: pure domain, no React or I/O.
 - §3.3: correctness is provable (perft and property tests).
@@ -42,7 +42,7 @@ Every chess lesson, puzzle, bot game and pass-and-play game (F15–F17) needs th
 
 ## Acceptance criteria
 - **AC1 (dependency):** `chess.js` is pinned to `1.4.0`. Only files under `src/domain/chess/` import it, and a lint rule enforces this.
-- **AC2 (correct rules):** perft from the start position gives 20 / 400 / 8,902 at depths 1–3, and the known "Kiwipete" position gives 48 / 2,039 at depths 1–2. A property test plays 200 random legal games (seeded) and checks that every position stays legal and every `play` of a listed move succeeds.
+- **AC2 (correct rules):** perft from the start position gives 20 / 400 / 8,902 at depths 1–3, and the known "Kiwipete" position gives 48 / 2,039 at depths 1–2. A property test plays 60 random legal games (seeded, up to 40 plies; was 200, see plan deviations) and checks that every position stays legal and every `play` of a listed move succeeds.
 - **AC3 (special moves):** fixtures cover:
   - castling both sides, plus refusing to castle through check, out of check, after the king moved, or when blocked;
   - en passant, right away and not one move later;

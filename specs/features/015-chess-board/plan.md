@@ -64,3 +64,12 @@
 | AC8 | unit (no transition class under reduced motion) plus e2e `emulateMedia` |
 | AC9 | `perf.spec.ts` |
 | AC10 | `chess-board.spec.ts` |
+
+## Deviations (recorded during implementation)
+- **Pieces live inside their square buttons**, not on a separate layer. The moved piece glides with a CSS animation keyed on the move (`--from-x/--from-y` in square units), so the board stays a simple controlled component. A captured piece is covered by the arriving one rather than fading.
+- **Selection and the promotion picker are keyed to the position they were made on**, so a new position clears them without an effect (the React Compiler lint rule).
+- **Coordinates sit beside the square buttons** (in the grid cell), not inside them. Otherwise axe flags a label/content mismatch (WCAG 2.5.3), because "1" and "a" would be visible text missing from the name. Coordinates are ink on both square colours for AA contrast.
+- **After a "why not", the piece stays selected**, so the kid can try again with one tap.
+- **Escape closes the promotion picker** through a document listener: the dialog itself can't take key handlers under jsx-a11y.
+- **AC9:** chess is its own chunk (`FreeBoardScreen-*.js`, about 49 KB, 17 KB gzipped, with chess.js). `perf.spec.ts` checks that no first-load script contains chess code and that `/chess/board` fetches it.
+- **Board fixtures need live positions:** e.g. K+B vs K is already a draw by insufficient material, so the board (correctly) won't move.

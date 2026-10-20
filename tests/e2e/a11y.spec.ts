@@ -71,3 +71,12 @@ test('My courses, the course switcher and the chess home (spec 013)', async ({ p
   await expect(page.getByTestId('chess-home')).toBeVisible()
   await expectAccessible(page, 'chess home')
 })
+
+test('the chess board (spec 015)', async ({ page }) => {
+  desktopOnly()
+  await page.goto('/chess/board')
+  await expect(page.getByTestId('free-board')).toBeVisible()
+  await expectAccessible(page, 'free board')
+  await page.getByTestId('sq-g1').click()
+  await expectAccessible(page, 'board with a piece selected')
+})

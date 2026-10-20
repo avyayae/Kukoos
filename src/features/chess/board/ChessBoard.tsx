@@ -316,17 +316,18 @@ export function ChessBoard({
                         ⚠
                       </span>
                     )}
-                    {col === 0 && (
-                      <span className="sq__rank" aria-hidden="true">
-                        {sq[1]}
-                      </span>
-                    )}
-                    {row === 7 && (
-                      <span className="sq__file" aria-hidden="true">
-                        {sq[0]}
-                      </span>
-                    )}
                   </button>
+                  {/* Coordinates sit beside the button, so its name is just the square. */}
+                  {col === 0 && (
+                    <span className="sq__rank" aria-hidden="true">
+                      {sq[1]}
+                    </span>
+                  )}
+                  {row === 7 && (
+                    <span className="sq__file" aria-hidden="true">
+                      {sq[0]}
+                    </span>
+                  )}
                 </div>
               )
             })}

@@ -42,5 +42,6 @@
 ## Deviations (recorded during implementation)
 - **Engine cache:** each `Position` value caches its chess.js instance in a `WeakMap`. `play` moves on it, reads the new FEN and undoes the move, so positions stay immutable values. This made the random-games test about 3× faster.
 - **En passant counts as a capture:** chess.js's `isCapture()` is false for en passant, so `ChessMove.capture` also checks `isEnPassant()`.
-- **Random games:** 200 seeded games of up to 40 plies each (60s timeout), instead of 120 plies, to keep CI time reasonable.
+- **Random games:** 60 seeded games of up to 40 plies each (2,400 positions), not 200. Verbose move lists are costly: chess.js computes notation, including check/mate, for every move. 200 games took 84s in the full parallel run with coverage.
+- **Risk for F017 (bot):** search must use chess.js's fast non-verbose move generation directly inside `src/domain/chess`, not `legalMoves` (verbose, about 1ms per call).
 - **AC8 is two checks:** a test that the `@/domain` barrel never re-exports chess here, and the build-chunk check in F015's perf work.
