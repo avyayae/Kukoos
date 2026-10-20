@@ -2,6 +2,7 @@ import Dexie from 'dexie'
 import {
   applyLesson,
   applyStartingPoint,
+  preMastered,
   type SavedLesson,
   type Progress,
   type SkillId,
@@ -85,5 +86,24 @@ export async function applyStartingPointProgress(
     )
     await writeRows(db, 'skillProgress', rows, at)
     return rows.length
+  })
+}
+
+/**
+ * Crowns one skill the kid proved they know (spec 016: "Already know this?" passed). Same
+ * rule as the starting point: never lowers real progress. True when something changed.
+ */
+export async function markMasteredProgress(
+  db: KukoosDb,
+  profileId: string,
+  skillId: SkillId,
+  at: number,
+): Promise<boolean> {
+  return db.transaction('rw', [db.skillProgress, db.outbox], async () => {
+    const prev = (await progressForProfile(db, profileId))[skillId]
+    const next = preMastered(prev, at)
+    if (next === prev) return false
+    await writeRows(db, 'skillProgress', [masteryToRow(profileId, skillId, next)], at)
+    return true
   })
 }

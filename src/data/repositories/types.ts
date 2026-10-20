@@ -60,6 +60,8 @@ export interface Repositories {
     forProfile(profileId: string): Promise<Progress>
     /** Pre-masters the starting point's prerequisites; returns how many skills changed. */
     applyStartingPoint(profileId: string, skillId: SkillId): Promise<number>
+    /** Crowns one skill the kid proved they know (spec 016 skip-ahead); true if it changed. */
+    markMastered(profileId: string, skillId: SkillId): Promise<boolean>
   }
   journey: {
     /** Worlds whose boss challenge was passed (spec 007). */

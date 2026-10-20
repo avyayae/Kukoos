@@ -43,7 +43,7 @@ export {
   type SkillMastery,
   type SrsBox,
 } from './engine/mastery'
-export { applyStartingPoint, prereqClosure } from './engine/startingPoint'
+export { applyStartingPoint, preMastered, prereqClosure } from './engine/startingPoint'
 export {
   BOSS_LENGTH,
   BOSS_PASS_ACCURACY,
