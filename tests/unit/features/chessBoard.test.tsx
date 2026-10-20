@@ -28,7 +28,7 @@ vi.mock('@/audio/sfx', async (orig) => ({
   playSfx: vi.fn(),
 }))
 
-const onIllegal = vi.fn<(reason: IllegalReason) => void>()
+const onIllegal = vi.fn<(reason: IllegalReason, from: Square) => void>()
 const onGameOver = vi.fn<(status: ChessStatus) => void>()
 
 function Harness({ start, flipped = false }: { start: Position; flipped?: boolean }) {
@@ -111,7 +111,7 @@ describe('why not? (AC4)', () => {
     await tapSq('c4')
     expect(screen.getByRole('status')).toHaveTextContent('The bishop moves diagonally.')
     expect(speak).toHaveBeenCalledWith('The bishop moves diagonally.')
-    expect(onIllegal).toHaveBeenCalledWith('not-how-it-moves')
+    expect(onIllegal).toHaveBeenCalledWith('not-how-it-moves', 'c1')
     expect(playSfx).toHaveBeenCalledWith('notYet')
     expect(sq('c1')).toHaveAccessibleName(/White bishop/)
     expect(sq('c4')).toHaveAccessibleName(/empty/)

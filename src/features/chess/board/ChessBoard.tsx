@@ -35,7 +35,7 @@ export interface ChessBoardProps {
   position: Position
   onMove: (result: { move: ChessMove; position: Position }) => void
   /** Why a tried move isn't allowed (lesson hints, mistake patterns). */
-  onIllegal?: (reason: IllegalReason) => void
+  onIllegal?: (reason: IllegalReason, from: Square) => void
   onGameOver?: (status: ChessStatus) => void
   /** Who may move: a colour, both (pass-and-play, free board) or none (read-only). */
   movable?: Color | 'both' | 'none'
@@ -43,6 +43,19 @@ export interface ChessBoardProps {
   /** Highlighted and animated. */
   lastMove?: { from: Square; to: Square } | null
   label?: string
+  /** Puzzle overlays (spec 016): ⭐ stars, 🎯 target, and the right answer after two misses. */
+  marks?: BoardMarks
+  /** Only this piece may move (puzzles: other pieces are walls). */
+  onlyFrom?: Square | null
+  /** "Find the square" puzzles: every square is a button and nothing moves. */
+  onTap?: (square: Square) => void
+}
+
+export interface BoardMarks {
+  stars?: readonly Square[]
+  target?: Square | null
+  /** Highlighted as the answer (💡). */
+  hint?: readonly Square[]
 }
 
 /** Pixels a press must travel before it's a drag rather than a tap. */
@@ -62,6 +75,9 @@ export function ChessBoard({
   flipped = false,
   lastMove = null,
   label = 'Chess board',
+  marks,
+  onlyFrom = null,
+  onTap,
 }: ChessBoardProps) {
   const say = useSpeakOnTap()
   // Selection and the promotion picker belong to the position they were made on, so a new
@@ -104,7 +120,8 @@ export function ChessBoard({
 
   const canControl = (sq: Square) => {
     const piece = board.get(sq)
-    if (!piece || movable === 'none' || st.over) return false
+    if (!piece || movable === 'none' || st.over || onTap) return false
+    if (onlyFrom && sq !== onlyFrom) return false
     return piece.color === toMove && (movable === 'both' || movable === piece.color)
   }
 
@@ -121,7 +138,7 @@ export function ChessBoard({
     setHint((h) => ({ text, square: from, n: (h?.n ?? 0) + 1 }))
     say(text)
     playSfx('notYet')
-    onIllegal?.(reason)
+    onIllegal?.(reason, from)
   }
 
   function commit(input: MoveInput) {
@@ -151,6 +168,10 @@ export function ChessBoard({
   }
 
   function tap(sq: Square) {
+    if (onTap) {
+      onTap(sq)
+      return
+    }
     if (promo) return
     const piece = board.get(sq)
     if (selected) {
@@ -258,6 +279,7 @@ export function ChessBoard({
                 selected === sq && 'sq--selected',
                 move && (move.capture ? 'sq--capture' : 'sq--target'),
                 checkedKing === sq && 'sq--check',
+                marks?.hint?.includes(sq) && 'sq--hint',
               ]
               const name = [
                 sq,
@@ -265,6 +287,9 @@ export function ChessBoard({
                 selected === sq && 'selected',
                 move && (move.capture ? 'can capture' : 'can move here'),
                 checkedKing === sq && 'in check',
+                marks?.stars?.includes(sq) && 'star',
+                marks?.target === sq && 'target',
+                marks?.hint?.includes(sq) && 'the answer',
               ]
               return (
                 <div role="gridcell" className="chess-board__cell" key={sq}>
@@ -309,6 +334,16 @@ export function ChessBoard({
                         style={glide(sq)}
                       >
                         <PieceArt type={piece.type} color={piece.color} />
+                      </span>
+                    )}
+                    {marks?.stars?.includes(sq) && (
+                      <span className="sq__mark sq__mark--star" aria-hidden="true">
+                        ⭐
+                      </span>
+                    )}
+                    {marks?.target === sq && (
+                      <span className="sq__mark sq__mark--target" aria-hidden="true">
+                        🎯
                       </span>
                     )}
                     {checkedKing === sq && (

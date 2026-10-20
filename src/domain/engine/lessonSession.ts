@@ -258,11 +258,11 @@ export function lessonProgress(state: LessonState): number {
   return Math.min(1, state.results.length / state.plan.length)
 }
 
-export function firstTryAccuracy(state: LessonState): number {
+export function firstTryAccuracy(state: Pick<SavedLesson, 'results'>): number {
   if (state.results.length === 0) return 0
   return state.results.filter((r) => r.firstTry).length / state.results.length
 }
 
-export function lessonMinutes(state: LessonState): number {
+export function lessonMinutes(state: Pick<SavedLesson, 'startedAt' | 'endedAt'>): number {
   return ((state.endedAt ?? state.startedAt) - state.startedAt) / 60000
 }
