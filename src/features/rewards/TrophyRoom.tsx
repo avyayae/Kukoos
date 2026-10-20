@@ -1,7 +1,8 @@
 import { Link, useSearchParams } from 'react-router'
+import { useCourses } from '@/app/courses'
 import { useActivity } from '@/app/time'
 import { useBadges, useProfiles } from '@/data'
-import { BADGES, parseAvatar } from '@/domain'
+import { BADGES, isChessBadge, parseAvatar } from '@/domain'
 import { useSpeakOnTap } from '@/ui'
 import { AvatarArt } from '@/ui/AvatarArt'
 
@@ -11,6 +12,9 @@ export function TrophyRoom() {
   const badges = useBadges()
   const { profile } = useProfiles()
   const say = useSpeakOnTap()
+  const { mine } = useCourses()
+  // Chess castle stickers show only for kids who learn chess (spec 016).
+  const shown = mine.includes('chess') ? BADGES : BADGES.filter((b) => !isChessBadge(b.id))
   const [params] = useSearchParams()
   const earned = new Set((badges ?? []).map((b) => b.badgeId))
   const back = params.toString() ? `/?${params.toString()}` : '/'
@@ -37,7 +41,7 @@ export function TrophyRoom() {
       )}
       {badges && (
         <ul className="trophies__grid" aria-label="Badges">
-          {BADGES.map((b) => {
+          {shown.map((b) => {
             const has = earned.has(b.id)
             return (
               <li key={b.id}>

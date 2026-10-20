@@ -135,6 +135,7 @@ export {
 export {
   BADGES,
   getBadge,
+  isChessBadge,
   newBadges,
   type BadgeDef,
   type BadgeRule,

@@ -1,4 +1,5 @@
 import fc from 'fast-check'
+import { CHESS_SKILLS } from '@/domain/chess/curriculum'
 import { describe, expect, it } from 'vitest'
 import { BADGES, type BadgeStats, getBadge, newBadges } from '@/domain/gamification/badges'
 import { addDays, daysBetween, localDate } from '@/domain/gamification/dates'
@@ -228,7 +229,12 @@ describe('badges (AC9)', () => {
       completedLessons: 99,
       perfectLessons: 99,
       firstTryAnswers: 999,
-      crowned: new Set(['add.within100.regroup', 'sub.within100.regroup', 'sub.3digit.acrossZero']),
+      crowned: new Set([
+        'add.within100.regroup',
+        'sub.within100.regroup',
+        'sub.3digit.acrossZero',
+        ...CHESS_SKILLS.map((s) => s.id),
+      ]),
       bossesBeaten: 5,
       streak: 30,
     })

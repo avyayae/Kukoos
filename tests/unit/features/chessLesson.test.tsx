@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Repositories } from '@/data'
 import { testStore } from '../withData'
 import { renderAt } from './nav'
@@ -13,10 +13,8 @@ vi.mock('@/audio/tts', async (orig) => ({
 }))
 
 beforeEach(() => {
-  vi.stubEnv('VITE_CHESS', '1')
   Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' })
 })
-afterEach(() => vi.unstubAllEnvs())
 
 const profileId = async (repos: Repositories) => (await repos.profiles.ensureCurrent())?.id ?? ''
 

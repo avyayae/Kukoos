@@ -1,3 +1,4 @@
+import { CHESS_AREAS, chessSkillsIn } from '../chess/curriculum'
 import type { SkillId } from '../types'
 
 /** What badge rules look at, after the lesson that was just saved. */
@@ -17,6 +18,8 @@ export type BadgeRule =
   | { type: 'crown'; skillId: SkillId }
   | { type: 'bosses'; count: number }
   | { type: 'streak'; days: number }
+  /** Every one of these skills crowned (a chess castle area, spec 016). */
+  | { type: 'crownAll'; skillIds: readonly SkillId[] }
 
 export interface BadgeDef {
   id: string
@@ -85,7 +88,18 @@ export const BADGES: readonly BadgeDef[] = [
     howTo: 'Get 100 answers right on the first try.',
     rule: { type: 'firstTry', count: 100 },
   },
+  // Chess castle areas (spec 016): a sticker for crowning every skill in an area.
+  ...CHESS_AREAS.map((area): BadgeDef => ({
+    id: area.sticker.id,
+    name: area.sticker.name,
+    emoji: area.sticker.emoji,
+    howTo: `Get a crown in every ${area.title} mission in Chess Castle.`,
+    rule: { type: 'crownAll', skillIds: chessSkillsIn(area.id).map((s) => s.id) },
+  })),
 ]
+
+/** Chess stickers only make sense to kids who learn chess. */
+export const isChessBadge = (id: string) => id.startsWith('chess.')
 
 export function getBadge(id: string): BadgeDef | undefined {
   return BADGES.find((b) => b.id === id)
@@ -105,6 +119,8 @@ function earned(rule: BadgeRule, s: BadgeStats): boolean {
       return s.bossesBeaten >= rule.count
     case 'streak':
       return s.streak >= rule.days
+    case 'crownAll':
+      return rule.skillIds.every((id) => s.crowned.has(id))
   }
 }
 

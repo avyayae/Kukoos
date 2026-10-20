@@ -1,7 +1,7 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { playSfx } from '@/audio/sfx'
 import { speak } from '@/audio/tts'
 import {
@@ -190,18 +190,9 @@ describe('keyboard (AC7)', () => {
 })
 
 describe('free board route (AC9)', () => {
-  afterEach(() => vi.unstubAllEnvs())
-
   it('loads the board on demand when chess is offered', async () => {
-    vi.stubEnv('VITE_CHESS', '1')
     renderAt('/chess/board')
     expect(await screen.findByTestId('free-board')).toBeInTheDocument()
     expect(screen.getByTestId('turn')).toHaveTextContent('White to move')
-  })
-
-  it('without chess it goes home', async () => {
-    vi.stubEnv('VITE_CHESS', '')
-    const router = renderAt('/chess/board')
-    await waitFor(() => expect(router.state.location.pathname).toBe('/'))
   })
 })

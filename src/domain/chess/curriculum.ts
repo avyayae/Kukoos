@@ -213,3 +213,30 @@ export function areasCleared(progress: ChessProgress): ChessAreaId[] {
     (a) => a.id,
   )
 }
+
+export type CastleNodeState = 'locked' | 'available' | 'current' | 'crowned'
+
+export interface CastleNode {
+  skill: ChessSkill
+  /** 1-based position on the path. */
+  order: number
+  state: CastleNodeState
+  mastery: number
+}
+
+/** Every chess skill with its castle-map state (spec 016 AC7). */
+export function castleNodes(progress: ChessProgress): CastleNode[] {
+  const open = new Set(chessUnlocked(progress))
+  const current = nextChessSkill(progress)
+  return CHESS_SKILLS.map((skill, i) => {
+    const m = progress[skill.id]
+    const state: CastleNodeState = m?.crowned
+      ? 'crowned'
+      : skill.id === current
+        ? 'current'
+        : open.has(skill.id)
+          ? 'available'
+          : 'locked'
+    return { skill, order: i + 1, state, mastery: m?.mastery ?? 0 }
+  })
+}
