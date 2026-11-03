@@ -60,12 +60,14 @@ describe('Chess Castle map (spec 016 AC7)', () => {
     expect(screen.getByRole('button', { name: 'Play next: The bishop' })).toBeInTheDocument()
   })
 
-  it('"Your first game" is coming soon', async () => {
+  it('"Your first game" opens a game with Sleepy Kukoos (spec 017 AC8)', async () => {
     const { repos } = testStore()
     await chessKid(repos)
-    renderAt('/', repos)
+    const router = renderAt('/', repos)
     await userEvent.click(await screen.findByTestId('node-chess-game'))
-    expect(speak).toHaveBeenCalledWith('Coming soon: play a whole game against Kukoos!')
+    expect(speak).toHaveBeenCalledWith('Your first game')
+    await waitFor(() => expect(router.state.location.pathname).toBe('/chess/play'))
+    expect(router.state.location.search).toBe('?level=1&color=w')
   })
 })
 

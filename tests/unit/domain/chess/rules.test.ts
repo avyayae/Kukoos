@@ -42,12 +42,13 @@ function perft(p: Position, depth: number): number {
 const KIWIPETE = 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1'
 
 describe('correct rules (spec 014 AC2)', () => {
-  it('perft from the start: 20 / 400 / 8,902', () => {
+  // CPU-bound: next to the bot tests (spec 017) the full parallel run can pass 5 s.
+  it('perft from the start: 20 / 400 / 8,902', { timeout: 30_000 }, () => {
     const p = startPosition()
     expect([perft(p, 1), perft(p, 2), perft(p, 3)]).toEqual([20, 400, 8902])
   })
 
-  it('perft on Kiwipete: 48 / 2,039', () => {
+  it('perft on Kiwipete: 48 / 2,039', { timeout: 30_000 }, () => {
     const p = fromFen(KIWIPETE)
     expect([perft(p, 1), perft(p, 2)]).toEqual([48, 2039])
   })

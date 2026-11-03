@@ -2,7 +2,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router'
 import { clockNow } from '@/app/clock'
 import type { CoursesValue } from '@/app/courses'
 import { useActivity, useDailyTime } from '@/app/time'
-import { useProfiles, useProgress, useWallet } from '@/data'
+import { useGameWins, useProfiles, useProgress, useWallet } from '@/data'
 import { chessDue, getChessSkill, nextChessSkill } from '@/domain/chess/curriculum'
 import { CourseSwitcher } from '@/features/courses/CourseSwitcher'
 import { HomeHeader } from '@/features/courses/HomeHeader'
@@ -10,7 +10,7 @@ import { BottomBar } from '@/features/map/BottomBar'
 import { TopStats } from '@/features/rewards/TopStats'
 import { Kukoos, useSpeakOnTap } from '@/ui'
 import { CastleMap } from './CastleMap'
-import { CHESS_COPY } from './copy'
+import { CHESS_COPY, PLAY_COPY } from './copy'
 
 /**
  * Chess Castle, the chess course home (specs 013, 016). Open play: no goal ring, streak or
@@ -22,6 +22,7 @@ export function ChessHome({ courses }: { courses: CoursesValue }) {
   const { profile } = useProfiles()
   const loadedWallet = useWallet()
   const loaded = useProgress()
+  const wins = useGameWins()
   const time = useDailyTime()
   const navigate = useNavigate()
   const [params] = useSearchParams()
@@ -65,27 +66,52 @@ export function ChessHome({ courses }: { courses: CoursesValue }) {
           }
           open(node.skill.id, node.skill.title)
         }}
-        onGame={() => say(CHESS_COPY.comingSoon)}
+        firstGameWon={(wins?.size ?? 0) > 0}
+        onGame={() => {
+          say('Your first game')
+          navigate('/chess/play?level=1&color=w')
+        }}
       />
       <div className="map-dock">
         {next ? (
+          <>
+            <button
+              type="button"
+              className="btn3d btn3d--primary btn3d--xl btn3d--block play-next"
+              aria-label={`Play next: ${getChessSkill(next).title}`}
+              data-testid="play-next"
+              onClick={() => open(next, getChessSkill(next).title)}
+            >
+              <span className="play-next__icon" aria-hidden="true">
+                ▶
+              </span>
+              <span className="play-next__text">
+                <span className="play-next__label">Play next:</span>{' '}
+                <span className="play-next__name">{getChessSkill(next).title}</span>
+              </span>
+            </button>
+            <PlayChip
+              onPlay={() => {
+                say(PLAY_COPY.play)
+                navigate('/chess/play')
+              }}
+            />
+          </>
+        ) : (
           <button
             type="button"
             className="btn3d btn3d--primary btn3d--xl btn3d--block play-next"
-            aria-label={`Play next: ${getChessSkill(next).title}`}
-            data-testid="play-next"
-            onClick={() => open(next, getChessSkill(next).title)}
+            data-testid="play-kukoos"
+            onClick={() => {
+              say(PLAY_COPY.play)
+              navigate('/chess/play')
+            }}
           >
             <span className="play-next__icon" aria-hidden="true">
-              ▶
+              ♟️
             </span>
-            <span className="play-next__text">
-              <span className="play-next__label">Play next:</span>{' '}
-              <span className="play-next__name">{getChessSkill(next).title}</span>
-            </span>
+            <span className="play-next__text">{PLAY_COPY.play}</span>
           </button>
-        ) : (
-          <p className="chess-home__done">{CHESS_COPY.comingSoon}</p>
         )}
         <BottomBar
           home={{ icon: '🏰', label: 'Castle' }}
@@ -119,7 +145,7 @@ export function ChessHome({ courses }: { courses: CoursesValue }) {
 }
 
 /** The optional chess limit is reached (spec 013): a calm rest, no timer, no guilt. */
-export function ChessRest({ courses }: { courses: CoursesValue }) {
+export function ChessRest({ courses, note }: { courses: CoursesValue; note?: string }) {
   useActivity(null)
   return (
     <main className="screen goodnight" data-testid="chess-rest">
@@ -129,10 +155,25 @@ export function ChessRest({ courses }: { courses: CoursesValue }) {
       </div>
       <h1 className="goodnight__title">{CHESS_COPY.restingTitle}</h1>
       <p className="goodnight__body">{CHESS_COPY.resting}</p>
+      {note && <p className="goodnight__body">{note}</p>}
       <CourseSwitcher courses={courses} />
       <Link to="/grown-ups" className="goodnight__grownups">
         🔒 Grown-ups
       </Link>
     </main>
+  )
+}
+
+/** A quieter way into games next to Play next (spec 017): every level is open. */
+function PlayChip({ onPlay }: { onPlay: () => void }) {
+  return (
+    <button
+      type="button"
+      className="btn3d btn3d--secondary btn3d--lg btn3d--block play-chip"
+      data-testid="play-kukoos"
+      onClick={onPlay}
+    >
+      <span aria-hidden="true">♟️</span> {PLAY_COPY.play}
+    </button>
   )
 }

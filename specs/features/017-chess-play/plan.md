@@ -86,4 +86,14 @@
 - **Schema v2** is the first migration. It gets an explicit migration test, and backup import must still accept v1 files.
 
 ## Deviations (recorded during implementation)
-- (none yet)
+- **The bot searches on chess.js internals, not the public non-verbose `moves()`.** Measured on a middlegame: `moves()` takes 0.25 ms and `move()` + `undo()` 0.18 ms, which is too slow for depth 3. chess.js's own pseudo-legal `_moves` + `_makeMove` / `_undoMove` are 50–150× faster. They're wrapped in one file (`bot/fastBoard.ts`, chess.js pinned at 1.4.0), and `fastBoard.test.ts` checks the fast board against the rules engine (castling, en passant, promotion, pins, checks, 60 random positions), so an upgrade fails loudly. Wise Kukoos answers in under 0.1 s in Node.
+- **Mate and stalemate are scored at the search horizon too.** The first strength run showed shallow levels stalemating won games (15–17 stalemates per 40 games). With the horizon check, every pairing clears 70% (Sleepy vs random 99%, Playful vs Sleepy 98%, Clever vs Playful 81%, Wise vs Clever 93%).
+- **Playful Kukoos slips 10% of the time** (the plan said 25%), so it stays clearly stronger than Sleepy.
+- **Sleepy Kukoos's slips may allow a mate.** The plan said slips would avoid mate-in-1 blunders, but a beginner needs Sleepy to be beatable (the e2e Scholar's mate relies on it). Slips still never stalemate a won game.
+- **The strength test (AC2) runs in CI or with `BOT_STRENGTH=1`**: it takes about two minutes, so it's skipped in a normal local `npm test`.
+- **The whisper pauses Kukoos** until the kid picks **Take it back** or **Play on**, so there's time to decide.
+- **`RewardMoment` is reused directly** in `GameOver`; `LessonComplete` wasn't split. XP and crystals show on the end card, and bigger moments (a level up) play before the chosen action.
+- **A quick win (fewer than 10 of the kid's moves) earns no XP**, but the first win at a level still earns its crystals, so a fast first win is still rewarded.
+- **Without storage, games aren't kept in memory** (the null repository saves nothing, like lessons). The plan said "an in-memory games".
+- **Kukoos's moves use an explicit seed per game** (`?seed=` in dev/e2e, random otherwise), not a hash of the game id.
+- **The captured-pieces strips** name the pieces for screen readers (found by the a11y check: an `aria-label` on a `<p>` isn't allowed).

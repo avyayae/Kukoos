@@ -1,6 +1,6 @@
 # Feature 017 — Chess Play: Games vs Kukoos
 
-**Status:** Approved (2026-11-03)  ·  **Constitution check:**
+**Status:** Implemented (2026-11-03)  ·  **Constitution check:**
 - §1.2: no shame. A lost game is "Good game!", never "game over". There are no lives and no penalties for resigning.
 - §1.3: chess is open play, with no clocks or timers in games and no "come back" nudges. The optional chess daily limit (F13) is respected.
 - §1.1: rewards come only from finished games (real play).

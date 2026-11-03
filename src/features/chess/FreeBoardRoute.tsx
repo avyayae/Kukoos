@@ -5,6 +5,7 @@ import { Kukoos } from '@/ui'
 // Nothing else may import the board or @/domain/chess statically.
 const FreeBoardScreen = lazy(() => import('./FreeBoardScreen'))
 const ChessLessonRoute = lazy(() => import('./lesson/ChessLessonRoute'))
+const PlayRoute = lazy(() => import('./play/PlayRoute'))
 
 function ChessLoading() {
   return (
@@ -30,6 +31,15 @@ export function ChessLessonGate() {
   return (
     <Suspense fallback={<ChessLoading />}>
       <ChessLessonRoute />
+    </Suspense>
+  )
+}
+
+/** /chess/play (spec 017): games against Kukoos, loaded on demand with the bot. */
+export function ChessPlayGate() {
+  return (
+    <Suspense fallback={<ChessLoading />}>
+      <PlayRoute />
     </Suspense>
   )
 }
