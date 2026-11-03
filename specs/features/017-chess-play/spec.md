@@ -1,6 +1,6 @@
 # Feature 017 — Chess Play: Games vs Kukoos
 
-**Status:** Draft (2026-11-03)  ·  **Constitution check:**
+**Status:** Approved (2026-11-03)  ·  **Constitution check:**
 - §1.2: no shame. A lost game is "Good game!", never "game over". There are no lives and no penalties for resigning.
 - §1.3: chess is open play, with no clocks or timers in games and no "come back" nudges. The optional chess daily limit (F13) is respected.
 - §1.1: rewards come only from finished games (real play).
@@ -45,6 +45,7 @@ F16 teaches every rule up to checkmate, but a kid can't yet **play a whole game*
    - A turn banner ("Your turn" / "Kukoos is thinking…"), and captured pieces shown for each side.
    - **Take back**: undoes your last move and Kukoos's reply. It's unlimited, and it's how a beginner recovers from a blunder without shame.
    - **Hint**: Kukoos highlights a good move, found by a level-4 search from your side. Hints are unlimited.
+   - **Whisper** (Sleepy Kukoos only): after the kid's move leaves a piece that can be taken for free, Kukoos says once "Psst… your bishop can be taken!" and marks the piece. The kid can take the move back or play on.
    - **End game**: asks "Stop this game?" (yes / keep playing). Ending isn't a loss and isn't shown as one.
    - Bot moves are read aloud when read-aloud is on ("Kukoos moves the knight to f6."), and announced in the board's live region.
 4. **Game end:** the F14 status decides the result.
@@ -66,8 +67,8 @@ F16 teaches every rule up to checkmate, but a kid can't yet **play a whole game*
    - The last castle node opens a game with Sleepy Kukoos, the kid playing White.
    - It is **crowned on the first win against any level**.
    - Crowning it completes the castle and plays the castle-complete moment. The Throne Room sticker stays as F16 made it.
-   - The node is open from the start, like every Play option (see Open questions).
-8. **Time:** active game time counts toward `chessSeconds`. Time spent waiting for the bot or with the tab hidden doesn't count. With a chess limit set, see Open questions for what happens mid-game.
+   - The node is open from the start, like every Play option.
+8. **Time:** active game time counts toward `chessSeconds`. Time spent waiting for the bot or with the tab hidden doesn't count. When the optional chess limit is reached mid-game, the game is **saved and paused** ("Chess time is done for today. Your game is saved!") and resumes the next day.
 
 ## Acceptance criteria
 - **AC1 (bot is legal and repeatable):** across 200 seeded random positions × 4 levels, the bot returns a legal move, the same seed returns the same move, and it never moves when the game is over.
@@ -82,10 +83,11 @@ F16 teaches every rule up to checkmate, but a kid can't yet **play a whole game*
   - **Take back** restores the position before the kid's last move.
   - **Hint** highlights a legal move.
   - Illegal tries show the F15 why-not hint.
+  - Against Sleepy Kukoos, a move that leaves a piece free to take gets the whisper once. At levels 2–4, and when the piece is defended well enough, there is no whisper.
 - **AC6 (game end):** a checkmate win plays the celebration and awards XP, and crystals on the first win at that level. A loss shows "Good game!" with Rematch / Easier Kukoos, and has no loss sound and no "game over" text. A stalemate names and explains the draw.
 - **AC7 (save and resume):** given an unfinished game, when the app is reloaded and Play is opened, "Keep playing your game?" restores the exact position, side to move and opponent. A finished game is saved with its result and moves. A v1 database upgrades to v2 without losing data.
 - **AC8 (Your first game):** the node opens a Sleepy Kukoos game. A first win crowns it and the castle shows complete. A loss leaves it uncrowned and shows the encouraging end screen.
-- **AC9 (time and limit):** game time adds to `chessSeconds`, bot thinking time does not, and the chess limit behaves as decided below. Math time is untouched.
+- **AC9 (time and limit):** game time adds to `chessSeconds`, bot thinking time does not, and reaching the chess limit mid-game saves the game and shows the chess rest screen. The game resumes the next day. Math time is untouched.
 - **AC10 (load budget):** the first load stays < 2 MB, and the bot and game screen load only when a game opens (perf test).
 - **AC11 (E2E):** a chess-only kid opens Play, picks Sleepy Kukoos, makes moves, uses take back and hint, ends the game, starts again and reloads mid-game to resume. A seeded Scholar's mate against Sleepy Kukoos wins and crowns "Your first game".
 
@@ -104,8 +106,9 @@ F16 teaches every rule up to checkmate, but a kid can't yet **play a whole game*
 - Chess badges and the chess part of the Grown-ups dashboard (F18). F17 saves the games F18 will report on.
 - An adjustable or "adaptive" bot beyond the 4 fixed levels.
 
-## Open questions
-1. **Chess limit reached mid-game.** Recommendation: **save the game and pause it** ("Chess time is done for today. Your game is saved!"), and it resumes tomorrow. Games can last much longer than a math mission, so "finish the game first" could run well past the limit. The alternative is to finish the game, as math finishes the mission.
-2. **When levels open.** Recommendation: **all 4 levels open from the start** (open play, and any beginner may already play a bit), with "Your first game" as the castle's suggested path. The alternative is to unlock each level by beating the one before it.
-3. **Is "Your first game" locked until the Throne Room is crowned?** Recommendation: **no**, it's playable any time. The crown still needs a win, and a kid who skips the lessons will likely lose and get pointed back to the castle. The alternative is to keep it locked like the other nodes, so the map's path stays strict.
-4. **Hanging-piece whisper for Sleepy Kukoos games.** Optional teaching aid: after the kid's move leaves a piece where it can be taken for free, Kukoos says "Psst… your bishop can be taken!" once per move, at level 1 only. Recommendation: **include it, on at level 1 only**. The alternative is to leave it out to keep F17 smaller.
+## Decisions (2026-11-03)
+- **Kid vs computer only.** Pass-and-play moves to a later feature.
+- **Chess limit reached mid-game:** the game is saved and paused, and it resumes the next day.
+- **All 4 levels are open from the start.** After a win, Kukoos suggests the next level.
+- **"Your first game" is playable any time.** The crown needs a win.
+- **Hanging-piece whisper, at Sleepy Kukoos only:** after the kid's move leaves a piece that can be taken for free, Kukoos says "Psst… your bishop can be taken!" once for that move. It's in scope.
