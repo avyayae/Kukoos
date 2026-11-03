@@ -98,7 +98,8 @@ export interface ParentReport {
 const pct = (hits: number, total: number) => (total === 0 ? null : hits / total)
 
 const MATH_SKILLS = new Set<SkillId>(SKILLS.map((s) => s.id))
-const isMathMistake = (key: MistakeKey): key is MisconceptionKey => !key.startsWith('chess.')
+const isMathMistake = (key: MistakeKey): key is MisconceptionKey =>
+  !key.startsWith('chess.') && !key.startsWith('es.')
 
 /**
  * The report covers the math course only (chess joins the dashboard in F18). Chess lessons,
