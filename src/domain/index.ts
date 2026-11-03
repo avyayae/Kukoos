@@ -150,6 +150,12 @@ export {
   type RewardEffectType,
 } from './gamification/rewards'
 export {
+  GAME_RULES,
+  type GameOutcome,
+  gameRewards,
+  type GameRewardsInput,
+} from './gamification/gameRewards'
+export {
   parentReport,
   REPORT_DAYS,
   STRUGGLE_PCT,
