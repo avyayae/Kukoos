@@ -1,6 +1,6 @@
 # Curriculum Skill Map — Spanish (first words)
 
-**Status:** Draft (2026-11-03)
+**Status:** Approved (2026-11-03)
 
 For a **total beginner** (about 5–10) hearing Spanish for the first time. The Spanish is **Latin American**. v1 is **listening first, with pictures**: the kid hears a word and taps what it means, and never has to read Spanish. Each **skill** is a small group of words. Skills are grouped into island **areas** (map regions) and unlock in order through mastery (constitution §2.1), with a skip-ahead check for kids who already know some words.
 

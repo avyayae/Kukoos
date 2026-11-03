@@ -1,6 +1,6 @@
 # Feature 018 — Spanish Course & Voice
 
-**Status:** Draft (2026-11-03)  ·  **Constitution check:** this feature **amends** the constitution (see below). Also touches:
+**Status:** Approved (2026-11-03)  ·  **Constitution check:** this feature **amends** the constitution (see below). Also touches:
 - §1.3: Spanish is open play, like chess;
 - §1.4: Spanish words are always heard, never only read;
 - §1.5: no accounts and no cloud voice, and speech stays on the device;
@@ -68,6 +68,6 @@ Like chess in F13, the Spanish home stays **hidden in production** until F20 lau
 - Speech checking, recorded audio and cloud voices (Phase 2).
 - A Spanish user interface (the app stays in English).
 
-## Open questions
-1. **The course icon:** 🇪🇸 is the flag of Spain, and we're teaching Latin American Spanish. Recommendation: **💬 with the word "Español"** (no country flag). The alternative is 🇲🇽 or 🇪🇸.
-2. **The optional limit:** recommendation is a **separate Spanish limit** (simple and clear). The alternative is one shared "open play" limit covering chess and Spanish together.
+## Decisions on the open questions (2026-11-03)
+- **Course icon: 💬, with "Español"** under the name "Spanish" on the course card. No country flag.
+- **A separate Spanish limit**, not one shared with chess.
