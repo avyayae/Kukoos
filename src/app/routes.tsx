@@ -9,6 +9,7 @@ import { MapScreen } from '@/features/map/MapScreen'
 import { ChangeLookScreen, MeScreen } from '@/features/profiles/MeScreen'
 import { WhoIsPlaying } from '@/features/profiles/WhoIsPlaying'
 import { TrophyRoom } from '@/features/rewards/TrophyRoom'
+import { SpanishLessonGate } from '@/features/spanish/SpanishGate'
 
 export const routes: RouteObject[] = [
   { path: '/', element: <MapScreen /> },
@@ -21,6 +22,7 @@ export const routes: RouteObject[] = [
   { path: '/chess/board', element: <FreeBoardRoute /> },
   { path: '/chess/lesson/:skillId', element: <ChessLessonGate /> },
   { path: '/chess/play', element: <ChessPlayGate /> },
+  { path: '/spanish/lesson/:skillId', element: <SpanishLessonGate /> },
   {
     path: '/grown-ups',
     element: (
