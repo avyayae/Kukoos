@@ -13,6 +13,7 @@ export async function audioPrefs(db: KukoosDb): Promise<AudioPrefs> {
     soundOn: row?.soundOn ?? DEFAULT_AUDIO.soundOn,
     volume: row?.volume ?? DEFAULT_AUDIO.volume,
     voiceURI: row?.voiceURI ?? DEFAULT_AUDIO.voiceURI,
+    spanishVoiceURI: row?.spanishVoiceURI ?? DEFAULT_AUDIO.spanishVoiceURI,
     speechRate: row?.speechRate ?? DEFAULT_AUDIO.speechRate,
   }
 }

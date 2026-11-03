@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { rankVoices, voiceLabel, type VoiceLike } from '@/audio/voices'
+import {
+  isSpanish,
+  rankSpanishVoices,
+  rankVoices,
+  voiceLabel,
+  type VoiceLike,
+} from '@/audio/voices'
 
 const v = (name: string, lang = 'en-US', localService = true): VoiceLike => ({
   name,
@@ -54,5 +60,44 @@ describe('rankVoices (AC7)', () => {
       'UK English Female (natural) · en-GB',
     )
     expect(voiceLabel(v('Samantha'))).toBe('Samantha')
+  })
+})
+
+// Spec 018 AC3: real Spanish voice names from Edge, Chrome, Safari/iPad and Android.
+describe('Spanish voices (spec 018 AC3)', () => {
+  const SPANISH = [
+    v('Microsoft Helena - Spanish (Spain)', 'es-ES'),
+    v('Microsoft Dalia Online (Natural) - Spanish (Mexico)', 'es-MX', false),
+    v('Google español', 'es-ES', false),
+    v('Google español de Estados Unidos', 'es-US', false),
+    v('Paulina', 'es-MX'),
+    v('Mónica', 'es-ES'),
+    v('Microsoft Aria Online (Natural) - English (United States)', 'en-US', false),
+  ]
+
+  it('Latin American first, natural before plain, Spain last; English is dropped', () => {
+    expect(rankSpanishVoices(SPANISH).map((x) => x.name)).toEqual([
+      'Microsoft Dalia Online (Natural) - Spanish (Mexico)',
+      'Google español de Estados Unidos',
+      'Paulina',
+      'Google español',
+      'Microsoft Helena - Spanish (Spain)',
+      'Mónica',
+    ])
+  })
+
+  it('picks es-MX over es-ES, falls back to es-ES, and is empty without Spanish', () => {
+    expect(rankSpanishVoices([v('a', 'en-US'), v('b', 'es-ES'), v('c', 'es-MX')])[0]?.name).toBe(
+      'c',
+    )
+    expect(rankSpanishVoices([v('b', 'es_ES')])[0]?.name).toBe('b')
+    expect(rankSpanishVoices([v('a', 'en-US')])).toEqual([])
+    expect(isSpanish(v('x', 'ES-419'))).toBe(true)
+  })
+
+  it('labels show the accent', () => {
+    expect(voiceLabel(v('Microsoft Dalia Online (Natural) - Spanish (Mexico)', 'es-MX'))).toBe(
+      'Dalia (natural) · es-MX',
+    )
   })
 })

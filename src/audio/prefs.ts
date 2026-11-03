@@ -11,6 +11,8 @@ export interface AudioPrefs {
   volume: number
   /** The grown-ups' chosen voice; `null` = the best-ranked voice on this device. */
   voiceURI: string | null
+  /** The Spanish voice (spec 018); `null` = the best-ranked Spanish voice on this device. */
+  spanishVoiceURI: string | null
   speechRate: number
 }
 
@@ -19,5 +21,6 @@ export const DEFAULT_AUDIO: AudioPrefs = {
   soundOn: true,
   volume: 0.8,
   voiceURI: null,
+  spanishVoiceURI: null,
   speechRate: DEFAULT_RATE,
 }
