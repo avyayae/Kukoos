@@ -7,8 +7,8 @@ const BUDGET = 2 * 1024 * 1024
 const CHESS_MARK = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
 /** Only the Kukoos bot (spec 017) names its levels. */
 const BOT_MARK = 'Sleepy Kukoos'
-/** Only the lazy Spanish home (spec 018) has it. */
-const SPANISH_MARK = 'spanish-hello'
+/** Only the lazy Spanish home (spec 018) and the Spanish words (spec 019) have these. */
+const SPANISH_MARKS = ['spanish-hello', 'diecinueve']
 
 test.use({ serviceWorkers: 'block' })
 
@@ -30,7 +30,10 @@ test('the first visit stays under 2 MB, without chess', async ({ page }, info) =
       if (res.url().endsWith('.js') && body.toString('utf8').includes(BOT_MARK)) {
         botScripts.push(res.url())
       }
-      if (res.url().endsWith('.js') && body.toString('utf8').includes(SPANISH_MARK)) {
+      if (
+        res.url().endsWith('.js') &&
+        SPANISH_MARKS.some((m) => body.toString('utf8').includes(m))
+      ) {
         spanishScripts.push(res.url())
       }
     } catch {

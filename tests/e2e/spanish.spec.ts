@@ -1,5 +1,11 @@
 import { expect, type Page, test } from '@playwright/test'
+import {
+  spanishLessonReducer,
+  type SpanishLessonState,
+  startSpanishLesson,
+} from '../../src/domain/spanish/lesson'
 import { pickCourses } from './fixtures'
+import { finishRewards } from './helpers'
 
 // Spec 018 AC8: a new kid picks Spanish only and hears "¡Hola!" in a Spanish voice; a
 // Math + Spanish kid switches between the two. (e2e builds offer Spanish: VITE_SPANISH=1.)
@@ -78,4 +84,97 @@ test('the Spanish home loads on demand', async ({ page }, info) => {
   await page.getByRole('button', { name: "That's me!" }).click()
   await expect(page.getByTestId('spanish-home')).toBeVisible()
   await expect.poll(() => spanishScripts.length).toBeGreaterThan(0)
+})
+
+// Spec 019 AC11: a fresh Spanish-only kid plays the first lesson, skips ahead on the second,
+// and a wrong pick is recorded. The test runs the same seeded lesson to know each answer.
+const at = 0
+function solved(s: SpanishLessonState): SpanishLessonState {
+  const q = s.question
+  if (q.kind === 'say') return spanishLessonReducer(s, { type: 'said' })
+  if (q.kind === 'match') {
+    return q.choices.reduce(
+      (acc, c) => spanishLessonReducer(acc, { type: 'pair', wordId: c.id, pictureId: c.id, at }),
+      s,
+    )
+  }
+  return spanishLessonReducer(s, { type: 'choice', wordId: q.answer.id, at })
+}
+
+async function answerRight(page: Page, s: SpanishLessonState) {
+  const q = s.question
+  await expect(page.getByTestId('spanish-lesson')).toHaveAttribute('data-kind', q.kind)
+  if (q.kind === 'say') return page.getByTestId('said-it').click()
+  if (q.kind === 'match') {
+    for (const c of q.choices) {
+      await page.getByTestId(`word-${c.id}`).click()
+      await page.getByTestId(`picture-${c.id}`).click()
+    }
+    return
+  }
+  const tile = page.getByTestId(`choice-${q.answer.id}`)
+  await tile.click()
+  if (q.kind === 'see') await tile.click()
+}
+
+async function playAll(page: Page, start: SpanishLessonState) {
+  let s = start
+  while (s.phase !== 'complete') {
+    await answerRight(page, s)
+    await page.getByTestId('feedback').getByRole('button', { name: 'Continue' }).click()
+    s = spanishLessonReducer(solved(s), { type: 'continue', at })
+  }
+}
+
+test('a Spanish kid plays the first lesson to the celebration', async ({ page }) => {
+  await onboard(page, ['Spanish'])
+  await expect(page.getByTestId('spanish-path')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Play next: Hello!' })).toBeVisible()
+  // Play next opens it; a fixed seed lets the test mirror the same questions.
+  await page.goto('/spanish/lesson/es.hello?seed=5&learn')
+  await playAll(page, startSpanishLesson({ skillId: 'es.hello', seed: 5, at }))
+  await expect(page.getByRole('heading', { name: 'Mission complete!' })).toBeVisible()
+  await finishRewards(page)
+  await expect(page.getByTestId('spanish-home')).toBeVisible()
+})
+
+test('the skip-ahead check crowns Kind words, and a wrong pick is saved', async ({ page }) => {
+  await onboard(page, ['Spanish'])
+  // The profile is saved once the home shows.
+  await expect(page.getByTestId('spanish-home')).toBeVisible()
+  await page.goto('/spanish/lesson/es.manners?seed=9')
+  await page.getByRole('button', { name: 'Show Kukoos!' }).click()
+  await playAll(page, startSpanishLesson({ skillId: 'es.manners', seed: 9, at, skipCheck: true }))
+  await expect(page.getByRole('heading', { name: 'You know these already!' })).toBeVisible()
+  await page.getByRole('button', { name: 'Continue' }).click()
+  // Crowned, even out of order (Hello is still the next one on the path).
+  await expect(page.getByTestId('node-es.manners')).toHaveAccessibleName(/crowned/)
+  await expect(page.getByTestId('node-es.hello')).toHaveAccessibleName(/start here/)
+
+  // A deliberate wrong pick in Feelings, then leave: the attempt keeps the mix-up.
+  await page.goto('/spanish/lesson/es.feelings?seed=3&learn')
+  const s = startSpanishLesson({ skillId: 'es.feelings', seed: 3, at })
+  const wrong = s.question.choices.find((c) => c.id !== s.question.answer.id)
+  if (!wrong) throw new Error('needs a distractor')
+  await page.getByTestId(`choice-${wrong.id}`).click()
+  await expect(page.getByTestId('feedback')).toContainText('Not yet!')
+  await page.getByRole('button', { name: 'Try again' }).click()
+  await page.getByTestId(`choice-${s.question.answer.id}`).click()
+  await page.getByTestId('feedback').getByRole('button', { name: 'Continue' }).click()
+  await page.getByRole('button', { name: 'Leave lesson' }).click()
+  await page.getByRole('button', { name: 'Leave', exact: true }).click()
+  await expect(page.getByTestId('spanish-home')).toBeVisible()
+  const keys = await page.evaluate(
+    () =>
+      new Promise<string[]>((resolve, reject) => {
+        const open = indexedDB.open('kukoos')
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const req = open.result.transaction('attempts').objectStore('attempts').getAll()
+          req.onsuccess = () =>
+            resolve((req.result as { misconceptions: string[] }[]).flatMap((a) => a.misconceptions))
+        }
+      }),
+  )
+  expect(keys).toContain(`es.mixup:${s.question.answer.id}~${wrong.id}`)
 })

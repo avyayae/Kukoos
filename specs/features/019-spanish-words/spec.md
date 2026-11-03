@@ -1,6 +1,6 @@
 # Feature 019 — Spanish Words & Lessons
 
-**Status:** Approved (2026-11-03)  ·  **Constitution check:**
+**Status:** Implemented (2026-11-03)  ·  **Constitution check:**
 - §2.1: mastery unlocks the next skill.
 - §2.2: spaced review.
 - §2.3: about 80% success, with adaptive difficulty.

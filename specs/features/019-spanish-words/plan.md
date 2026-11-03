@@ -68,3 +68,15 @@
 - **Emoji differences across devices:** keep to common emoji (Unicode ≤ 13).
 - **Spoken numbers for 16–19:** use the single-word forms ("dieciséis").
 - **Bundle size:** the words are about 10 KB and lazy, so they don't affect the first load.
+
+## Deviations (recorded during implementation)
+- **Word list changes from the skill map's examples** (the map lists examples; `words.review.md` is the list to approve):
+  - `es.body`: "la cabeza" is left out (no clear emoji), and "la oreja" 👂 is added.
+  - `es.home`: "la mesa" is left out (no clear emoji), and "la ventana" 🪟 is added.
+  - `es.feelings`: "asustado / asustada" 😨 is added, so the skill has 5 words.
+  - `es.market` pictures: big 🌳, small 🌱, a lot 🍎🍎🍎🍎, a little 🍎.
+- **Number word IDs are plain ASCII** ("dieciseis"). The Spanish shown and spoken keeps its accent.
+- **Distractors never share a meaning.** "orange (fruit)" and "orange" count as the same meaning, so 🍊 and the orange swatch never appear together.
+- **A skill is reachable by URL even when locked,** as in chess. The path and Play next only open unlocked skills.
+- **The offer and result cards reuse the chess card layout** (`chess-card` classes plus `spanish-card`).
+- **The skill path reuses the math and chess map nodes** (`journey`, `band`, `map-node`), with island bands `band--es-*`. F20 turns it into Hola Island.
