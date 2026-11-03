@@ -58,6 +58,8 @@ export interface BoardMarks {
   target?: Square | null
   /** Highlighted as the answer (💡). */
   hint?: readonly Square[]
+  /** A piece that can be taken for free (spec 017 whisper). */
+  warn?: readonly Square[]
 }
 
 /** Pixels a press must travel before it's a drag rather than a tap. */
@@ -284,6 +286,7 @@ export function ChessBoard({
                 move && (move.capture ? 'sq--capture' : 'sq--target'),
                 checkedKing === sq && 'sq--check',
                 marks?.hint?.includes(sq) && 'sq--hint',
+                marks?.warn?.includes(sq) && 'sq--warn',
               ]
               const name = [
                 sq,
@@ -294,6 +297,7 @@ export function ChessBoard({
                 marks?.stars?.includes(sq) && 'star',
                 marks?.target === sq && 'target',
                 marks?.hint?.includes(sq) && 'the answer',
+                marks?.warn?.includes(sq) && 'can be taken',
               ]
               return (
                 <div role="gridcell" className="chess-board__cell" key={sq}>
@@ -348,6 +352,11 @@ export function ChessBoard({
                     {marks?.target === sq && (
                       <span className="sq__mark sq__mark--target" aria-hidden="true">
                         🎯
+                      </span>
+                    )}
+                    {marks?.warn?.includes(sq) && (
+                      <span className="sq__mark sq__mark--warn" aria-hidden="true">
+                        ❗
                       </span>
                     )}
                     {checkedKing === sq && (

@@ -48,6 +48,22 @@ describe('backup export (AC7)', () => {
     expect(await snapshot(other)).toEqual(before)
   })
 
+  it('imports a v1 backup (from before games existed) with no games (spec 017)', async () => {
+    const { repos } = await seeded()
+    const file = await repos.backup.export()
+    const v1Tables = Object.fromEntries(
+      Object.entries(file.tables).filter(([table]) => table !== 'games'),
+    )
+    const v1 = { ...file, schemaVersion: 1, tables: v1Tables }
+    const other = createDexieRepositories(freshDb())
+    const result = await other.backup.import(JSON.stringify(v1))
+    expect(result).toMatchObject({ ok: true, counts: { games: 0, lessons: 1 } })
+    // From v2 on, a missing table means the file is damaged.
+    expect(validateBackup({ ...file, tables: v1Tables })).toMatchObject({
+      error: BACKUP_ERRORS.damaged,
+    })
+  })
+
   it('import replaces whatever was on the device', async () => {
     const { repos } = await seeded()
     const file = await repos.backup.export()

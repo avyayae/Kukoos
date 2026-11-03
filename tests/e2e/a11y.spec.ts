@@ -80,3 +80,23 @@ test('the chess board (spec 015)', async ({ page }) => {
   await page.getByTestId('sq-g1').click()
   await expectAccessible(page, 'board with a piece selected')
 })
+
+test('games vs Kukoos: setup, the game, the whisper and the end card (spec 017)', async ({
+  page,
+}) => {
+  desktopOnly()
+  await page.goto('/chess/play')
+  await expect(page.getByTestId('game-setup')).toBeVisible()
+  await expectAccessible(page, 'game setup')
+  await page.getByTestId('start-game').click()
+  await expect(page.getByTestId('game-turn')).toHaveText('Your turn')
+  await expectAccessible(page, 'game')
+  await page.getByTestId('sq-e2').click()
+  await page.getByTestId('sq-e4').click()
+  await expect(page.getByTestId('game-turn')).toHaveText('Your turn', { timeout: 10_000 })
+  await page.getByRole('button', { name: 'End game' }).click()
+  await expectAccessible(page, 'end game sheet')
+  await page.getByRole('button', { name: 'Stop' }).click()
+  await expect(page.getByTestId('game-over')).toBeVisible()
+  await expectAccessible(page, 'game over')
+})

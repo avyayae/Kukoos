@@ -10,6 +10,7 @@ export {
   useBadges,
   useBestScores,
   useCurrentProfile,
+  useGameWins,
   useJourney,
   useProgress,
   useWallet,
@@ -19,6 +20,7 @@ export { createRepositories } from './createRepositories'
 export { createDexieRepositories, DEFAULT_PROFILE } from './repositories/dexie'
 export { createNullRepositories, NO_STORAGE_MESSAGE } from './repositories/null'
 export type { BackupFile, ImportResult, Repositories } from './repositories/types'
-export type { BadgeRow, ProfileRow, TableName } from './rows'
+export type { SavedGame } from './games'
+export type { BadgeRow, GameRow, ProfileRow, TableName } from './rows'
 export { newId } from './write'
 export { BACKUP_ERRORS, validateBackup } from './backup'

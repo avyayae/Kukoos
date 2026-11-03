@@ -27,3 +27,19 @@ export {
   PIECE_VALUES,
   reachable,
 } from './teach'
+export {
+  applyMove,
+  endGame,
+  fromUci,
+  type GameResult,
+  type GameState,
+  isKidsTurn,
+  kidMoves,
+  newGame,
+  replay,
+  resultOf,
+  takeBack,
+  takeBackCount,
+  toUci,
+} from './game'
+export { hangingPieces, whisperFor } from './whisper'

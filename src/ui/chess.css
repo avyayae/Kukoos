@@ -137,6 +137,15 @@
   .sq--hint {
     box-shadow: inset 0 0 0 4px var(--mq-sun);
   }
+  .sq--warn {
+    box-shadow: inset 0 0 0 4px var(--mq-danger);
+  }
+  .sq__mark--warn {
+    top: 2%;
+    left: 4%;
+    font-size: min(var(--mq-text-base), 4vw);
+    animation: mq-pop var(--mq-dur-base) var(--mq-ease-bounce) both;
+  }
 
   /* ---------------------------------------------------------- pieces */
   .sq__piece {
@@ -347,7 +356,138 @@
     max-width: 24rem;
   }
 
+  /* ---------------------------------------------------------- games vs Kukoos (spec 017) */
+  .game,
+  .game-setup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-3);
+    max-width: var(--mq-content-max);
+    margin-inline: auto;
+  }
+  .game__top {
+    display: flex;
+    align-items: center;
+    gap: var(--mq-space-3);
+  }
+  .game__title {
+    flex: 1;
+    margin: 0;
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-lg);
+    font-weight: var(--mq-weight-black);
+    line-height: 1.15;
+  }
+  .game__kukoos {
+    display: flex;
+    align-items: center;
+    min-height: var(--mq-tap-kid);
+  }
+  .game__board {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: var(--mq-board-max);
+    margin-inline: auto;
+  }
+  .game__captured {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--mq-space-1);
+    min-height: var(--mq-space-6);
+    max-width: var(--mq-board-max);
+    margin: 0 auto;
+    width: 100%;
+  }
+  .game__captured-piece {
+    width: var(--mq-space-6);
+    height: var(--mq-space-6);
+  }
+  .game__actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--mq-space-3);
+    width: 100%;
+    max-width: var(--mq-board-max);
+    margin-inline: auto;
+  }
+  .game__actions .btn3d {
+    flex-direction: column;
+    gap: 0;
+    padding-inline: var(--mq-space-1);
+    font-size: var(--mq-text-base);
+    line-height: 1.1;
+    text-transform: none;
+  }
+  .game[data-thinking] .game__board {
+    cursor: progress;
+  }
+
+  .level-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--mq-space-3);
+  }
+  .tile.level-card {
+    justify-content: flex-start;
+    gap: var(--mq-space-3);
+    padding: var(--mq-space-3) var(--mq-space-4);
+    text-align: left;
+  }
+  .level-card__face {
+    font-size: var(--mq-text-2xl);
+    line-height: 1;
+  }
+  .level-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-1);
+  }
+  .level-card__name {
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-lg);
+    font-weight: var(--mq-weight-black);
+  }
+  .level-card__about {
+    color: var(--mq-ink-muted);
+    font-size: var(--mq-text-base);
+    font-weight: var(--mq-weight-bold);
+  }
+  .color-pick {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--mq-space-3);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .color-pick__title {
+    grid-column: 1 / -1;
+    margin-bottom: var(--mq-space-2);
+    font-size: var(--mq-text-lg);
+    font-weight: var(--mq-weight-black);
+  }
+  .tile.color-pick__choice {
+    flex-direction: column;
+    gap: var(--mq-space-1);
+    font-size: var(--mq-text-base);
+  }
+  .color-pick__piece {
+    display: grid;
+    place-items: center;
+    width: var(--mq-space-8);
+    height: var(--mq-space-8);
+    font-size: var(--mq-text-xl);
+  }
+  .game-setup__dock {
+    margin-top: var(--mq-space-2);
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .sq__mark--warn {
+      animation: mq-fade var(--mq-dur-fast) linear both;
+    }
     .sq__piece--glide {
       animation: mq-fade var(--mq-dur-fast) linear both;
     }

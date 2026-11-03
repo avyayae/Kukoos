@@ -81,6 +81,8 @@ export default defineConfig({
       devOptions: { enabled: false },
     }),
   ],
+  // Kukoos thinks in a module worker (spec 017); ES format lets it share chunks.
+  worker: { format: 'es' },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

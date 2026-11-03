@@ -3,6 +3,7 @@ import type {
   AttemptRow,
   BadgeRow,
   DailyActivityRow,
+  GameRow,
   InventoryRow,
   LessonRow,
   OutboxRow,
@@ -22,10 +23,10 @@ export const DB_NAME = 'kukoos'
  *   3. add a migration test that opens a vN-1 database and checks the upgrade
  * Backups record the schema version; import refuses files from a newer version.
  */
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 
 /** Index definitions per table (first entry = primary key). */
-export const STORES_V1: Record<TableName, string> = {
+export const STORES_V1: Record<Exclude<TableName, 'games'>, string> = {
   profiles: 'id',
   settings: 'id',
   lessons: 'id, profileId, [profileId+skillId], [profileId+endedAt]',
@@ -38,6 +39,12 @@ export const STORES_V1: Record<TableName, string> = {
   outbox: 'id, at',
 }
 
+/** v2 (spec 017): games against Kukoos. Only the new table; no existing row changes. */
+export const STORES_V2 = { games: 'id, profileId, [profileId+endedAt]' } as const
+
+/** The first schema version each table exists in (backups from before it have none). */
+export const TABLE_SINCE: Partial<Record<TableName, number>> = { games: 2 }
+
 export class KukoosDb extends Dexie {
   declare profiles: EntityTable<ProfileRow, 'id'>
   declare settings: EntityTable<SettingsRow, 'id'>
@@ -49,10 +56,12 @@ export class KukoosDb extends Dexie {
   declare badges: EntityTable<BadgeRow, 'id'>
   declare dailyActivity: EntityTable<DailyActivityRow, 'id'>
   declare outbox: EntityTable<OutboxRow, 'id'>
+  declare games: EntityTable<GameRow, 'id'>
 
   constructor(name = DB_NAME) {
     super(name)
     this.version(1).stores(STORES_V1)
+    this.version(2).stores(STORES_V2)
   }
 }
 

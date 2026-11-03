@@ -21,15 +21,17 @@ const STATE_TEXT: Record<CastleNodeState, string> = {
 interface CastleMapProps {
   progress: Partial<Record<SkillId, SkillMastery>>
   onOpen: (node: CastleNode) => void
-  /** "Your first game" (F17). */
+  /** "Your first game" (spec 017): open from the start, crowned on the first win. */
   onGame: () => void
+  firstGameWon: boolean
 }
 
 /**
  * Chess Castle (spec 016 AC7): Courtyard → Towers → Throne Room, bottom to top, the same
- * node look as the math map. The last stop, "Your first game", arrives with F17.
+ * node look as the math map. The last stop, "Your first game", is a real game with Sleepy
+ * Kukoos (spec 017 AC8).
  */
-export function CastleMap({ progress, onOpen, onGame }: CastleMapProps) {
+export function CastleMap({ progress, onOpen, onGame, firstGameWon }: CastleMapProps) {
   const nodes = castleNodes(progress)
   const reduced = usePrefersReducedMotion()
   const scrolled = useRef(false)
@@ -59,13 +61,13 @@ export function CastleMap({ progress, onOpen, onGame }: CastleMapProps) {
               <div className="map-row" style={{ '--lane': 0 } as CSSProperties}>
                 <button
                   type="button"
-                  className="map-node map-node--locked map-node--boss"
-                  aria-label="Your first game, coming soon"
+                  className={`map-node map-node--${firstGameWon ? 'crowned' : 'available'} map-node--boss`}
+                  aria-label={`Your first game, ${firstGameWon ? 'crowned' : 'open'}`}
                   data-testid="node-chess-game"
                   onClick={onGame}
                 >
                   <span className="map-node__face" aria-hidden="true">
-                    ♟️
+                    {firstGameWon ? '👑' : '♟️'}
                   </span>
                 </button>
               </div>

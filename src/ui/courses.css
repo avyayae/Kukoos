@@ -93,7 +93,15 @@
 
   /* ---------------------------------------------------------- chess castle (spec 016) */
   .map-screen.chess-home {
+    /* The dock also holds "Play Kukoos" (spec 017). */
+    padding-bottom: calc(
+      var(--mq-bar-h) + var(--mq-tap-xl) + var(--mq-tap-kid) + var(--mq-space-12) +
+        var(--mq-space-8) + env(safe-area-inset-bottom)
+    );
     background: var(--mq-castle-courtyard);
+  }
+  .btn3d.play-chip {
+    gap: var(--mq-space-2);
   }
   .band--courtyard {
     background: linear-gradient(to top, var(--mq-castle-courtyard) 60%, var(--mq-castle-towers));

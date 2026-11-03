@@ -125,6 +125,7 @@ const PROGRESS_TABLES: readonly SyncTableName[] = [
   'inventory',
   'badges',
   'dailyActivity',
+  'games',
 ]
 
 /** "Start over": clears a kid's progress but keeps the kid, the explorer and settings. */

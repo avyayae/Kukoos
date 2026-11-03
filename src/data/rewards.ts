@@ -18,7 +18,7 @@ import { dayId, readToday, timeSettings } from './time'
 import { type NewRow, writeRows } from './write'
 
 /** One wallet row per kid, keyed by the profile id. */
-const toWallet = (row: WalletRow | undefined): Wallet =>
+export const toWallet = (row: WalletRow | undefined): Wallet =>
   row
     ? {
         xpTotal: row.xpTotal,
@@ -30,7 +30,7 @@ const toWallet = (row: WalletRow | undefined): Wallet =>
       }
     : NEW_WALLET
 
-const walletRow = (profileId: string, w: Wallet): NewRow<'wallet'> => ({
+export const walletRow = (profileId: string, w: Wallet): NewRow<'wallet'> => ({
   id: profileId,
   profileId,
   ...w,

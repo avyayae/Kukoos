@@ -5,6 +5,8 @@ import { expect, test } from '@playwright/test'
 const BUDGET = 2 * 1024 * 1024
 /** chess.js's start position: only chess code contains it. */
 const CHESS_MARK = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
+/** Only the Kukoos bot (spec 017) names its levels. */
+const BOT_MARK = 'Sleepy Kukoos'
 
 test.use({ serviceWorkers: 'block' })
 
@@ -13,6 +15,7 @@ test('the first visit stays under 2 MB, without chess', async ({ page }, info) =
   let bytes = 0
   const sizes: { url: string; size: number }[] = []
   const chessScripts: string[] = []
+  const botScripts: string[] = []
   page.on('response', async (res) => {
     try {
       const body = await res.body()
@@ -20,6 +23,9 @@ test('the first visit stays under 2 MB, without chess', async ({ page }, info) =
       sizes.push({ url: res.url(), size: body.length })
       if (res.url().endsWith('.js') && body.toString('utf8').includes(CHESS_MARK)) {
         chessScripts.push(res.url())
+      }
+      if (res.url().endsWith('.js') && body.toString('utf8').includes(BOT_MARK)) {
+        botScripts.push(res.url())
       }
     } catch {
       // Redirects and aborted requests have no body.
@@ -36,9 +42,16 @@ test('the first visit stays under 2 MB, without chess', async ({ page }, info) =
     BUDGET,
   )
   expect(chessScripts, 'chess code in the first load').toEqual([])
+  expect(botScripts, 'bot code in the first load').toEqual([])
 
   // Opening the free board fetches the chess chunk.
   await page.goto('/chess/board')
   await expect(page.getByTestId('free-board')).toBeVisible()
   await expect.poll(() => chessScripts.length).toBeGreaterThan(0)
+  expect(botScripts, 'the free board does not need the bot').toEqual([])
+
+  // Spec 017 AC10: a game against Kukoos fetches the bot (the game screen and its worker).
+  await page.goto('/chess/play?level=1&color=w')
+  await expect(page.getByTestId('game')).toBeVisible()
+  await expect.poll(() => botScripts.length).toBeGreaterThan(0)
 })
