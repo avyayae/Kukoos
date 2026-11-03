@@ -79,6 +79,8 @@ export interface Repositories {
     addActive(profileId: string, lessonSeconds: number, totalSeconds: number): Promise<TodayTime>
     /** Adds chess seconds (spec 013): never the goal or the math limit. */
     addChess(profileId: string, seconds: number): Promise<TodayTime>
+    /** Adds Spanish seconds (spec 018): never the goal, the math or the chess limit. */
+    addSpanish(profileId: string, seconds: number): Promise<TodayTime>
     /** The grown-up "+10 minutes today". */
     addBonus(profileId: string, minutes: number): Promise<TodayTime>
     settings(profileId: string): Promise<TimeSettings>

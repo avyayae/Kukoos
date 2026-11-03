@@ -61,8 +61,23 @@ For **any kid (about 5–12) learning chess from the basics**, not only the orig
 | F15 | Board and pieces (tap-to-move, legal-move hints, loaded on demand) |
 | F16 | Chess curriculum and map (`05-chess-skill-map.md`, units, mastery, skip-ahead checks) |
 | F17 | Play: games vs a friendly bot (4 levels), "Your first game" |
-| F18 | Chess rewards, Grown-ups dashboard, launch |
+| F21 | Chess rewards, Grown-ups dashboard (moved after Spanish, 2026-11-03) |
 | Later | Pass-and-play: two players on one device (moved out of F17, 2026-11-03) |
+
+## v3: Spanish course (decided 2026-11-03)
+A third course, so a kid can **start learning Spanish from zero**.
+- **Latin American Spanish**, for a **total beginner**: first words, listening first, with pictures (`06-spanish-skill-map.md`).
+- **The device's own Spanish voice** first; recorded clips only if it sounds poor.
+- **Open play like chess:** no goal or streak, and an optional limit (off by default).
+- **Speaking:** "say it" practice with no microphone and no checking in v1.
+- Comes **before** F21 (chess badges and dashboard).
+
+| # | Feature |
+|---|---|
+| F18 | Spanish course and voice: course registry, constitution amendment, Spanish voice per language, Grown-ups voice choice, gated home |
+| F19 | Spanish words, question kinds (listen, see, match, count, say) and lessons, with mastery and skip-ahead |
+| F20 | Hola Island map, area stickers, launch (gate removed) |
+| Later | Tiny phrases, reading and spelling, speech checking, recorded audio |
 
 ## Phase 2 (after MVP, ~4–6 weeks)
 - Avatar shop, placement quiz.

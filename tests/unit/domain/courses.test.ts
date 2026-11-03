@@ -5,26 +5,43 @@ import {
   COURSES,
   courseNow,
   getCourse,
+  openPlayBudget,
   profileCourses,
   toggleCourse,
 } from '@/domain'
 
 describe('course model (spec 013 AC1)', () => {
-  it('lists math (timed) and chess (open play)', () => {
+  it('lists math (timed), chess and Spanish (open play)', () => {
     expect(COURSES.map((c) => [c.id, c.timed])).toEqual([
       ['math', true],
       ['chess', false],
+      ['spanish', false],
     ])
     expect(getCourse('chess').name).toBe('Chess')
+    // Spec 018 decision: 💬 "Español", no country flag.
+    expect(getCourse('spanish')).toMatchObject({
+      name: 'Spanish',
+      nameLocal: 'Español',
+      icon: '💬',
+    })
   })
 
-  it('offers chess only when the build has it', () => {
-    expect(availableCourses({ chess: false })).toEqual(['math'])
-    expect(availableCourses({ chess: true })).toEqual(['math', 'chess'])
+  it('offers each course only when the build has it (spec 018 AC1)', () => {
+    expect(availableCourses({ chess: false, spanish: false })).toEqual(['math'])
+    expect(availableCourses({ chess: true, spanish: false })).toEqual(['math', 'chess'])
+    expect(availableCourses({ chess: true, spanish: true })).toEqual(['math', 'chess', 'spanish'])
+  })
+
+  it('a Spanish-only kid gets only Spanish (spec 018 AC1)', () => {
+    const all = availableCourses({ chess: true, spanish: true })
+    expect(profileCourses(['spanish'], all)).toEqual(['spanish'])
+    expect(toggleCourse(['spanish'], 'math')).toEqual(['math', 'spanish'])
+    // Without the gate, a Spanish-only kid still gets a course.
+    expect(profileCourses(['spanish'], ['math', 'chess'])).toEqual(['math'])
   })
 
   it('profiles without courses are math players; never empty', () => {
-    const both = availableCourses({ chess: true })
+    const both = availableCourses({ chess: true, spanish: false })
     expect(profileCourses(undefined, both)).toEqual(['math'])
     expect(profileCourses(['chess', 'math'], both)).toEqual(['math', 'chess'])
     expect(profileCourses(['chess'], both)).toEqual(['chess'])
@@ -45,7 +62,12 @@ describe('course model (spec 013 AC1)', () => {
   })
 })
 
-describe('optional chess limit (spec 013 AC3)', () => {
+describe('optional open-play limits: chess (spec 013 AC3) and Spanish (spec 018 AC6)', () => {
+  it('Spanish uses the same budget as chess', () => {
+    expect(openPlayBudget(10 * 60, 10)).toEqual({ remainingSeconds: 0, locked: true })
+    expect(openPlayBudget(10 * 60, null).locked).toBe(false)
+  })
+
   it('is off by default', () => {
     expect(chessBudget(99_999, null)).toEqual({ remainingSeconds: null, locked: false })
     expect(chessBudget(99_999, undefined).locked).toBe(false)

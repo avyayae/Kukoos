@@ -1,7 +1,10 @@
 import { test as base, expect, type Page } from '@playwright/test'
 
 /** "What do you want to learn?" (spec 013; e2e builds offer chess). */
-export async function pickCourses(page: Page, courses: readonly ('Math' | 'Chess')[] = ['Math']) {
+export async function pickCourses(
+  page: Page,
+  courses: readonly ('Math' | 'Chess' | 'Spanish')[] = ['Math'],
+) {
   await expect(page.getByText('What do you want to learn?')).toBeVisible()
   for (const c of courses) await page.getByRole('button', { name: c, exact: true }).click()
   await page.getByRole('button', { name: 'Next' }).click()

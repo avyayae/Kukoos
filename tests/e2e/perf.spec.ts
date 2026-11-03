@@ -7,6 +7,8 @@ const BUDGET = 2 * 1024 * 1024
 const CHESS_MARK = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
 /** Only the Kukoos bot (spec 017) names its levels. */
 const BOT_MARK = 'Sleepy Kukoos'
+/** Only the lazy Spanish home (spec 018) has it. */
+const SPANISH_MARK = 'spanish-hello'
 
 test.use({ serviceWorkers: 'block' })
 
@@ -16,6 +18,7 @@ test('the first visit stays under 2 MB, without chess', async ({ page }, info) =
   const sizes: { url: string; size: number }[] = []
   const chessScripts: string[] = []
   const botScripts: string[] = []
+  const spanishScripts: string[] = []
   page.on('response', async (res) => {
     try {
       const body = await res.body()
@@ -26,6 +29,9 @@ test('the first visit stays under 2 MB, without chess', async ({ page }, info) =
       }
       if (res.url().endsWith('.js') && body.toString('utf8').includes(BOT_MARK)) {
         botScripts.push(res.url())
+      }
+      if (res.url().endsWith('.js') && body.toString('utf8').includes(SPANISH_MARK)) {
+        spanishScripts.push(res.url())
       }
     } catch {
       // Redirects and aborted requests have no body.
@@ -43,6 +49,7 @@ test('the first visit stays under 2 MB, without chess', async ({ page }, info) =
   )
   expect(chessScripts, 'chess code in the first load').toEqual([])
   expect(botScripts, 'bot code in the first load').toEqual([])
+  expect(spanishScripts, 'Spanish code in the first load').toEqual([])
 
   // Opening the free board fetches the chess chunk.
   await page.goto('/chess/board')

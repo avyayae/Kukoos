@@ -5,6 +5,7 @@ import { type CoursesValue, useCourses } from '@/app/courses'
 import { useActivity, useDailyTime } from '@/app/time'
 import { useJourney, useProfiles, useWallet } from '@/data'
 import { ChessHome, ChessRest } from '@/features/chess/ChessHome'
+import { SpanishHomeGate, SpanishRest } from '@/features/spanish/SpanishGate'
 import { HomeHeader } from '@/features/courses/HomeHeader'
 import { Onboarding } from '@/features/profiles/Onboarding'
 import { WhoIsPlaying } from '@/features/profiles/WhoIsPlaying'
@@ -59,6 +60,16 @@ export function MapScreen() {
         <ChessRest courses={courses} />
       ) : (
         <ChessHome courses={courses} />
+      ),
+    )
+  }
+  // Spanish is open play too: only its own optional limit rests it (spec 018 AC6).
+  if (courses.current === 'spanish') {
+    return home(
+      time.ready && time.spanish.locked ? (
+        <SpanishRest courses={courses} />
+      ) : (
+        <SpanishHomeGate courses={courses} />
       ),
     )
   }

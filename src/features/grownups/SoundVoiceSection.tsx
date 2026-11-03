@@ -1,12 +1,15 @@
+import { spanishAvailable } from '@/app/courses'
 import { RATE_RANGE } from '@/audio/prefs'
 import { speak } from '@/audio/tts'
 import { voiceLabel } from '@/audio/voices'
 import { Button3D } from '@/ui'
 import { useAudioPrefs } from '@/ui/audioPrefs'
-import { useVoices } from '@/ui/useSpeech'
+import { useSpanishVoices, useVoices } from '@/ui/useSpeech'
 
 const AUTO = 'auto'
 export const SAMPLE_LINE = 'Hi! I am Kukoos. What is 36 minus 28? Let us trade a ten!'
+/** The Spanish sample (spec 018 AC5). */
+export const SPANISH_SAMPLE = 'Hola, soy Kukoos. ¡Vamos a aprender español!'
 
 /**
  * Sound & voice (spec 009 AC8, AC10): sound on/off and volume, the voice (best one first)
@@ -92,6 +95,68 @@ export function SoundVoiceSection() {
       >
         Test voice
       </Button3D>
+      {spanishAvailable() && <SpanishVoice />}
     </section>
+  )
+}
+
+/**
+ * The Spanish voice (spec 018 AC5): only Spanish voices, Latin American first, with a
+ * sample. Without one, how to add one on this kind of device.
+ */
+function SpanishVoice() {
+  const { prefs, setPrefs } = useAudioPrefs()
+  const voices = useSpanishVoices()
+  const chosen = voices.some((v) => v.voiceURI === prefs.spanishVoiceURI)
+    ? prefs.spanishVoiceURI
+    : null
+  if (voices.length === 0) {
+    return (
+      <div data-testid="no-spanish-voice">
+        <h3>Spanish voice</h3>
+        <p>
+          This device has no Spanish voice yet, so Spanish words may sound wrong. To add one:
+          Android, Settings → Text-to-speech → Google → install Spanish (United States or Mexico);
+          iPad, Settings → Accessibility → Spoken Content → Voices → Spanish (Mexico); Windows,
+          Settings → Time &amp; language → Speech → add Spanish (Mexico). Then reopen Kukoos.
+        </p>
+      </div>
+    )
+  }
+  return (
+    <>
+      <label className="grownup__field">
+        <span>Spanish voice</span>
+        <select
+          className="grownup__select"
+          value={chosen ?? AUTO}
+          onChange={(e) =>
+            setPrefs({ spanishVoiceURI: e.target.value === AUTO ? null : e.target.value })
+          }
+        >
+          <option value={AUTO}>
+            Best on this device: {voiceLabel(voices[0] as SpeechSynthesisVoice)}
+          </option>
+          {voices.map((v) => (
+            <option key={v.voiceURI} value={v.voiceURI}>
+              {voiceLabel(v)}
+            </option>
+          ))}
+        </select>
+      </label>
+      <Button3D
+        variant="ghost"
+        size="md"
+        onClick={() =>
+          speak(SPANISH_SAMPLE, {
+            lang: 'es',
+            rate: prefs.speechRate,
+            ...(chosen ? { voiceURI: chosen } : {}),
+          })
+        }
+      >
+        Test Spanish voice
+      </Button3D>
+    </>
   )
 }

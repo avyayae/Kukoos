@@ -50,11 +50,15 @@ export interface SettingsRow extends SyncFields {
   dailyLimitMin?: number | null
   /** Per-profile optional chess limit in minutes (spec 013); absent or `null` = off. */
   chessLimitMin?: number | null
+  /** Per-profile optional Spanish limit in minutes (spec 018); absent or `null` = off. */
+  spanishLimitMin?: number | null
   /** Device-level (global row) sound and voice settings (spec 009); absent = default. */
   readAloud?: boolean
   soundOn?: boolean
   volume?: number
   voiceURI?: string | null
+  /** Device-level (global row): the Spanish voice (spec 018); absent = the best one. */
+  spanishVoiceURI?: string | null
   speechRate?: number
   /** Device-level (global row): the grown-ups PIN as a salted SHA-256 hash (spec 011). */
   pinHash?: string
@@ -133,6 +137,8 @@ export interface DailyActivityRow extends SyncFields {
   goalMet: boolean
   /** Chess time (spec 013); absent on older rows = 0. */
   chessSeconds?: number
+  /** Spanish time (spec 018); absent on older rows = 0. */
+  spanishSeconds?: number
 }
 
 /** A game against Kukoos (spec 017): saved after every move, finished once. */

@@ -30,7 +30,11 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   }, [repos])
 
   useEffect(() => {
-    configureSpeech({ voiceURI: prefs.voiceURI, rate: prefs.speechRate })
+    configureSpeech({
+      voiceURI: prefs.voiceURI,
+      spanishVoiceURI: prefs.spanishVoiceURI,
+      rate: prefs.speechRate,
+    })
     configureSfx({ on: prefs.soundOn, volume: prefs.volume })
   }, [prefs])
 

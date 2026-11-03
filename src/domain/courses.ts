@@ -1,14 +1,16 @@
 /**
- * Courses (spec 013): what a kid is here to learn. Math is timed (goal, streak, daily limit);
- * chess is open play, with only an optional grown-up limit.
+ * Courses (specs 013, 018): what a kid is here to learn. Math is timed (goal, streak, daily
+ * limit); chess and Spanish are open play, each with only an optional grown-up limit.
  */
-export type CourseId = 'math' | 'chess'
+export type CourseId = 'math' | 'chess' | 'spanish'
 
 export interface Course {
   id: CourseId
   /** Kid-facing name, also spoken. */
   name: string
   icon: string
+  /** The name in the course's own language, shown under it ("Español"). */
+  nameLocal?: string
   /** Timed courses fill the daily goal and streak and count toward the daily limit. */
   timed: boolean
 }
@@ -16,7 +18,15 @@ export interface Course {
 const MATH: Course = { id: 'math', name: 'Math', icon: '🔢', timed: true }
 const CHESS: Course = { id: 'chess', name: 'Chess', icon: '♞', timed: false }
 
-export const COURSES: readonly Course[] = [MATH, CHESS]
+const SPANISH: Course = {
+  id: 'spanish',
+  name: 'Spanish',
+  nameLocal: 'Español',
+  icon: '💬',
+  timed: false,
+}
+
+export const COURSES: readonly Course[] = [MATH, CHESS, SPANISH]
 
 /** Profiles saved before courses existed are math players. */
 export const DEFAULT_COURSES: readonly CourseId[] = ['math']
@@ -25,9 +35,9 @@ export function getCourse(id: CourseId): Course {
   return COURSES.find((c) => c.id === id) ?? MATH
 }
 
-/** The courses this build offers (chess stays hidden until it ships). */
-export function availableCourses(flags: { chess: boolean }): CourseId[] {
-  return COURSES.filter((c) => c.id !== 'chess' || flags.chess).map((c) => c.id)
+/** The courses this build offers (a course stays hidden until it ships). */
+export function availableCourses(flags: { chess: boolean; spanish: boolean }): CourseId[] {
+  return COURSES.filter((c) => (c.id === 'math' ? true : flags[c.id])).map((c) => c.id)
 }
 
 /**
@@ -56,7 +66,7 @@ export function toggleCourse(mine: readonly CourseId[], id: CourseId): CourseId[
   return COURSES.map((c) => c.id).filter((c) => c === id || mine.includes(c))
 }
 
-/** Grown-up chess limit options in minutes; `null` = off (the default). */
+/** Grown-up limit options for an open-play course (chess, Spanish), in minutes; `null` = off. */
 export const CHESS_LIMIT_OPTIONS = [15, 20, 30, 45, 60] as const
 
 export interface ChessBudget {
@@ -66,11 +76,11 @@ export interface ChessBudget {
   locked: boolean
 }
 
-export function chessBudget(
-  chessSeconds: number,
-  limitMin: number | null | undefined,
-): ChessBudget {
+/** An open-play course's budget (chess, Spanish): only its own optional limit can lock it. */
+export function openPlayBudget(seconds: number, limitMin: number | null | undefined): ChessBudget {
   if (limitMin === null || limitMin === undefined) return { remainingSeconds: null, locked: false }
-  const remainingSeconds = Math.max(0, limitMin * 60 - Math.max(0, chessSeconds))
+  const remainingSeconds = Math.max(0, limitMin * 60 - Math.max(0, seconds))
   return { remainingSeconds, locked: remainingSeconds === 0 }
 }
+
+export const chessBudget = openPlayBudget

@@ -174,6 +174,7 @@ export {
   availableCourses,
   CHESS_LIMIT_OPTIONS,
   chessBudget,
+  openPlayBudget,
   COURSES,
   courseNow,
   DEFAULT_COURSES,

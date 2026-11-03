@@ -16,7 +16,7 @@ let clock = 0
 
 function Probe({ activity }: { activity: Activity | null }) {
   useActivity(activity)
-  const { today, budget, chess, ready } = useDailyTime()
+  const { today, budget, chess, spanish, ready } = useDailyTime()
   if (!ready) return null
   return (
     <>
@@ -25,6 +25,9 @@ function Probe({ activity }: { activity: Activity | null }) {
       </p>
       <p data-testid="chess">
         {today?.chessSeconds ?? 0}/{chess.locked ? 'resting' : 'open'}
+      </p>
+      <p data-testid="spanish">
+        {today?.spanishSeconds ?? 0}/{spanish.locked ? 'resting' : 'open'}
       </p>
     </>
   )
@@ -153,5 +156,17 @@ describe('active-time tracker (AC6)', () => {
     expect(screen.getByTestId('chess').textContent).toContain('open')
     await pass(5000)
     expect(screen.getByTestId('chess').textContent).toBe('900/resting')
+  })
+
+  it('Spanish time is only recorded, and rests at its own optional limit (spec 018 AC6)', async () => {
+    const repos = createNullRepositories(() => clock)
+    await repos.time.setSettings('local', { goalMin: 10, limitMin: 60, spanishLimitMin: 15 })
+    await repos.time.addSpanish('local', 15 * 60 - 5)
+    await setup('spanish', repos)
+    expect(screen.getByTestId('spanish').textContent).toContain('open')
+    await pass(5000)
+    expect(screen.getByTestId('probe').textContent).toBe('0/0/open')
+    expect(screen.getByTestId('chess').textContent).toBe('0/open')
+    expect(screen.getByTestId('spanish').textContent).toBe('900/resting')
   })
 })

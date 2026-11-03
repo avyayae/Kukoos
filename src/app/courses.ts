@@ -1,6 +1,14 @@
 import { useProfiles, useRepos } from '@/data'
 import { availableCourses, type CourseId, courseNow, profileCourses } from '@/domain'
 
+/**
+ * Spanish ships in F20; until then only builds with `VITE_SPANISH=1` (dev, e2e) offer it.
+ * Read at call time so tests can stub it.
+ */
+export function spanishAvailable(): boolean {
+  return import.meta.env.VITE_SPANISH === '1'
+}
+
 /** Router state that tells home to cross-fade (spec 013 UX: switching courses). */
 export const SWITCHED = { switched: true }
 
@@ -21,8 +29,8 @@ export interface CoursesValue {
 export function useCourses(): CoursesValue {
   const repos = useRepos()
   const { profile, refresh } = useProfiles()
-  // Chess is live for everyone since F16 (decision 2026-10-20).
-  const available = availableCourses({ chess: true })
+  // Chess is live for everyone since F16 (decision 2026-10-20); Spanish ships in F20.
+  const available = availableCourses({ chess: true, spanish: spanishAvailable() })
   const mine = profileCourses(profile?.courses, available)
   const current = courseNow(mine, profile?.currentCourse)
   return {

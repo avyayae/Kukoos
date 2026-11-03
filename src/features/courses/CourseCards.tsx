@@ -35,6 +35,12 @@ export function CourseCards({ courses, selected, onToggle }: CourseCardsProps) {
               {course.icon}
             </span>
             <span>{course.name}</span>
+            {course.nameLocal && (
+              // A visual subtitle: the card's name stays the course name ("Spanish").
+              <span className="course-card__local" lang="es" aria-hidden="true">
+                {course.nameLocal}
+              </span>
+            )}
             {on && (
               <span className="course-card__tick" aria-hidden="true">
                 ✓

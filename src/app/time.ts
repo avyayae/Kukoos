@@ -12,9 +12,9 @@ import {
 
 /**
  * What the kid is doing right now. Lesson time fills the goal; lesson and map time count
- * toward the limit. Chess time is only recorded (spec 013).
+ * toward the limit. Chess and Spanish time are only recorded (specs 013, 018).
  */
-export type Activity = 'lesson' | 'map' | 'chess'
+export type Activity = 'lesson' | 'map' | 'chess' | 'spanish'
 
 export interface TimeContextValue {
   /** False until today's minutes and the settings have loaded. */
@@ -24,6 +24,8 @@ export interface TimeContextValue {
   budget: TimeBudget
   /** The optional chess limit (spec 013); never locked when it's off. */
   chess: ChessBudget
+  /** The optional Spanish limit (spec 018); never locked when it's off. */
+  spanish: ChessBudget
   /** Screens declare what counts (see `useActivity`); `null` = nothing counts. */
   setActivity(activity: Activity | null): void
   /** The grown-up "+10 minutes today". */
@@ -39,6 +41,7 @@ export const TimeContext = createContext<TimeContextValue>({
   settings: DEFAULT_TIME_SETTINGS,
   budget: timeBudget(EMPTY_DAY, DEFAULT_TIME_SETTINGS),
   chess: chessBudget(0, null),
+  spanish: chessBudget(0, null),
   setActivity: () => undefined,
   grantBonus: noop,
   setSettings: noop,
