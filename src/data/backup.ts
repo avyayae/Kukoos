@@ -1,4 +1,4 @@
-import { type KukoosDb, SCHEMA_VERSION } from './db'
+import { type KukoosDb, SCHEMA_VERSION, TABLE_SINCE } from './db'
 import type { BackupFile, ImportResult } from './repositories/types'
 import { SYNC_TABLES, TABLES, type TableName } from './rows'
 
@@ -62,6 +62,8 @@ export function validateBackup(input: unknown): Validation {
   const tables = file.tables
   if (!isObject(tables)) return { ok: false, error: BACKUP_ERRORS.damaged }
   for (const t of TABLES) {
+    // A backup from before a table existed (e.g. v1 has no games) just has none.
+    if (tables[t] === undefined && version < (TABLE_SINCE[t] ?? 1)) tables[t] = []
     const rows = tables[t]
     if (!Array.isArray(rows)) return { ok: false, error: BACKUP_ERRORS.damaged }
     const valid = (SYNC_TABLES as readonly string[]).includes(t) ? isSyncRow : isOutboxRow

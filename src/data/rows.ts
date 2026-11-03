@@ -8,6 +8,9 @@ import type {
   SrsBox,
   WorldId,
 } from '@/domain'
+// Types only: chess code (and chess.js) stays out of the first load (constitution §3.7).
+import type { Color, GameResult } from '@/domain/chess'
+import type { BotLevel } from '@/domain/chess/bot'
 
 /**
  * Row shapes stored in IndexedDB (spec 004). The same shapes become SQL tables when the
@@ -132,6 +135,22 @@ export interface DailyActivityRow extends SyncFields {
   chessSeconds?: number
 }
 
+/** A game against Kukoos (spec 017): saved after every move, finished once. */
+export interface GameRow extends SyncFields {
+  /** Kukoos's level; `local` is reserved for pass-and-play (a later feature). */
+  opponent: `bot:${BotLevel}`
+  kidColor: Color
+  startFen: string
+  /** Every move so far, as UCI ("e2e4", "e7e8q"). */
+  moves: string[]
+  kidMoves: number
+  /** `null` while the game goes on. */
+  result: GameResult | null
+  startedAt: number
+  /** `null` while the game goes on. */
+  endedAt: number | null
+}
+
 export interface OutboxRow {
   id: string
   table: SyncTableName
@@ -150,6 +169,7 @@ export interface RowsByTable {
   inventory: InventoryRow
   badges: BadgeRow
   dailyActivity: DailyActivityRow
+  games: GameRow
 }
 
 export type SyncTableName = keyof RowsByTable
@@ -165,5 +185,6 @@ export const SYNC_TABLES: readonly SyncTableName[] = [
   'inventory',
   'badges',
   'dailyActivity',
+  'games',
 ]
 export const TABLES: readonly TableName[] = [...SYNC_TABLES, 'outbox']

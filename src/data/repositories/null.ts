@@ -80,6 +80,12 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
       wallet: () => Promise.resolve({ wallet: NEW_WALLET, roll: { kind: 'none' } }),
       badges: () => Promise.resolve([]),
     },
+    games: {
+      unfinished: () => Promise.resolve(null),
+      save: () => Promise.resolve(),
+      finish: () => Promise.resolve([]),
+      wins: () => Promise.resolve(new Set()),
+    },
     reports: {
       forProfile: () =>
         Promise.resolve({

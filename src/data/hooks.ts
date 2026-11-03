@@ -7,6 +7,7 @@ import {
   type Wallet,
   type WorldId,
 } from '@/domain'
+import type { BotLevel } from '@/domain/chess/bot'
 import { useRepos } from './context'
 import { useProfiles } from './profileContext'
 import type { Repositories } from './repositories/types'
@@ -112,4 +113,12 @@ const loadScores: Loader<Partial<Record<SkillId, number>>> = (repos, profile) =>
 /** Best first-try score per skill for the current profile (empty while loading). */
 export function useBestScores(): Partial<Record<SkillId, number>> {
   return useProfileData(loadScores, NO_SCORES, NO_SCORES) ?? NO_SCORES
+}
+
+const NO_WINS: ReadonlySet<BotLevel> = new Set()
+const loadWins: Loader<ReadonlySet<BotLevel>> = (repos, profile) => repos.games.wins(profile.id)
+
+/** The Kukoos levels the current kid has beaten (spec 017); `undefined` while loading. */
+export function useGameWins(): ReadonlySet<BotLevel> | undefined {
+  return useProfileData(loadWins, NO_WINS, NO_WINS)
 }

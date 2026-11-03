@@ -4,7 +4,7 @@ import { TABLES } from '@/data/rows'
 import { freshDb } from './testDb'
 
 describe('database schema (AC1)', () => {
-  it('opens with all 10 tables at the current schema version', async () => {
+  it('opens with every table at the current schema version', async () => {
     const db = freshDb()
     await db.open()
     expect(db.verno).toBe(SCHEMA_VERSION)

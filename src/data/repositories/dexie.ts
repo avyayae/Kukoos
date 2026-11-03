@@ -1,6 +1,7 @@
 import type { SkillId } from '@/domain'
 import { exportBackup, importBackup, tableCounts } from '../backup'
 import type { KukoosDb } from '../db'
+import { finishGame, gameWins, saveGame, unfinishedGame } from '../games'
 import { bossesBeaten, markWorldsSeen, seenWorlds } from '../journey'
 import { lessonToRows } from '../mappers'
 import {
@@ -135,6 +136,13 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
     rewards: {
       wallet: (profileId) => rollWallet(db, profileId, now()),
       badges: (profileId) => badgesFor(db, profileId),
+    },
+
+    games: {
+      unfinished: (profileId) => unfinishedGame(db, profileId),
+      save: (game) => saveGame(db, game, now()),
+      finish: (game, result) => finishGame(db, game, result, now()),
+      wins: (profileId) => gameWins(db, profileId),
     },
 
     reports: {

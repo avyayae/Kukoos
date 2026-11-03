@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { BACKUP_ERRORS, createNullRepositories, type Repositories } from '@/data'
 import { correctResponse, lessonReducer, startLesson } from '@/domain'
+import { SCHEMA_VERSION } from '@/data/db'
 import { GrownUpsScreen } from '@/features/grownups/GrownUpsScreen'
 import { backupFileName } from '@/features/grownups/download'
 import { testStore, withData } from '../withData'
@@ -63,7 +64,7 @@ describe('GrownUpsScreen: backup', () => {
     await waitFor(() => expect(clicked).toEqual([backupFileName(Date.UTC(2026, 9, 17, 12))]))
     expect(clicked[0]).toMatch(/^kukoos-backup-\d{4}-\d{2}-\d{2}\.json$/)
     const file = JSON.parse(await (created[0] as Blob).text())
-    expect(file).toMatchObject({ app: 'kukoos', schemaVersion: 1 })
+    expect(file).toMatchObject({ app: 'kukoos', schemaVersion: SCHEMA_VERSION })
     expect(file.tables.lessons).toHaveLength(1)
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('Backup downloaded'))
   })

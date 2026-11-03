@@ -10,9 +10,12 @@ import type {
   Wallet,
   WorldId,
 } from '@/domain'
+import type { GameResult } from '@/domain/chess'
+import type { BotLevel } from '@/domain/chess/bot'
+import type { SavedGame } from '../games'
 import type { LessonMeta } from '../mappers'
 import type { NewProfile, ProfilePatch } from '../profiles'
-import type { BadgeRow, ProfileRow, RowsByTable, TableName } from '../rows'
+import type { BadgeRow, GameRow, ProfileRow, RowsByTable, TableName } from '../rows'
 import type { TodayTime } from '../time'
 
 export interface BackupFile {
@@ -85,6 +88,17 @@ export interface Repositories {
     /** XP, crystals and streak, with missed days settled (saved once). */
     wallet(profileId: string): Promise<{ wallet: Wallet; roll: StreakRoll }>
     badges(profileId: string): Promise<BadgeRow[]>
+  }
+  /** Games against Kukoos (spec 017). */
+  games: {
+    /** The kid's game still being played, if any. */
+    unfinished(profileId: string): Promise<GameRow | null>
+    /** Saves the game as it is now (after every move); stops any other unfinished game. */
+    save(game: SavedGame): Promise<void>
+    /** Saves the result once and returns the rewards to celebrate; `[]` if already finished. */
+    finish(game: SavedGame, result: GameResult): Promise<RewardEffect[]>
+    /** The Kukoos levels this kid has beaten. */
+    wins(profileId: string): Promise<Set<BotLevel>>
   }
   /** Raw records for the parent dashboard (spec 011). */
   reports: {
