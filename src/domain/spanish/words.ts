@@ -34,7 +34,7 @@ const colour = (id: string, es: string, en: string, swatch: string): SpanishWord
 })
 const num = (n: number, es: string): SpanishWord => ({
   // Ids are plain ASCII: dieciséis → dieciseis.
-  id: es.normalize('NFD').replace(/[̀-ͯ]/g, ''),
+  id: es.normalize('NFD').replace(/\p{M}/gu, ''),
   es,
   en: String(n),
   picture: { number: n },
