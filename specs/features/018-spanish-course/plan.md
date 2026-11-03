@@ -53,4 +53,8 @@
 - **Tests that list courses:** e2e builds now offer three courses, so the onboarding and switcher e2e helpers need to pick by name, not by position.
 
 ## Deviations (recorded during implementation)
-- (none yet)
+- **"Español" on the course card is a visual subtitle** (`aria-hidden`). The card's accessible name stays "Spanish", so the English voice and name-based helpers say one clear name.
+- **The course switcher with three courses** stacks the icon above the name, so all three fit on one row on a 360px phone.
+- **Only the Spanish home is lazy.** `SpanishRest` and the small lazy loader stay in the main bundle, the same as `ChessRest`. The perf test checks that the home chunk isn't in the first load.
+- **Goodnight (the math limit) still offers only chess.** A Spanish kid at the math limit switches with the course switcher. Offering Spanish there comes with the F20 launch.
+- **No schema change:** `spanishSeconds`, `spanishLimitMin` and `spanishVoiceURI` are optional fields on existing rows.

@@ -1,6 +1,6 @@
 # Feature 018 — Spanish Course & Voice
 
-**Status:** Approved (2026-11-03)  ·  **Constitution check:** this feature **amends** the constitution (see below). Also touches:
+**Status:** Implemented (2026-11-03)  ·  **Constitution check:** this feature **amends** the constitution (see below). Also touches:
 - §1.3: Spanish is open play, like chess;
 - §1.4: Spanish words are always heard, never only read;
 - §1.5: no accounts and no cloud voice, and speech stays on the device;
