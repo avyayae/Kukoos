@@ -1,0 +1,132 @@
+/* Spanish course (specs 018, 019). Tokens only; word colours (swatches) come from the
+   reviewed word data as `--swatch`. Shared tiles, banners and map nodes do the motion. */
+
+@layer components {
+  /* ---------------------------------------------------------- home path */
+  .spanish-home__note {
+    margin: 0;
+    font-size: var(--mq-text-base);
+    font-weight: var(--mq-weight-black);
+    text-align: center;
+  }
+  .band--es-harbor {
+    background: linear-gradient(to top, var(--mq-island-sea) 60%, var(--mq-island-sand));
+  }
+  .band--es-market {
+    background: linear-gradient(to top, var(--mq-island-sand) 60%, var(--mq-map-jungle));
+  }
+  .band--es-jungle {
+    background: var(--mq-map-jungle);
+  }
+
+  /* ---------------------------------------------------------- pictures */
+  .word-pic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .word-pic--emoji {
+    font-size: var(--mq-text-3xl);
+  }
+  .word-pic--number {
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-3xl);
+    font-weight: var(--mq-weight-black);
+  }
+  .word-pic--swatch {
+    width: calc(var(--mq-tile-min) * 0.6);
+    aspect-ratio: 1;
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-pill);
+    background: var(--swatch);
+  }
+  .word-pic--dots {
+    flex-direction: column;
+    gap: var(--mq-space-1);
+  }
+  .tens-frame {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: calc(var(--mq-space-1) / 2);
+  }
+  .tens-frame__cell {
+    width: var(--mq-space-3);
+    aspect-ratio: 1;
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-pill);
+  }
+  .tens-frame__cell--on {
+    border-color: var(--mq-primary);
+    background: var(--mq-primary);
+  }
+
+  /* ---------------------------------------------------------- lesson */
+  .spanish-lesson__hear {
+    gap: var(--mq-space-2);
+    align-self: center;
+    width: auto;
+  }
+  .spanish-see__picture {
+    display: flex;
+    justify-content: center;
+    padding: var(--mq-space-3);
+  }
+  .spanish-see__picture .word-pic--emoji,
+  .spanish-see__picture .word-pic--number {
+    font-size: calc(var(--mq-text-3xl) * 1.5);
+  }
+  .spanish-see__picture .word-pic--swatch {
+    width: var(--mq-tile-min);
+  }
+  .tile.spanish-word {
+    font-size: var(--mq-text-lg);
+    line-height: 1.15;
+    text-align: center;
+  }
+  .spanish-match {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--mq-space-3);
+  }
+  .spanish-match__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-2);
+  }
+  .spanish-match .tile {
+    min-height: calc(var(--mq-tile-min) * 0.72);
+    padding: var(--mq-space-2);
+  }
+  .spanish-match .word-pic--emoji,
+  .spanish-match .word-pic--number {
+    font-size: var(--mq-text-2xl);
+  }
+  .spanish-match .word-pic--swatch {
+    width: calc(var(--mq-tile-min) * 0.4);
+  }
+  .spanish-say {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mq-space-4);
+  }
+  .spanish-say__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mq-space-2);
+    padding: var(--mq-space-4) var(--mq-space-6);
+    border-radius: var(--mq-radius-card);
+    background: var(--mq-island-sand);
+    color: var(--mq-ink);
+  }
+  .spanish-say__card .word-pic--emoji {
+    font-size: calc(var(--mq-text-3xl) * 1.5);
+  }
+  .spanish-say__word {
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-2xl);
+    font-weight: var(--mq-weight-black);
+  }
+}

@@ -8,6 +8,7 @@
 @import './parent.css';
 @import './courses.css';
 @import './chess.css';
+@import './spanish.css';
 
 /* Token-only palette: wipe Tailwind's default colors so `bg-red-500` etc. don't exist.
    Every color utility must come from tokens.css. */

@@ -30,8 +30,14 @@ export type QuestionKind = 'numeric' | 'column' | 'tradeBlocks' | 'mcq' | 'compa
 export type ChessPuzzleKind =
   'find' | 'reach' | 'stars' | 'capture' | 'safe' | 'count' | 'escape' | 'which' | 'mate1' | 'mate'
 
-/** What kind of item an answer was for: a math question, or a chess puzzle (`chess.reach`). */
-export type AnswerKind = QuestionKind | `chess.${ChessPuzzleKind}`
+/** Spanish question kinds (spec 019, `specs/06-spanish-skill-map.md`). `say` is never scored. */
+export type SpanishKind = 'listen' | 'see' | 'match' | 'count' | 'say'
+
+/**
+ * What kind of item an answer was for: a math question, a chess puzzle (`chess.reach`) or a
+ * Spanish question (`es.listen`).
+ */
+export type AnswerKind = QuestionKind | `chess.${ChessPuzzleKind}` | `es.${SpanishKind}`
 
 export type VisualKind = 'tenFrame' | 'baseTen' | 'none'
 
@@ -104,8 +110,10 @@ export type MisconceptionKey =
 
 /** A chess mistake (spec 016): `chess.<reason>` or `chess.<reason>:<piece>` (spec 014 reasons). */
 export type ChessMistakeKey = `chess.${string}`
-/** Any recorded mistake pattern: math misconceptions and chess reasons. */
-export type MistakeKey = MisconceptionKey | ChessMistakeKey
+/** A Spanish mix-up (spec 019 AC8): `es.mixup:<answerId>~<pickedId>`. */
+export type SpanishMistakeKey = `es.${string}`
+/** Any recorded mistake pattern: math misconceptions, chess reasons and Spanish mix-ups. */
+export type MistakeKey = MisconceptionKey | ChessMistakeKey | SpanishMistakeKey
 
 // ---------------------------------------------------------------- questions
 
