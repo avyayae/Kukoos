@@ -72,6 +72,8 @@ export interface Repositories {
     today(profileId: string): Promise<TodayTime>
     /** Adds active seconds to today (lesson seconds also count toward the goal). */
     addActive(profileId: string, lessonSeconds: number, totalSeconds: number): Promise<TodayTime>
+    /** Adds chess seconds (spec 013): never the goal or the math limit. */
+    addChess(profileId: string, seconds: number): Promise<TodayTime>
     /** The grown-up "+10 minutes today". */
     addBonus(profileId: string, minutes: number): Promise<TodayTime>
     settings(profileId: string): Promise<TimeSettings>

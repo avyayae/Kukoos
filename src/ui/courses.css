@@ -1,0 +1,119 @@
+/* Courses (spec 013): the Math | Chess switcher, course cards and the chess home.
+   Tokens only; switching cross-fades (shorter automatically with reduced motion). */
+
+@layer components {
+  /* ---------------------------------------------------------- switcher */
+  .course-switch {
+    display: grid;
+    flex-basis: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--mq-space-2);
+  }
+  .course-switch__chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mq-space-2);
+    min-height: var(--mq-tap-kid);
+    margin-bottom: var(--mq-lip);
+    padding: 0 var(--mq-space-3);
+    border: var(--mq-stroke) solid var(--mq-border);
+    border-radius: var(--mq-radius-pill);
+    background: var(--mq-surface);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-border);
+    color: var(--mq-ink);
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-lg);
+    font-weight: var(--mq-weight-black);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: transform var(--mq-dur-press) var(--mq-ease-out);
+  }
+  .course-switch__chip:active {
+    transform: translateY(var(--mq-lip));
+    box-shadow: none;
+  }
+  .course-switch__chip--on {
+    border-color: var(--mq-primary);
+    background: var(--mq-primary-tint);
+    box-shadow: 0 var(--mq-lip) 0 var(--mq-primary);
+  }
+  .course-switch__icon {
+    font-size: var(--mq-text-xl);
+    line-height: 1;
+  }
+  .goodnight .course-switch {
+    position: relative;
+    flex-basis: auto;
+    width: min(100%, var(--mq-content-max));
+  }
+
+  /* ---------------------------------------------------------- untimed stats (chess) */
+  .top-stats--untimed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* ---------------------------------------------------------- course cards */
+  .course-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--mq-space-3);
+    width: 100%;
+    max-width: var(--mq-content-max);
+  }
+  .course-card {
+    flex-direction: column;
+    gap: var(--mq-space-2);
+    min-height: calc(var(--mq-tile-min) * 1.6);
+  }
+  .course-card__icon {
+    font-size: var(--mq-text-3xl);
+    line-height: 1;
+  }
+  .course-card__tick {
+    position: absolute;
+    top: var(--mq-space-2);
+    right: var(--mq-space-2);
+    color: var(--mq-primary);
+    font-size: var(--mq-text-lg);
+  }
+
+  /* ---------------------------------------------------------- me → my courses */
+  .me__courses {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mq-space-3);
+  }
+  .me__courses-title {
+    margin: 0;
+    font-family: var(--mq-font-display);
+    font-size: var(--mq-text-xl);
+    font-weight: var(--mq-weight-black);
+  }
+
+  /* ---------------------------------------------------------- chess home */
+  .map-screen.chess-home {
+    background: var(--mq-bg);
+  }
+  .chess-home .bottom-bar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .chess-home__sign {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mq-space-4);
+    max-width: var(--mq-content-max);
+    margin: var(--mq-space-8) auto 0;
+    padding: 0 var(--mq-space-4);
+  }
+  .chess-home__castle {
+    font-size: var(--mq-text-math);
+    line-height: 1;
+  }
+
+  /* ---------------------------------------------------------- switching */
+  .course-fade {
+    animation: mq-fade var(--mq-dur-base) var(--mq-ease-out) both;
+  }
+}

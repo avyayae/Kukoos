@@ -11,6 +11,8 @@ export const WARN_SECONDS = 120
 export interface TimeSettings {
   goalMin: number
   limitMin: number | null
+  /** Optional grown-up limit for chess (spec 013); absent or `null` = off. */
+  chessLimitMin?: number | null
 }
 
 export const DEFAULT_TIME_SETTINGS: TimeSettings = {
@@ -23,6 +25,8 @@ export interface DayTime {
   lessonSeconds: number
   totalSeconds: number
   bonusMinutes: number
+  /** Chess time (spec 013): recorded, but never part of the goal or the math limit. */
+  chessSeconds?: number
 }
 
 export const EMPTY_DAY: DayTime = { lessonSeconds: 0, totalSeconds: 0, bonusMinutes: 0 }

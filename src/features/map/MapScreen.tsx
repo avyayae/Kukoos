@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { clockNow } from '@/app/clock'
+import { type CoursesValue, useCourses } from '@/app/courses'
 import { useActivity, useDailyTime } from '@/app/time'
 import { useJourney, useProfiles, useWallet } from '@/data'
+import { ChessHome, ChessRest } from '@/features/chess/ChessHome'
+import { HomeHeader } from '@/features/courses/HomeHeader'
 import { Onboarding } from '@/features/profiles/Onboarding'
 import { WhoIsPlaying } from '@/features/profiles/WhoIsPlaying'
 import { REWARD_COPY } from '@/features/rewards/copy'
@@ -16,11 +19,8 @@ import {
   mapNodes,
   type MissionTarget,
   nextMission,
-  parseAvatar,
 } from '@/domain'
-import { cancelSpeech } from '@/audio/tts'
-import { Kukoos, useReadAloud, useSpeakOnTap } from '@/ui'
-import { AvatarArt } from '@/ui/AvatarArt'
+import { Kukoos, useSpeakOnTap } from '@/ui'
 import { usePrefersReducedMotion } from '@/ui/usePrefersReducedMotion'
 import { BottomBar } from './BottomBar'
 import { JourneyCanvas } from './JourneyCanvas'
@@ -36,25 +36,53 @@ import { WorldUnlockMoment } from './WorldUnlockMoment'
 export function MapScreen() {
   const time = useDailyTime()
   const { profile, needsPick } = useProfiles()
+  const courses = useCourses()
+  const location = useLocation()
   // Several kids share the device: ask who's playing first (spec 010 AC6).
   if (needsPick) return <WhoIsPlaying />
   // A new kid makes their explorer before the first mission (spec 010 AC4).
   if (profile && profile.avatar === null) return <Onboarding />
-  // The daily limit is reached: Kukoos sleeps until tomorrow (spec 008 AC8).
-  if (time.ready && time.budget.locked) {
-    return <Goodnight minutes={Math.floor((time.today?.totalSeconds ?? 0) / 60)} />
+  // A course switch cross-fades the new home (spec 013 UX).
+  const fade = (location.state as { switched?: boolean } | null)?.switched === true
+  const home = (node: ReactNode) =>
+    fade ? (
+      <div className="course-fade" key={courses.current}>
+        {node}
+      </div>
+    ) : (
+      node
+    )
+  // Chess is open play: only the optional grown-up limit rests it (spec 013).
+  if (courses.current === 'chess') {
+    return home(
+      time.ready && time.chess.locked ? (
+        <ChessRest courses={courses} />
+      ) : (
+        <ChessHome courses={courses} />
+      ),
+    )
   }
-  return <JourneyMap />
+  // The math limit is reached: Kukoos sleeps until tomorrow (spec 008 AC8), but a kid with
+  // chess can still play chess (spec 013 AC3).
+  if (time.ready && time.budget.locked) {
+    const chessOpen = courses.mine.includes('chess') && !time.chess.locked
+    return (
+      <Goodnight
+        minutes={Math.floor((time.today?.totalSeconds ?? 0) / 60)}
+        onChess={chessOpen ? () => void courses.choose('chess') : undefined}
+      />
+    )
+  }
+  return home(<JourneyMap courses={courses} />)
 }
 
-function JourneyMap() {
+function JourneyMap({ courses }: { courses: CoursesValue }) {
   const journey = useJourney()
   const loadedWallet = useWallet()
   const time = useDailyTime()
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const say = useSpeakOnTap()
-  const { readAloud, setReadAloud } = useReadAloud()
   const reduced = usePrefersReducedMotion()
   const [selected, setSelected] = useState<MapNode | null>(null)
   const scrolled = useRef(false)
@@ -84,51 +112,23 @@ function JourneyMap() {
 
   return (
     <main className="map-screen">
-      <header className="map-header">
-        {journey.profile?.avatar ? (
-          <button
-            type="button"
-            className="map-header__me"
-            aria-label={`Me, ${nickname}`}
-            onClick={() => {
-              say(nickname)
-              navigate('/me')
-            }}
-          >
-            <AvatarArt avatar={parseAvatar(journey.profile.avatar)} size={48} decorative />
-          </button>
-        ) : (
-          <Kukoos mood="idle" size={44} talks helmet={inSpace} />
-        )}
-        <button
-          type="button"
-          className="map-header__hello"
-          onClick={() => say(`Hi ${nickname}! Tap a mission, or press play.`)}
-        >
-          <h1 className="map-header__title">Hi, {nickname}!</h1>
-        </button>
-        <button
-          type="button"
-          className="btn3d btn3d--ghost btn3d--lg icon-btn"
-          aria-label={readAloud ? 'Turn off reading aloud' : 'Turn on reading aloud'}
-          aria-pressed={readAloud}
-          onClick={() => {
-            if (readAloud) cancelSpeech()
-            setReadAloud(!readAloud)
-          }}
-        >
-          {readAloud ? '🔊' : '🔇'}
-        </button>
-        {loadedWallet && (
-          <TopStats
-            wallet={loadedWallet.wallet}
-            budget={time.budget}
-            settings={time.settings}
-            lessonSeconds={time.today?.lessonSeconds ?? 0}
-            onSay={say}
-          />
-        )}
-      </header>
+      <HomeHeader
+        profile={journey.profile}
+        fallback={<Kukoos mood="idle" size={44} talks helmet={inSpace} />}
+        hello={`Hi ${nickname}! Tap a mission, or press play.`}
+        courses={courses}
+        stats={
+          loadedWallet && (
+            <TopStats
+              wallet={loadedWallet.wallet}
+              budget={time.budget}
+              settings={time.settings}
+              lessonSeconds={time.today?.lessonSeconds ?? 0}
+              onSay={say}
+            />
+          )
+        }
+      />
       {roll?.kind === 'frozen' && (
         <Notice emoji="🧊" text={REWARD_COPY.frozen} testId="streak-notice" />
       )}

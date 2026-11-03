@@ -48,7 +48,7 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'kukoos.svg'],
       manifest: {
-        name: 'Kukoos Math Quest',
+        name: 'Kukoos',
         short_name: 'Kukoos',
         description: 'Fly with Kukoos from Earth to space while mastering 2nd–3rd grade math.',
         theme_color: THEME_COLOR,

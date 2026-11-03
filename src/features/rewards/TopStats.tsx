@@ -8,17 +8,26 @@ interface TopStatsProps {
   settings: TimeSettings
   lessonSeconds: number
   onSay: (text: string) => void
+  /** Untimed courses (chess, spec 013) show only crystals and level: no streak or goal ring. */
+  timed?: boolean
 }
 
 /**
  * Streak, crystals, goal ring and level (spec 008 AC11). Every chip is tap-to-hear. Its
  * accessible name starts with the visible value (WCAG 2.5.3); the spoken line is friendlier.
  */
-export function TopStats({ wallet, budget, settings, lessonSeconds, onSay }: TopStatsProps) {
+export function TopStats({
+  wallet,
+  budget,
+  settings,
+  lessonSeconds,
+  onSay,
+  timed = true,
+}: TopStatsProps) {
   const minutes = Math.min(settings.goalMin, Math.floor(lessonSeconds / 60))
   const toNext = xpForLevel(wallet.level + 1) - wallet.xpTotal
   const streak = wallet.streakCount
-  const items = [
+  const all = [
     {
       key: 'streak',
       icon: '🔥',
@@ -56,8 +65,9 @@ export function TopStats({ wallet, budget, settings, lessonSeconds, onSay }: Top
       speech: `Level ${wallet.level}. ${toNext} XP to level ${wallet.level + 1}.`,
     },
   ]
+  const items = timed ? all : all.filter((item) => item.key === 'gems' || item.key === 'level')
   return (
-    <ul className="top-stats" aria-label="Your stats">
+    <ul className={`top-stats${timed ? '' : ' top-stats--untimed'}`} aria-label="Your stats">
       {items.map((item) => (
         <li key={item.key}>
           <button

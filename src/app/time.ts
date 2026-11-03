@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect } from 'react'
 import type { TodayTime } from '@/data'
 import {
+  type ChessBudget,
+  chessBudget,
   DEFAULT_TIME_SETTINGS,
   EMPTY_DAY,
   timeBudget,
@@ -8,8 +10,11 @@ import {
   type TimeSettings,
 } from '@/domain'
 
-/** What the kid is doing right now. Lesson time fills the goal; both count toward the limit. */
-export type Activity = 'lesson' | 'map'
+/**
+ * What the kid is doing right now. Lesson time fills the goal; lesson and map time count
+ * toward the limit. Chess time is only recorded (spec 013).
+ */
+export type Activity = 'lesson' | 'map' | 'chess'
 
 export interface TimeContextValue {
   /** False until today's minutes and the settings have loaded. */
@@ -17,6 +22,8 @@ export interface TimeContextValue {
   today: TodayTime | null
   settings: TimeSettings
   budget: TimeBudget
+  /** The optional chess limit (spec 013); never locked when it's off. */
+  chess: ChessBudget
   /** Screens declare what counts (see `useActivity`); `null` = nothing counts. */
   setActivity(activity: Activity | null): void
   /** The grown-up "+10 minutes today". */
@@ -31,6 +38,7 @@ export const TimeContext = createContext<TimeContextValue>({
   today: null,
   settings: DEFAULT_TIME_SETTINGS,
   budget: timeBudget(EMPTY_DAY, DEFAULT_TIME_SETTINGS),
+  chess: chessBudget(0, null),
   setActivity: () => undefined,
   grantBonus: noop,
   setSettings: noop,

@@ -121,7 +121,7 @@ test.describe('PWA', () => {
     expect(res.ok()).toBe(true)
     const manifest = await res.json()
     expect(manifest).toMatchObject({
-      name: 'Kukoos Math Quest',
+      name: 'Kukoos',
       short_name: 'Kukoos',
       display: 'standalone',
       start_url: '/',

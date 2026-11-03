@@ -1,6 +1,6 @@
-# Kukoos Math Quest
+# Kukoos
 
-A math adventure for Grades 2–3 (Common Core) about carrying and borrowing. Kukoos the bird flies from animal habitats on Earth out to the planets. It's an offline-first PWA: progress stays on the device, and there's no server and no tracking.
+A learning adventure for kids with Kukoos the bird. **Math**: a Grades 2–3 (Common Core) journey about carrying and borrowing, from Earth's animal habitats out to the planets. **Chess** (coming in v2): from the basics to a first win. It's an offline-first PWA: progress stays on the device, and there's no server and no tracking.
 
 **Play:** https://avyayae.github.io/Kukoos/
 

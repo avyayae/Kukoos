@@ -17,7 +17,7 @@ import {
 } from '../profiles'
 import { applyLessonRewards, badgesFor, rollWallet } from '../rewards'
 import { reportInput } from '../report'
-import { addActive, addBonus, readToday, saveTimeSettings, timeSettings } from '../time'
+import { addActive, addBonus, addChess, readToday, saveTimeSettings, timeSettings } from '../time'
 import type { ProfileRow } from '../rows'
 import { newId, writeRows } from '../write'
 import type { Repositories } from './types'
@@ -120,6 +120,7 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       today: (profileId) => readToday(db, profileId, now()),
       addActive: (profileId, lessonSeconds, totalSeconds) =>
         addActive(db, profileId, lessonSeconds, totalSeconds, now()),
+      addChess: (profileId, seconds) => addChess(db, profileId, seconds, now()),
       addBonus: (profileId, minutes) => addBonus(db, profileId, minutes, now()),
       settings: (profileId) => timeSettings(db, profileId),
       setSettings: (profileId, settings) => saveTimeSettings(db, profileId, settings, now()),

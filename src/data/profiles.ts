@@ -11,7 +11,9 @@ export interface NewProfile {
   nickname: string
   grade: 2 | 3
 }
-export type ProfilePatch = Partial<Pick<ProfileRow, 'nickname' | 'grade' | 'avatar'>>
+export type ProfilePatch = Partial<
+  Pick<ProfileRow, 'nickname' | 'grade' | 'avatar' | 'courses' | 'currentCourse'>
+>
 
 export async function listProfiles(db: KukoosDb): Promise<ProfileRow[]> {
   return (await db.profiles.toArray()).sort((a, b) => a.createdAt - b.createdAt)
