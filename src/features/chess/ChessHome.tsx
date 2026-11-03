@@ -6,7 +6,7 @@ import { CourseSwitcher } from '@/features/courses/CourseSwitcher'
 import { HomeHeader } from '@/features/courses/HomeHeader'
 import { BottomBar } from '@/features/map/BottomBar'
 import { TopStats } from '@/features/rewards/TopStats'
-import { Kukoos, useSpeakOnTap } from '@/ui'
+import { Button3D, Kukoos, useSpeakOnTap } from '@/ui'
 import { CHESS_COPY } from './copy'
 
 /**
@@ -48,6 +48,16 @@ export function ChessHome({ courses }: { courses: CoursesValue }) {
         <Kukoos mood="happy" size={120} talks>
           <span>{CHESS_COPY.building}</span>
         </Kukoos>
+        <Button3D
+          variant="primary"
+          size="xl"
+          onClick={() => {
+            say(CHESS_COPY.tryBoard)
+            navigate('/chess/board')
+          }}
+        >
+          {CHESS_COPY.tryBoard}
+        </Button3D>
       </section>
       <div className="map-dock">
         <BottomBar

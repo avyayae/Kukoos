@@ -12,7 +12,7 @@ Kid-focused learning adventure with courses: Math (Common Core Grade 2–3) and 
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-`specs/features/013-courses/` on branch `feature/013-courses` (v2: Math + Chess courses; chess hidden in production until F16 via `VITE_CHESS=1`). Done: 001–012 (PRs #1–#10). Next: F14 chess rules (see `specs/04-roadmap.md` → v2).
+`specs/features/014-chess-rules/` + `specs/features/015-chess-board/` on branch `feature/014-015-chess-rules-board` (stacked on F013, PR #11). Chess rules: import `@/domain/chess` (never the `@/domain` barrel; chess.js only inside `src/domain/chess`, lint-enforced). Chess UI loads lazily (`/chess/board`). Done: 001–013. Next: F16 chess curriculum and map (`specs/04-roadmap.md` → v2).
 Deployed by `.github/workflows/pages.yml` to https://avyayae.github.io/Kukoos/ (`BASE_PATH=/Kukoos/`).
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.

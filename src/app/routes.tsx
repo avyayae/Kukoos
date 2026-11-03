@@ -1,4 +1,5 @@
 import { Navigate, type RouteObject } from 'react-router'
+import { FreeBoardRoute } from '@/features/chess/FreeBoardRoute'
 import { RequireGrownUp } from '@/features/grownups/GrownUpGate'
 import { GrownUpsScreen } from '@/features/grownups/GrownUpsScreen'
 import { MissionsList } from '@/features/grownups/MissionsList'
@@ -17,6 +18,7 @@ export const routes: RouteObject[] = [
   { path: '/me', element: <MeScreen /> },
   { path: '/me/look', element: <ChangeLookScreen /> },
   { path: '/who', element: <WhoIsPlaying /> },
+  { path: '/chess/board', element: <FreeBoardRoute /> },
   {
     path: '/grown-ups',
     element: (

@@ -53,6 +53,10 @@ export const SOUNDS = {
     n(392, 1.1, 0.5, 0.2),
     n(330, 1.65, 1.2, 0.2),
   ],
+  // Chess (spec 015): a soft wooden knock, a two-note pop, and a bright "watch out" chime.
+  move: [n(392, 0, 0.07, 0.22, 'triangle')],
+  capture: [n(330, 0, 0.06, 0.25, 'triangle'), n(523, 0.06, 0.1, 0.22, 'triangle')],
+  check: [n(988, 0, 0.1, 0.22), n(784, 0.1, 0.18, 0.22)],
 } satisfies Record<string, readonly Note[]>
 
 export type SfxKey = keyof typeof SOUNDS

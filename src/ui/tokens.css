@@ -100,6 +100,20 @@
   --mq-moment-disc: 176px; /* the big emoji disc on a reward moment */
   --mq-night: #0d0b24; /* goodnight sky, top (deeper than space) */
 
+  /* Chess board (spec 015): Kukoos lavender squares; pieces read on both squares */
+  --mq-board-light: #ebe4ff;
+  --mq-board-dark: #a99cd6;
+  --mq-board-coord: #2b2140; /* coordinates: ink on both square colours (AA) */
+  --mq-board-last: rgb(255 210 63 / 0.5); /* last move: sun tint */
+  --mq-board-target: rgb(43 33 64 / 0.35); /* legal-move dot / capture ring */
+  --mq-board-max: 560px;
+  --mq-piece-white: #ffffff;
+  --mq-piece-white-line: #3b2f5c;
+  --mq-piece-white-face: #2b2140;
+  --mq-piece-black: #3b2f5c;
+  --mq-piece-black-line: #1d1633;
+  --mq-piece-black-face: #ffffff;
+
   /* Type */
   --mq-font-display: 'Baloo 2', 'Nunito Variable', system-ui, sans-serif;
   --mq-font-body: 'Nunito Variable', 'Nunito', system-ui, sans-serif;
@@ -171,6 +185,11 @@
     --mq-success-ink: #7ce6b4;
     --mq-danger-tint: #3d1d26;
     --mq-danger-ink: #ffb1b4;
+    --mq-board-light: #4b4380;
+    --mq-board-dark: #2f2963;
+    --mq-board-coord: #f4f1ff;
+    --mq-board-target: rgb(244 241 255 / 0.4);
+    --mq-piece-black-line: #d9d0ff;
   }
 }
 :root[data-theme='dark'] {
@@ -190,6 +209,11 @@
   --mq-success-ink: #7ce6b4;
   --mq-danger-tint: #3d1d26;
   --mq-danger-ink: #ffb1b4;
+  --mq-board-light: #4b4380;
+  --mq-board-dark: #2f2963;
+  --mq-board-coord: #f4f1ff;
+  --mq-board-target: rgb(244 241 255 / 0.4);
+  --mq-piece-black-line: #d9d0ff;
 }
 
 @media (prefers-reduced-motion: reduce) {
