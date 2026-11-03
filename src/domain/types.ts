@@ -26,6 +26,13 @@ export type SkillId = string
 
 export type QuestionKind = 'numeric' | 'column' | 'tradeBlocks' | 'mcq' | 'compare' | 'trueFalse'
 
+/** Chess puzzle kinds (spec 016, `specs/05-chess-skill-map.md`). */
+export type ChessPuzzleKind =
+  'find' | 'reach' | 'stars' | 'capture' | 'safe' | 'count' | 'escape' | 'which' | 'mate1' | 'mate'
+
+/** What kind of item an answer was for: a math question, or a chess puzzle (`chess.reach`). */
+export type AnswerKind = QuestionKind | `chess.${ChessPuzzleKind}`
+
 export type VisualKind = 'tenFrame' | 'baseTen' | 'none'
 
 /** Which columns regroup (see spec 003, "Regrouping patterns"). */
@@ -94,6 +101,11 @@ export type MisconceptionKey =
   | 'wrongOperation'
   | 'offByOne'
   | 'offByTen'
+
+/** A chess mistake (spec 016): `chess.<reason>` or `chess.<reason>:<piece>` (spec 014 reasons). */
+export type ChessMistakeKey = `chess.${string}`
+/** Any recorded mistake pattern: math misconceptions and chess reasons. */
+export type MistakeKey = MisconceptionKey | ChessMistakeKey
 
 // ---------------------------------------------------------------- questions
 

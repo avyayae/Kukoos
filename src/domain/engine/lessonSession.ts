@@ -1,11 +1,12 @@
 import { check } from '../generators/check'
 import { generateQuestion } from '../generators/registry'
 import type {
+  AnswerKind,
   CheckResult,
   Difficulty,
   MisconceptionKey,
+  MistakeKey,
   Question,
-  QuestionKind,
   Response,
   SkillId,
   WorldId,
@@ -21,12 +22,12 @@ export interface QuestionResult {
   /** The skill this question practised (reviews differ from the lesson's focus skill). */
   skillId: SkillId
   questionId: string
-  kind: QuestionKind
+  kind: AnswerKind
   difficulty: Difficulty
   firstTry: boolean
   solved: boolean
   attempts: number
-  misconceptions: readonly MisconceptionKey[]
+  misconceptions: readonly MistakeKey[]
   /** When the question was finished (ms). */
   at: number
 }
@@ -66,6 +67,22 @@ export type LessonEvent =
   | { type: 'continue'; at: number }
 
 export type LessonMode = 'skill' | 'review' | 'boss'
+
+/**
+ * What saving a lesson needs (specs 004, 006, 008). Math `LessonState` and the chess lesson
+ * (spec 016) both satisfy it, so both save through the same repository.
+ */
+export interface SavedLesson {
+  skillId: SkillId
+  mode: LessonMode
+  worldId: WorldId | null
+  seed: number
+  phase: LessonPhase
+  results: readonly QuestionResult[]
+  bestCombo: number
+  startedAt: number
+  endedAt: number | null
+}
 
 export interface StartLessonOptions {
   skillId: SkillId
@@ -241,11 +258,11 @@ export function lessonProgress(state: LessonState): number {
   return Math.min(1, state.results.length / state.plan.length)
 }
 
-export function firstTryAccuracy(state: LessonState): number {
+export function firstTryAccuracy(state: Pick<SavedLesson, 'results'>): number {
   if (state.results.length === 0) return 0
   return state.results.filter((r) => r.firstTry).length / state.results.length
 }
 
-export function lessonMinutes(state: LessonState): number {
+export function lessonMinutes(state: Pick<SavedLesson, 'startedAt' | 'endedAt'>): number {
   return ((state.endedAt ?? state.startedAt) - state.startedAt) / 60000
 }

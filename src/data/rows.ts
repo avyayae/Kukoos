@@ -1,9 +1,9 @@
 import type {
+  AnswerKind,
   CourseId,
   Difficulty,
   LessonMode,
-  MisconceptionKey,
-  QuestionKind,
+  MistakeKey,
   SkillId,
   SrsBox,
   WorldId,
@@ -79,12 +79,12 @@ export interface AttemptRow extends SyncFields {
   lessonId: string
   skillId: SkillId
   questionId: string
-  kind: QuestionKind
+  kind: AnswerKind
   difficulty: Difficulty
   firstTry: boolean
   solved: boolean
   attempts: number
-  misconceptions: MisconceptionKey[]
+  misconceptions: MistakeKey[]
   at: number
 }
 

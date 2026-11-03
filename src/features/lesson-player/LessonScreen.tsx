@@ -206,7 +206,13 @@ export function LessonScreen({
 
   if (phase === 'complete') {
     return (
-      <LessonComplete state={state} effects={effects} autoRead={autoRead} onContinue={onExit} />
+      <LessonComplete
+        state={state}
+        effects={effects}
+        autoRead={autoRead}
+        onContinue={onExit}
+        helmet={isSpaceWorld(getSkill(q.skillId).worldId)}
+      />
     )
   }
 

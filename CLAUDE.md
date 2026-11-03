@@ -12,7 +12,7 @@ Kid-focused learning adventure with courses: Math (Common Core Grade 2–3) and 
 7. Before ticking a task, run `npm run verify` (lint + typecheck + unit + build + e2e).
 
 ## Current feature
-`specs/features/014-chess-rules/` + `specs/features/015-chess-board/` on branch `feature/014-015-chess-rules-board` (stacked on F013, PR #11). Chess rules: import `@/domain/chess` (never the `@/domain` barrel; chess.js only inside `src/domain/chess`, lint-enforced). Chess UI loads lazily (`/chess/board`). Done: 001–013. Next: F16 chess curriculum and map (`specs/04-roadmap.md` → v2).
+`specs/features/016-chess-curriculum/` on branch `feature/016-chess-curriculum` (stacked on #12 → #11). Chess is live: Chess Castle map, 18 skills (`specs/05-chess-skill-map.md`), lessons at `/chess/lesson/:skillId`. Chess rules: import `@/domain/chess` (never via the `@/domain` barrel; chess.js only inside `src/domain/chess`, lint-enforced); lessons and board load lazily. The parent report is math-only until F18. Done: 001–015. Next: F17 bot games and pass-and-play.
 Deployed by `.github/workflows/pages.yml` to https://avyayae.github.io/Kukoos/ (`BASE_PATH=/Kukoos/`).
 Storage: UI uses `useRepos()` / hooks from `@/data` (Dexie only inside `src/data`, lint-enforced).
 The domain API lives at `@/domain`: `generateQuestion`, `check`, `SKILLS`, `unlockedSkills`, `solveColumns`, etc.

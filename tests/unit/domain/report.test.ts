@@ -124,3 +124,23 @@ describe('parent report (spec 011 AC6)', () => {
     expect(parentReport(input()).totals.firstTryPct).toBeNull()
   })
 })
+
+describe('the report is math-only (spec 016)', () => {
+  it('ignores chess lessons, answers, mastery and mistakes, without crashing', () => {
+    const r = parentReport(
+      input({
+        attempts: [
+          attempt({ skillId: 'chess.knight', misconceptions: ['chess.not-how-it-moves:n'] }),
+          attempt({ skillId: 'chess.knight', firstTry: false }),
+          attempt({ misconceptions: ['sub.smallerFromLarger'] }),
+        ],
+        lessons: [{ skillId: 'chess.knight', completed: true, endedAt: daysAgo(0) }],
+        progress: { 'chess.knight': m({ mastery: 0.2, crowned: true, nextReviewAt: 0 }) },
+      }),
+    )
+    expect(r.totals.answers).toBe(1)
+    expect(r.totals.missions).toBe(0)
+    expect(r.misconceptions.map((x) => x.key)).toEqual(['sub.smallerFromLarger'])
+    expect(r.needsPractice.map((p) => p.skillId)).not.toContain('chess.knight')
+  })
+})

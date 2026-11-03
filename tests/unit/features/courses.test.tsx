@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { speak } from '@/audio/tts'
 import type { Repositories } from '@/data'
 import type { CourseId } from '@/domain'
@@ -16,11 +16,7 @@ vi.mock('@/audio/tts', async (orig) => ({
 
 beforeEach(() => {
   vi.mocked(speak).mockClear()
-  vi.stubEnv('VITE_CHESS', '1')
   Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' })
-})
-afterEach(() => {
-  vi.unstubAllEnvs()
 })
 
 async function kid(repos: Repositories, courses: CourseId[], currentCourse?: CourseId) {
@@ -30,15 +26,6 @@ async function kid(repos: Repositories, courses: CourseId[], currentCourse?: Cou
 }
 
 describe('course homes and the switcher (spec 013 AC3, AC4, AC6)', () => {
-  it('without chess in the build, the map has no switcher (AC8)', async () => {
-    vi.stubEnv('VITE_CHESS', '')
-    const { repos } = testStore()
-    await kid(repos, ['math', 'chess'], 'chess')
-    renderAt('/', repos)
-    expect(await screen.findByTestId('journey')).toBeInTheDocument()
-    expect(screen.queryByRole('radiogroup', { name: 'Courses' })).toBeNull()
-  })
-
   it('a math-only kid has no switcher', async () => {
     const { repos } = testStore()
     renderAt('/', repos)
@@ -132,18 +119,6 @@ describe('choosing courses (spec 013 AC5, AC7)', () => {
       courses: ['chess'],
       currentCourse: 'chess',
     })
-  })
-
-  it('without chess in the build, first run is unchanged and saves no courses', async () => {
-    vi.stubEnv('VITE_CHESS', '')
-    const { repos } = testStore({ onboarded: false })
-    renderAt('/', repos)
-    expect(
-      await screen.findByText("Hi! I'm Kukoos. Let's fly from the jungle all the way to Mars!"),
-    ).toBeVisible()
-    await userEvent.click(screen.getByRole('button', { name: "Let's go!" }))
-    expect(screen.getByRole('textbox', { name: 'Your explorer name' })).toBeInTheDocument()
-    expect(screen.queryByText('What do you want to learn?')).toBeNull()
   })
 
   it('Me → My courses adds and drops courses without a PIN, never the last one', async () => {

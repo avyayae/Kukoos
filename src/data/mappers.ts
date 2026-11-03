@@ -1,4 +1,4 @@
-import type { LessonState } from '@/domain'
+import type { SavedLesson } from '@/domain'
 import type { NewRow } from './write'
 import { newId } from './write'
 
@@ -10,7 +10,7 @@ export interface LessonMeta {
 
 /** Domain lesson state → one lesson row + one attempt row per answered question. */
 export function lessonToRows(
-  state: LessonState,
+  state: SavedLesson,
   { lessonId, profileId }: LessonMeta,
   at: number,
 ): { lesson: NewRow<'lessons'>; attempts: NewRow<'attempts'>[] } {

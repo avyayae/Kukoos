@@ -91,25 +91,23 @@
     font-weight: var(--mq-weight-black);
   }
 
-  /* ---------------------------------------------------------- chess home */
+  /* ---------------------------------------------------------- chess castle (spec 016) */
   .map-screen.chess-home {
-    background: var(--mq-bg);
+    background: var(--mq-castle-courtyard);
   }
-  .chess-home .bottom-bar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .band--courtyard {
+    background: linear-gradient(to top, var(--mq-castle-courtyard) 60%, var(--mq-castle-towers));
   }
-  .chess-home__sign {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--mq-space-4);
-    max-width: var(--mq-content-max);
-    margin: var(--mq-space-8) auto 0;
-    padding: 0 var(--mq-space-4);
+  .band--towers {
+    background: linear-gradient(to top, var(--mq-castle-towers) 60%, var(--mq-castle-throne));
   }
-  .chess-home__castle {
-    font-size: var(--mq-text-math);
-    line-height: 1;
+  .band--throne {
+    background: var(--mq-castle-throne);
+  }
+  .chess-home__done {
+    margin: 0;
+    font-weight: var(--mq-weight-black);
+    text-align: center;
   }
 
   /* ---------------------------------------------------------- switching */

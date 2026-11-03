@@ -1,16 +1,17 @@
 import { getSkill, skillsInWorld } from './curriculum/skillGraph'
+import { SKILLS } from './curriculum/skills'
 import { WORLDS } from './curriculum/worlds'
 import { isDue } from './engine/mastery'
 import type { Progress } from './engine/lessonComposer'
 import type { LessonMode } from './engine/lessonSession'
 import { addDays, localDate, type LocalDate } from './gamification/dates'
-import type { MisconceptionKey, SkillId, WorldId } from './types'
+import type { MisconceptionKey, MistakeKey, SkillId, WorldId } from './types'
 
 /** Plain records the parent report reads (spec 011 AC6); storage maps its rows to these. */
 export interface ReportAttempt {
   skillId: SkillId
   firstTry: boolean
-  misconceptions: readonly MisconceptionKey[]
+  misconceptions: readonly MistakeKey[]
   at: number
 }
 export interface ReportLesson {
@@ -96,8 +97,27 @@ export interface ParentReport {
 
 const pct = (hits: number, total: number) => (total === 0 ? null : hits / total)
 
+const MATH_SKILLS = new Set<SkillId>(SKILLS.map((s) => s.id))
+const isMathMistake = (key: MistakeKey): key is MisconceptionKey => !key.startsWith('chess.')
+
+/**
+ * The report covers the math course only (chess joins the dashboard in F18). Chess lessons,
+ * answers, mastery and mistake keys are left out here, so nothing math-specific sees them.
+ */
+function mathOnly(input: ParentReportInput): ParentReportInput {
+  return {
+    ...input,
+    attempts: input.attempts.filter((a) => MATH_SKILLS.has(a.skillId)),
+    lessons: input.lessons.filter((l) => MATH_SKILLS.has(l.skillId)),
+    progress: Object.fromEntries(
+      Object.entries(input.progress).filter(([id]) => MATH_SKILLS.has(id)),
+    ),
+  }
+}
+
 /** How the kid is doing, for grown-ups (spec 011 AC6). Pure and deterministic. */
-export function parentReport(input: ParentReportInput): ParentReport {
+export function parentReport(all: ParentReportInput): ParentReport {
+  const input = mathOnly(all)
   const today = localDate(input.now)
   const dates = Array.from({ length: REPORT_DAYS }, (_, i) => addDays(today, i - REPORT_DAYS + 1))
   const first = dates[0] as LocalDate
@@ -172,7 +192,7 @@ export function parentReport(input: ParentReportInput): ParentReport {
   const counts = new Map<MisconceptionKey, MistakeCount>()
   for (const a of recent) {
     const inWeek = localDate(a.at) >= weekStart
-    for (const key of a.misconceptions) {
+    for (const key of a.misconceptions.filter(isMathMistake)) {
       const c = counts.get(key) ?? { key, week: 0, fortnight: 0 }
       c.fortnight += 1
       if (inWeek) c.week += 1

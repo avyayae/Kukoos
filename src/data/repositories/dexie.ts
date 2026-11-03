@@ -3,7 +3,12 @@ import { exportBackup, importBackup, tableCounts } from '../backup'
 import type { KukoosDb } from '../db'
 import { bossesBeaten, markWorldsSeen, seenWorlds } from '../journey'
 import { lessonToRows } from '../mappers'
-import { applyLessonProgress, applyStartingPointProgress, progressForProfile } from '../progress'
+import {
+  applyLessonProgress,
+  applyStartingPointProgress,
+  markMasteredProgress,
+  progressForProfile,
+} from '../progress'
 import { audioPrefs, saveAudioPrefs } from '../device'
 import { isPersisted, requestPersistenceOnce } from '../persistence'
 import { checkPin, hasPin, setPin } from '../pin'
@@ -108,6 +113,7 @@ export function createDexieRepositories(db: KukoosDb, now: () => number = Date.n
       forProfile: (profileId) => progressForProfile(db, profileId),
       applyStartingPoint: (profileId, skillId) =>
         applyStartingPointProgress(db, profileId, skillId, now()),
+      markMastered: (profileId, skillId) => markMasteredProgress(db, profileId, skillId, now()),
     },
 
     journey: {

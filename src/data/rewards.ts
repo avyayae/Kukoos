@@ -1,7 +1,7 @@
 import Dexie from 'dexie'
 import {
   bossPassed,
-  type LessonState,
+  type SavedLesson,
   lessonRewards,
   localDate,
   NEW_WALLET,
@@ -67,7 +67,7 @@ export async function badgesFor(db: KukoosDb, profileId: string): Promise<BadgeR
  */
 export async function applyLessonRewards(
   db: KukoosDb,
-  state: LessonState,
+  state: SavedLesson,
   profileId: string,
   at: number,
 ): Promise<RewardEffect[]> {

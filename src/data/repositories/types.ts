@@ -1,6 +1,6 @@
 import type { AudioPrefs } from '@/audio/prefs'
 import type {
-  LessonState,
+  SavedLesson,
   ParentReportInput,
   Progress,
   RewardEffect,
@@ -51,7 +51,7 @@ export interface Repositories {
      * Saves a finished or exited lesson once, with its rewards (spec 008), and returns the
      * effects to celebrate. Re-saving, or saving with nothing answered, returns `[]`.
      */
-    save(state: LessonState, meta: LessonMeta): Promise<RewardEffect[]>
+    save(state: SavedLesson, meta: LessonMeta): Promise<RewardEffect[]>
     /** Best first-try score (0–100) of completed lessons per skill. */
     bestFirstTryBySkill(profileId: string): Promise<Partial<Record<SkillId, number>>>
   }
@@ -60,6 +60,8 @@ export interface Repositories {
     forProfile(profileId: string): Promise<Progress>
     /** Pre-masters the starting point's prerequisites; returns how many skills changed. */
     applyStartingPoint(profileId: string, skillId: SkillId): Promise<number>
+    /** Crowns one skill the kid proved they know (spec 016 skip-ahead); true if it changed. */
+    markMastered(profileId: string, skillId: SkillId): Promise<boolean>
   }
   journey: {
     /** Worlds whose boss challenge was passed (spec 007). */
