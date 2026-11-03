@@ -161,8 +161,10 @@ describe('choosing courses (spec 013 AC5, AC7)', () => {
     await waitFor(async () =>
       expect((await repos.profiles.list())[0]?.courses).toEqual(['math', 'chess']),
     )
+    // Wait for the screen to show both courses, or the tap still sees chess as the last one.
+    await screen.findByRole('button', { name: 'Math', pressed: true })
     // Dropping the current course switches home to the one left.
-    await userEvent.click(await screen.findByRole('button', { name: 'Chess', pressed: true }))
+    await userEvent.click(screen.getByRole('button', { name: 'Chess', pressed: true }))
     await waitFor(async () =>
       expect((await repos.profiles.list())[0]).toMatchObject({
         courses: ['math'],
