@@ -60,8 +60,9 @@ For **any kid (about 5–12) learning chess from the basics**, not only the orig
 | F14 | Chess rules (pure domain; legal moves, check and mate, special moves, draws) |
 | F15 | Board and pieces (tap-to-move, legal-move hints, loaded on demand) |
 | F16 | Chess curriculum and map (`05-chess-skill-map.md`, units, mastery, skip-ahead checks) |
-| F17 | Play: friendly bot levels and pass-and-play |
+| F17 | Play: games vs a friendly bot (4 levels), "Your first game" |
 | F18 | Chess rewards, Grown-ups dashboard, launch |
+| Later | Pass-and-play: two players on one device (moved out of F17, 2026-11-03) |
 
 ## Phase 2 (after MVP, ~4–6 weeks)
 - Avatar shop, placement quiz.
