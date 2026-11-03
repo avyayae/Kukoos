@@ -1,3 +1,4 @@
+import { spanishAvailable } from '@/app/courses'
 import { useDailyTime } from '@/app/time'
 import { BONUS_MIN, CHESS_LIMIT_OPTIONS, GOAL_OPTIONS, LIMIT_OPTIONS } from '@/domain'
 import { Button3D } from '@/ui'
@@ -8,7 +9,8 @@ const minutes = (seconds: number) => Math.floor(seconds / 60)
 /**
  * Daily goal and limit in minutes (spec 008 AC12), today's active time, and the
  * "+10 minutes today" override. Changes apply right away. With chess on offer these are the
- * math settings, plus the optional chess limit (spec 013: off by default; chess is open play).
+ * math settings, plus the optional chess and Spanish limits (specs 013, 018: off by default;
+ * both are open play).
  */
 export function DailyTimeSection({ onDone }: { onDone: (message: string) => void }) {
   const { settings, setSettings, today, budget, grantBonus } = useDailyTime()
@@ -97,6 +99,35 @@ export function DailyTimeSection({ onDone }: { onDone: (message: string) => void
           ))}
         </select>
       </label>
+      {spanishAvailable() && (
+        <>
+          <h3>Spanish</h3>
+          <p data-testid="today-spanish">
+            Today: {minutes(today?.spanishSeconds ?? 0)} min of Spanish. Spanish is open play: no
+            goal and no streak.
+          </p>
+          <label className="grownup__field">
+            <span>Spanish daily limit</span>
+            <select
+              className="grownup__select"
+              value={settings.spanishLimitMin ?? OFF}
+              onChange={(e) =>
+                void setSettings({
+                  ...settings,
+                  spanishLimitMin: e.target.value === OFF ? null : Number(e.target.value),
+                })
+              }
+            >
+              <option value={OFF}>No limit</option>
+              {CHESS_LIMIT_OPTIONS.map((m) => (
+                <option key={m} value={m}>
+                  {m} minutes a day
+                </option>
+              ))}
+            </select>
+          </label>
+        </>
+      )}
     </section>
   )
 }

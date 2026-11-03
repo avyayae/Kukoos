@@ -6,8 +6,18 @@
   .course-switch {
     display: grid;
     flex-basis: 100%;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
     gap: var(--mq-space-2);
+  }
+  /* Three courses on a phone: icon above the name (spec 018). */
+  .course-switch:has(> :nth-child(3)) .course-switch__chip {
+    flex-direction: column;
+    gap: 0;
+    padding-inline: var(--mq-space-1);
+  }
+  .course-switch:has(> :nth-child(3)) .course-switch__icon {
+    font-size: var(--mq-text-lg);
   }
   .course-switch__chip {
     display: flex;
@@ -56,7 +66,7 @@
   /* ---------------------------------------------------------- course cards */
   .course-cards {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
     gap: var(--mq-space-3);
     width: 100%;
     max-width: var(--mq-content-max);
@@ -69,6 +79,11 @@
   .course-card__icon {
     font-size: var(--mq-text-3xl);
     line-height: 1;
+  }
+  .course-card__local {
+    color: var(--mq-ink-muted);
+    font-size: var(--mq-text-base);
+    font-weight: var(--mq-weight-bold);
   }
   .course-card__tick {
     position: absolute;
@@ -116,6 +131,39 @@
     margin: 0;
     font-weight: var(--mq-weight-black);
     text-align: center;
+  }
+
+  /* ---------------------------------------------------------- Spanish (spec 018) */
+  .map-screen.spanish-home {
+    background: var(--mq-island-sea);
+  }
+  .spanish-home__sign {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--mq-space-4);
+    max-width: var(--mq-content-max);
+    margin: var(--mq-space-8) auto 0;
+    padding: var(--mq-space-6) var(--mq-space-4);
+    border-radius: var(--mq-radius-card);
+    background: var(--mq-island-sand);
+  }
+  .spanish-home__island {
+    font-size: var(--mq-text-3xl);
+    line-height: 1;
+  }
+  .spanish-home__hello {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .spanish-home__word {
+    font-family: var(--mq-font-display);
+    font-weight: var(--mq-weight-black);
   }
 
   /* ---------------------------------------------------------- switching */

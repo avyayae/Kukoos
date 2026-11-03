@@ -4,7 +4,7 @@ import { getCourse } from '@/domain'
 import { useSpeakOnTap } from '@/ui'
 
 /**
- * Math | Chess (spec 013 AC6): one tap switches home. Shown only to kids with 2 courses.
+ * Math | Chess | Spanish (specs 013 AC6, 018): one tap switches home. Shown only to kids with 2 courses.
  * The chip's accessible name is the course name; the current one is checked.
  */
 export function CourseSwitcher({ courses }: { courses: CoursesValue }) {
