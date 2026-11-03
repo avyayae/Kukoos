@@ -13,6 +13,8 @@ export interface TimeSettings {
   limitMin: number | null
   /** Optional grown-up limit for chess (spec 013); absent or `null` = off. */
   chessLimitMin?: number | null
+  /** Optional grown-up limit for Spanish (spec 018); absent or `null` = off. */
+  spanishLimitMin?: number | null
 }
 
 export const DEFAULT_TIME_SETTINGS: TimeSettings = {
@@ -27,6 +29,8 @@ export interface DayTime {
   bonusMinutes: number
   /** Chess time (spec 013): recorded, but never part of the goal or the math limit. */
   chessSeconds?: number
+  /** Spanish time (spec 018): recorded, never part of the goal, the math or the chess limit. */
+  spanishSeconds?: number
 }
 
 export const EMPTY_DAY: DayTime = { lessonSeconds: 0, totalSeconds: 0, bonusMinutes: 0 }

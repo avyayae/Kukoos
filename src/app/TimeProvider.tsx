@@ -89,7 +89,9 @@ export function TimeProvider({ children, now = Date.now, tickMs = TICK_MS }: Tim
       const saved =
         kind === 'chess'
           ? repos.time.addChess(profileId, seconds)
-          : repos.time.addActive(profileId, kind === 'lesson' ? seconds : 0, seconds)
+          : kind === 'spanish'
+            ? repos.time.addSpanish(profileId, seconds)
+            : repos.time.addActive(profileId, kind === 'lesson' ? seconds : 0, seconds)
       void saved.then(store).catch(() => undefined)
     }, tickMs)
     return () => window.clearInterval(id)
@@ -106,6 +108,7 @@ export function TimeProvider({ children, now = Date.now, tickMs = TICK_MS }: Tim
       settings,
       budget: timeBudget(today ?? EMPTY_DAY, settings),
       chess: chessBudget(today?.chessSeconds ?? 0, settings.chessLimitMin),
+      spanish: chessBudget(today?.spanishSeconds ?? 0, settings.spanishLimitMin),
       setActivity,
       grantBonus: async () => {
         if (!profileId) return

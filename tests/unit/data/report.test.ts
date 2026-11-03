@@ -78,6 +78,7 @@ describe('reset progress (spec 011 AC8)', () => {
       goalMin: 15,
       limitMin: 45,
       chessLimitMin: null,
+      spanishLimitMin: null,
     })
     expect(await repos.profiles.reset('missing')).toBe(false)
     expect(await createNullRepositories().profiles.reset('x')).toBe(false)

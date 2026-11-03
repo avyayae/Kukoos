@@ -65,6 +65,11 @@ export function createNullRepositories(now: () => number = Date.now): Repositori
         today = { ...t, chessSeconds: t.chessSeconds + seconds }
         return Promise.resolve(today)
       },
+      addSpanish: (_, seconds) => {
+        const t = current()
+        today = { ...t, spanishSeconds: t.spanishSeconds + seconds }
+        return Promise.resolve(today)
+      },
       addBonus: (_, minutes) => {
         const t = current()
         today = { ...t, bonusMinutes: t.bonusMinutes + minutes }
