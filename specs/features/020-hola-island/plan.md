@@ -42,3 +42,13 @@
 ## Risks
 - **Skip-ahead crowns earn no stickers.** That's the existing rule ("no badge without practice", §1.1), the same as chess. A kid who skips a whole area gets its sticker once a practised lesson completes the set. The AC9 e2e therefore seeds 5 practised Harbor crowns and plays the 6th skill for real, instead of using skip-ahead checks.
 - **First load:** `badges.ts` now imports the Spanish curriculum (skill ids and areas, about 3 KB, no words). The perf test keeps the words and lessons out of the first load.
+
+## Deviations (recorded during implementation)
+- **AC9 e2e doesn't use skip-ahead checks to crown the Harbor.** Skip-ahead crowns never earn stickers (the existing "no badge without practice" rule, §1.1, the same as chess areas). The test instead:
+  - seeds five Harbor crowns as if earned through practice;
+  - seeds Count to 5 as nearly mastered;
+  - plays one perfect Count to 5 lesson, which crowns it and earns the Harbor flag in the celebration;
+  - checks the flag in the Trophy Room.
+- **The fiesta lesson is saved in `skill` mode** with `skillId = 'es.fiesta'`. Best scores count only `skill` lessons, and they mark the stop crowned.
+- **The fiesta moment is its own screen after the shared celebration**, reusing the reward-moment look. It never overlaps another moment. Its button is "Back to the island".
+- **`.env.development` is removed**, because it held only the Spanish flag.

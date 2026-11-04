@@ -21,7 +21,12 @@ vi.mock('@/audio/tts', async (orig) => ({
   isSpeechSupported: () => true,
 }))
 
-interface Voice { name: string; lang: string; voiceURI: string; localService: boolean }
+interface Voice {
+  name: string
+  lang: string
+  voiceURI: string
+  localService: boolean
+}
 let voices: Voice[] = []
 const ARIA: Voice = { name: 'Aria', lang: 'en-US', voiceURI: 'aria', localService: true }
 const PAULINA: Voice = { name: 'Paulina', lang: 'es-MX', voiceURI: 'paulina', localService: true }

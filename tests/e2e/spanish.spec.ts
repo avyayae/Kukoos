@@ -8,7 +8,7 @@ import { pickCourses } from './fixtures'
 import { finishRewards } from './helpers'
 
 // Spec 018 AC8: a new kid picks Spanish only and hears "¡Hola!" in a Spanish voice; a
-// Math + Spanish kid switches between the two. (e2e builds offer Spanish: VITE_SPANISH=1.)
+// Math + Spanish kid switches between the two. Since spec 020, every build offers Spanish.
 
 /** Records every utterance (text and language) instead of speaking it. */
 async function recordSpeech(page: Page) {
@@ -128,7 +128,7 @@ async function playAll(page: Page, start: SpanishLessonState) {
 
 test('a Spanish kid plays the first lesson to the celebration', async ({ page }) => {
   await onboard(page, ['Spanish'])
-  await expect(page.getByTestId('spanish-path')).toBeVisible()
+  await expect(page.getByTestId('hola-island')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Play next: Hello!' })).toBeVisible()
   // Play next opens it; a fixed seed lets the test mirror the same questions.
   await page.goto('/spanish/lesson/es.hello?seed=5&learn')
@@ -177,4 +177,96 @@ test('the skip-ahead check crowns Kind words, and a wrong pick is saved', async 
       }),
   )
   expect(keys).toContain(`es.mixup:${s.question.answer.id}~${wrong.id}`)
+})
+
+// Spec 020 AC9: Hola Island on the production build. Five Harbor skills are already crowned
+// with practice (seeded) and Count to 5 is nearly there: one perfect lesson crowns it, and
+// the whole Harbor earns the Harbor flag. (Skip-ahead crowns never earn stickers, §1.1.)
+async function seedHarbor(page: Page) {
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve, reject) => {
+        const open = indexedDB.open('kukoos')
+        open.onerror = () => reject(open.error)
+        open.onsuccess = () => {
+          const db = open.result
+          const tx = db.transaction(['settings', 'skillProgress'], 'readwrite')
+          const get = tx.objectStore('settings').get('global')
+          get.onsuccess = () => {
+            const profileId = (get.result as { currentProfileId: string }).currentProfileId
+            const now = Date.now()
+            const row = (skillId: string, done: boolean) => ({
+              id: `${profileId}:${skillId}`,
+              profileId,
+              skillId,
+              mastery: done ? 0.9 : 0.84,
+              attempts: done ? 20 : 14,
+              sessionsSeen: done ? 3 : 1,
+              srsBox: done ? 3 : 1,
+              nextReviewAt: now + 7 * 24 * 60 * 60 * 1000,
+              crowned: done,
+              preMastered: false,
+              updatedAt: now,
+              version: 1,
+            })
+            const store = tx.objectStore('skillProgress')
+            for (const id of ['es.hello', 'es.manners', 'es.feelings', 'es.colors1', 'es.colors2'])
+              store.put(row(id, true))
+            store.put(row('es.numbers1', false))
+          }
+          tx.oncomplete = () => {
+            db.close()
+            resolve()
+          }
+          tx.onerror = () => reject(tx.error)
+        }
+      }),
+  )
+}
+
+test('Hola Island: crowning the Harbor earns the Harbor flag', async ({ page }) => {
+  await onboard(page, ['Spanish'])
+  await expect(page.getByTestId('hola-island')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Harbor, El puerto' })).toBeVisible()
+  await seedHarbor(page)
+  await page.reload()
+  await expect(page.getByTestId('node-es.numbers1')).toHaveAccessibleName(/start here/)
+
+  await page.goto('/spanish/lesson/es.numbers1?seed=6')
+  await playAll(
+    page,
+    startSpanishLesson({
+      skillId: 'es.numbers1',
+      seed: 6,
+      at,
+      // Mastery 0.84 starts at difficulty 2, as on the screen.
+      progress: {
+        'es.numbers1': {
+          mastery: 0.84,
+          attempts: 14,
+          sessionsSeen: 1,
+          srsBox: 1,
+          nextReviewAt: 0,
+          crowned: false,
+          preMastered: false,
+        },
+      },
+    }),
+  )
+  await expect(page.getByRole('heading', { name: 'Mission complete!' })).toBeVisible()
+  // The sticker plays in the shared celebration, after the summary.
+  await page.getByRole('button', { name: 'Continue' }).click()
+  const seen: string[] = []
+  const moment = page.getByTestId('reward-moment')
+  for (let step = 1; await moment.isVisible(); step++) {
+    const current = page.locator(`[data-testid="reward-moment"][data-step="${step}"]`)
+    seen.push((await current.textContent()) ?? '')
+    await current.getByRole('button', { name: 'Continue' }).click()
+    await expect(current).toHaveCount(0)
+  }
+  expect(seen.join(' | ')).toContain('Harbor flag')
+  await expect(page.getByTestId('node-es.numbers1')).toHaveAccessibleName(/crowned/)
+
+  await page.goto('/trophies')
+  await expect(page.getByTestId('badge-es.area.harbor')).toHaveAttribute('data-earned', 'true')
 })

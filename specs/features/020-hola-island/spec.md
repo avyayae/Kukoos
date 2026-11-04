@@ -1,6 +1,6 @@
 # Feature 020 — Hola Island & Spanish Launch
 
-**Status:** Approved (2026-11-03)  ·  **Constitution check:**
+**Status:** Implemented (2026-11-03)  ·  **Constitution check:**
 - §1.2: no shame (locked stops explain kindly).
 - §1.3: Spanish is open play (no goal or streak; optional limit).
 - §1.4: every Spanish word is heard.
