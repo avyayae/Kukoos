@@ -135,7 +135,8 @@ export function startSpanishLesson(options: StartSpanishLesson): SpanishLessonSt
   return {
     // The fiesta is saved as its own lesson, so its first finish can be celebrated once.
     skillId: fiesta ? FIESTA : (skills[0] as SkillId),
-    mode: fiesta ? 'review' : mode,
+    // `skill` mode, so the finished fiesta counts in best scores (its stop is crowned).
+    mode: fiesta ? 'skill' : mode,
     worldId: null,
     seed,
     phase: 'answering',

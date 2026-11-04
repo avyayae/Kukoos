@@ -20,7 +20,6 @@ let voices: { name: string; lang: string; voiceURI: string; localService: boolea
 beforeEach(() => {
   vi.mocked(speak).mockClear()
   vi.mocked(speakParts).mockClear()
-  vi.stubEnv('VITE_SPANISH', '1')
   voices = []
   Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' })
   Object.defineProperty(window, 'speechSynthesis', {
@@ -42,7 +41,6 @@ beforeEach(() => {
   })
 })
 afterEach(() => {
-  vi.unstubAllEnvs()
   Reflect.deleteProperty(window, 'speechSynthesis')
   Reflect.deleteProperty(window, 'SpeechSynthesisUtterance')
 })
@@ -54,22 +52,13 @@ async function kid(repos: Repositories, courses: CourseId[], currentCourse?: Cou
 }
 
 describe('the Spanish course (spec 018 AC1, AC2)', () => {
-  it('My courses offers Spanish (💬 Español) only when the build has it', async () => {
+  it('My courses offers Spanish (💬 Español) with no build flag (spec 020 AC5)', async () => {
     const { repos } = testStore()
     renderAt('/me', repos)
     const spanish = await screen.findByTestId('course-card-spanish')
     expect(spanish).toHaveTextContent('Spanish')
     expect(spanish).toHaveTextContent('Español')
     expect(spanish).toHaveTextContent('💬')
-  })
-
-  it('is hidden without the gate', async () => {
-    vi.stubEnv('VITE_SPANISH', '')
-    const { repos } = testStore()
-    await kid(repos, ['math', 'chess'])
-    renderAt('/me', repos)
-    expect(await screen.findByTestId('course-card-chess')).toBeInTheDocument()
-    expect(screen.queryByTestId('course-card-spanish')).toBeNull()
   })
 
   it('a Spanish-only kid sees the Spanish home, and Kukoos says ¡Hola! in Spanish', async () => {
@@ -171,14 +160,5 @@ describe('Grown-ups: Spanish voice and limit (spec 018 AC5, AC6)', () => {
         chessLimitMin: null,
       }),
     )
-  })
-
-  it('no Spanish settings without the gate', async () => {
-    vi.stubEnv('VITE_SPANISH', '')
-    const { repos } = testStore()
-    await renderGrownUp('/grown-ups', repos)
-    expect(await screen.findByRole('combobox', { name: 'Chess daily limit' })).toBeInTheDocument()
-    expect(screen.queryByRole('combobox', { name: 'Spanish daily limit' })).toBeNull()
-    expect(screen.queryByTestId('no-spanish-voice')).toBeNull()
   })
 })

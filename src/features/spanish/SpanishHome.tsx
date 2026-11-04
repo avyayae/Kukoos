@@ -4,19 +4,26 @@ import { clockNow } from '@/app/clock'
 import type { CoursesValue } from '@/app/courses'
 import { useActivity, useDailyTime } from '@/app/time'
 import { cancelSpeech, isSpeechSupported, speakParts } from '@/audio/tts'
-import { useProfiles, useProgress, useWallet } from '@/data'
-import { getSpanishSkill, nextSpanishSkill, spanishDue } from '@/domain/spanish/curriculum'
+import { useBestScores, useProfiles, useProgress, useWallet } from '@/data'
+import {
+  FIESTA,
+  fiestaOpen,
+  getSpanishSkill,
+  nextSpanishSkill,
+  spanishDue,
+} from '@/domain/spanish/curriculum'
 import { HomeHeader } from '@/features/courses/HomeHeader'
 import { BottomBar } from '@/features/map/BottomBar'
 import { TopStats } from '@/features/rewards/TopStats'
 import { Kukoos, useReadAloud, useSpeakOnTap } from '@/ui'
+import { useSpanishVoices, useVoices } from '@/ui/useSpeech'
 import { SPANISH_COPY } from './copy'
-import { SpanishPath } from './SpanishPath'
+import { HolaIsland } from './HolaIsland'
 
 /**
- * The Spanish course home (specs 018, 019): open play, like chess. Kukoos says hello in
- * Spanish, then the skills wait on a path (Hola Island's map arrives in F20), with one
- * obvious next step (Play next) and Review for crowned skills that are due.
+ * Hola Island, the Spanish course home (specs 018–020): open play, like chess. Kukoos says
+ * hello in Spanish, then the island map shows the way, with one obvious next step (Play
+ * next), Review for crowned skills that are due, and ¡Fiesta! at the end.
  */
 export default function SpanishHome({ courses }: { courses: CoursesValue }) {
   useActivity('spanish')
@@ -29,6 +36,11 @@ export default function SpanishHome({ courses }: { courses: CoursesValue }) {
   const say = useSpeakOnTap()
   const { readAloud } = useReadAloud()
   const [canHear] = useState(isSpeechSupported)
+  const scores = useBestScores()
+  // Voices load late in some browsers: only say a Spanish voice is missing once any are in.
+  const spanishVoices = useSpanishVoices()
+  const anyVoices = useVoices().length > 0
+  const needsVoice = canHear && anyVoices && spanishVoices.length === 0
   const hello = () => speakParts([{ es: SPANISH_COPY.hello }, SPANISH_COPY.building])
 
   useEffect(() => {
@@ -84,9 +96,14 @@ export default function SpanishHome({ courses }: { courses: CoursesValue }) {
             🔇 {SPANISH_COPY.noSpeech}
           </p>
         )}
+        {needsVoice && (
+          <p className="spanish-home__note" data-testid="spanish-needs-voice">
+            🗣️ {SPANISH_COPY.needsVoice}
+          </p>
+        )}
       </section>
       {loaded && (
-        <SpanishPath
+        <HolaIsland
           progress={progress}
           onOpen={(node) => {
             if (node.state === 'locked') {
@@ -94,6 +111,19 @@ export default function SpanishHome({ courses }: { courses: CoursesValue }) {
               return
             }
             open(node.skill.id)
+          }}
+          onSign={(area) => speakParts([{ es: area.esName }, `the ${area.title}`])}
+          fiesta={{
+            open: fiestaOpen(progress),
+            done: scores[FIESTA] !== undefined,
+            onOpen: () => {
+              if (!fiestaOpen(progress)) {
+                say(SPANISH_COPY.fiestaLocked)
+                return
+              }
+              say('Fiesta!')
+              navigate(`/spanish/lesson/${FIESTA}`)
+            },
           }}
         />
       )}
@@ -121,7 +151,7 @@ export default function SpanishHome({ courses }: { courses: CoursesValue }) {
           onMap={() => {
             say('Island')
             document
-              .querySelector<HTMLElement>('.spanish-path [data-current]')
+              .querySelector<HTMLElement>('.hola-island [data-current]')
               ?.scrollIntoView?.({ block: 'center' })
           }}
           onReview={() => {

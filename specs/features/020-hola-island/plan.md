@@ -11,7 +11,7 @@
 - `FIESTA = 'es.fiesta'` and `fiestaOpen(progress)`, which is true when every Jungle Trail skill is crowned.
 - **`startSpanishLesson({ fiesta: true })`:**
   - 8 questions on 8 different skills, picked by seed from all 18. Each uses one of its kinds, at fixed difficulty alternating 2 and 3, with no `say` step.
-  - `state.skillId` is `es.fiesta` and the mode is `review`, so it counts as practice: answers update each word's own skill, and the lesson earns XP and crystals.
+  - `state.skillId` is `es.fiesta` and the mode is `skill`, because best scores only count `skill` lessons and the stop is crowned from them. Answers still update each word's own skill, and the lesson earns XP and crystals.
 - **`badges.ts`:** `SPANISH_AREAS` stickers (`es.area.*`, rule `crownAll`) and `isSpanishBadge`.
 
 ## UI

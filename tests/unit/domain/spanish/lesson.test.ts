@@ -194,7 +194,7 @@ describe('¡Fiesta! (spec 020 AC4)', () => {
     for (let seed = 0; seed < 50; seed++) {
       const s = start({ seed, fiesta: true })
       expect(s.skillId).toBe(FIESTA)
-      expect(s.mode).toBe('review')
+      expect(s.mode).toBe('skill')
       expect(s.plan).toHaveLength(SPANISH_LESSON_LENGTH)
       expect(new Set(s.plan.map((p) => p.skillId)).size).toBe(8)
       expect(s.plan.map((p) => p.kind)).not.toContain('say')

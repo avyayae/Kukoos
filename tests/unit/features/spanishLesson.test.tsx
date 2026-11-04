@@ -1,6 +1,6 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { speak, speakParts } from '@/audio/tts'
 import type { Repositories } from '@/data'
 import {
@@ -25,10 +25,8 @@ beforeEach(() => {
   speech = true
   vi.mocked(speak).mockClear()
   vi.mocked(speakParts).mockClear()
-  vi.stubEnv('VITE_SPANISH', '1')
   Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'visible' })
 })
-afterEach(() => vi.unstubAllEnvs())
 
 async function spanishKid(repos: Repositories) {
   const id = (await repos.profiles.ensureCurrent())?.id ?? ''
@@ -207,7 +205,7 @@ describe('the Spanish home path (spec 019 AC6)', () => {
     const { repos } = testStore()
     await spanishKid(repos)
     const router = renderAt('/', repos)
-    expect(await screen.findByTestId('spanish-path')).toBeInTheDocument()
+    expect(await screen.findByTestId('hola-island')).toBeInTheDocument()
     for (const area of ['Harbor', 'Market', 'Jungle Trail']) {
       expect(screen.getByRole('region', { name: area })).toBeInTheDocument()
     }
@@ -215,13 +213,6 @@ describe('the Spanish home path (spec 019 AC6)', () => {
     expect(router.state.location.pathname).toBe('/')
     await userEvent.click(screen.getByTestId('play-next'))
     expect(router.state.location.pathname).toBe('/spanish/lesson/es.hello')
-  })
-
-  it('the lesson route is hidden without the gate', async () => {
-    vi.stubEnv('VITE_SPANISH', '')
-    const { repos } = testStore()
-    const router = renderAt('/spanish/lesson/es.hello', repos)
-    await waitFor(() => expect(router.state.location.pathname).toBe('/'))
   })
 })
 

@@ -1,4 +1,3 @@
-import { spanishAvailable } from '@/app/courses'
 import { RATE_RANGE } from '@/audio/prefs'
 import { speak } from '@/audio/tts'
 import { voiceLabel } from '@/audio/voices'
@@ -95,7 +94,7 @@ export function SoundVoiceSection() {
       >
         Test voice
       </Button3D>
-      {spanishAvailable() && <SpanishVoice />}
+      <SpanishVoice />
     </section>
   )
 }
