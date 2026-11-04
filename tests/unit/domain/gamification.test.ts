@@ -1,5 +1,6 @@
 import fc from 'fast-check'
 import { CHESS_SKILLS } from '@/domain/chess/curriculum'
+import { SPANISH_SKILLS } from '@/domain/spanish/curriculum'
 import { describe, expect, it } from 'vitest'
 import { BADGES, type BadgeStats, getBadge, newBadges } from '@/domain/gamification/badges'
 import { addDays, daysBetween, localDate } from '@/domain/gamification/dates'
@@ -234,6 +235,7 @@ describe('badges (AC9)', () => {
         'sub.within100.regroup',
         'sub.3digit.acrossZero',
         ...CHESS_SKILLS.map((s) => s.id),
+        ...SPANISH_SKILLS.map((s) => s.id),
       ]),
       bossesBeaten: 5,
       streak: 30,

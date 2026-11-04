@@ -1,4 +1,5 @@
 import { CHESS_AREAS, chessSkillsIn } from '../chess/curriculum'
+import { SPANISH_AREAS, spanishSkillsIn } from '../spanish/curriculum'
 import type { SkillId } from '../types'
 
 /** What badge rules look at, after the lesson that was just saved. */
@@ -96,10 +97,21 @@ export const BADGES: readonly BadgeDef[] = [
     howTo: `Get a crown in every ${area.title} mission in Chess Castle.`,
     rule: { type: 'crownAll', skillIds: chessSkillsIn(area.id).map((s) => s.id) },
   })),
+  // Hola Island areas (spec 020): the same rule, for Spanish.
+  ...SPANISH_AREAS.map((area): BadgeDef => ({
+    id: area.sticker.id,
+    name: area.sticker.name,
+    emoji: area.sticker.emoji,
+    howTo: `Get a crown in every ${area.title} mission on Hola Island.`,
+    rule: { type: 'crownAll', skillIds: spanishSkillsIn(area.id).map((s) => s.id) },
+  })),
 ]
 
 /** Chess stickers only make sense to kids who learn chess. */
 export const isChessBadge = (id: string) => id.startsWith('chess.')
+
+/** Hola Island stickers only make sense to kids who learn Spanish (spec 020 AC3). */
+export const isSpanishBadge = (id: string) => id.startsWith('es.')
 
 export function getBadge(id: string): BadgeDef | undefined {
   return BADGES.find((b) => b.id === id)

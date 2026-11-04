@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { newMastery } from '@/domain'
+import { FIESTA, fiestaOpen, getSpanishSkill, spanishSkillsIn } from '@/domain/spanish/curriculum'
 import {
   SAY_AFTER,
   scoredCount,
@@ -185,5 +186,32 @@ describe('skip-ahead and review (spec 019 AC6, AC7)', () => {
     })
     expect(new Set(s.plan.map((p) => p.skillId))).toEqual(new Set(['es.hello', 'es.colors1']))
     expect(s.plan.map((p) => p.kind)).not.toContain('say')
+  })
+})
+
+describe('¡Fiesta! (spec 020 AC4)', () => {
+  it('8 questions from 8 different skills across all 3 areas, difficulty 2 and 3, no say', () => {
+    for (let seed = 0; seed < 50; seed++) {
+      const s = start({ seed, fiesta: true })
+      expect(s.skillId).toBe(FIESTA)
+      expect(s.mode).toBe('review')
+      expect(s.plan).toHaveLength(SPANISH_LESSON_LENGTH)
+      expect(new Set(s.plan.map((p) => p.skillId)).size).toBe(8)
+      expect(s.plan.map((p) => p.kind)).not.toContain('say')
+      expect(new Set(s.plan.map((p) => p.fixedDifficulty))).toEqual(new Set([2, 3]))
+      const areas = new Set(s.plan.map((p) => getSpanishSkill(p.skillId).area))
+      expect(areas.size, `seed ${seed}`).toBeGreaterThanOrEqual(2)
+      const done = playThrough(s)
+      expect(done.results.map((r) => r.skillId)).toEqual(s.plan.map((p) => p.skillId))
+    }
+  })
+
+  it('opens only when every Jungle Trail skill is crowned', () => {
+    const crowned = { ...newMastery(), mastery: 0.9, crowned: true }
+    const jungle = spanishSkillsIn('jungle').map((s) => s.id)
+    expect(fiestaOpen({})).toBe(false)
+    const most = Object.fromEntries(jungle.slice(1).map((id) => [id, crowned]))
+    expect(fiestaOpen(most)).toBe(false)
+    expect(fiestaOpen({ ...most, [jungle[0] ?? '']: crowned })).toBe(true)
   })
 })

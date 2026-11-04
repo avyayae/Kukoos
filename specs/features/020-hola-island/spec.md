@@ -1,6 +1,6 @@
 # Feature 020 — Hola Island & Spanish Launch
 
-**Status:** Draft (2026-11-03)  ·  **Constitution check:**
+**Status:** Approved (2026-11-03)  ·  **Constitution check:**
 - §1.2: no shame (locked stops explain kindly).
 - §1.3: Spanish is open play (no goal or streak; optional limit).
 - §1.4: every Spanish word is heard.
@@ -76,7 +76,7 @@ F18 built the Spanish course frame and F19 the words and lessons. A kid still le
 - Tiny phrases, reading, spelling, speech checking and recorded audio (Phase 2).
 - A Spanish user interface (the app stays in English).
 
-## Open questions (with recommendations)
+## Decisions on the open questions (2026-11-03, approved as recommended)
 1. **Is the Fiesta a party lesson or just a celebration?** Recommendation: a **party lesson** of 8 mixed questions that can be replayed, so finishing the island also gives her a fun way to review every word.
 2. **Spanish area names on the map** ("El puerto", "El mercado", "La selva"). Recommendation: **yes**, small under the English name and spoken when tapped. They're a free extra few words.
 3. **The "add a Spanish voice" note** for kids on devices with no Spanish voice. Recommendation: **show it**. Without a Spanish voice, the words may be read by an English voice and sound wrong.

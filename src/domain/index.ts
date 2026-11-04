@@ -136,6 +136,7 @@ export {
   BADGES,
   getBadge,
   isChessBadge,
+  isSpanishBadge,
   newBadges,
   type BadgeDef,
   type BadgeRule,
