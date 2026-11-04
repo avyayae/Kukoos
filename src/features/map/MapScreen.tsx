@@ -10,7 +10,7 @@ import { HomeHeader } from '@/features/courses/HomeHeader'
 import { Onboarding } from '@/features/profiles/Onboarding'
 import { WhoIsPlaying } from '@/features/profiles/WhoIsPlaying'
 import { REWARD_COPY } from '@/features/rewards/copy'
-import { Goodnight } from '@/features/rewards/Goodnight'
+import { Goodnight, type OpenPlayOffer } from '@/features/rewards/Goodnight'
 import { Notice } from '@/features/rewards/Notice'
 import { TopStats } from '@/features/rewards/TopStats'
 import {
@@ -74,15 +74,13 @@ export function MapScreen() {
     )
   }
   // The math limit is reached: Kukoos sleeps until tomorrow (spec 008 AC8), but a kid with
-  // chess can still play chess (spec 013 AC3).
+  // chess or Spanish can keep going there, unless that course's own limit is reached too
+  // (specs 013 AC3, 020 AC6).
   if (time.ready && time.budget.locked) {
-    const chessOpen = courses.mine.includes('chess') && !time.chess.locked
-    return (
-      <Goodnight
-        minutes={Math.floor((time.today?.totalSeconds ?? 0) / 60)}
-        onChess={chessOpen ? () => void courses.choose('chess') : undefined}
-      />
-    )
+    const offers: OpenPlayOffer[] = (['chess', 'spanish'] as const)
+      .filter((c) => courses.mine.includes(c) && !time[c].locked)
+      .map((course) => ({ course, onOpen: () => void courses.choose(course) }))
+    return <Goodnight minutes={Math.floor((time.today?.totalSeconds ?? 0) / 60)} offers={offers} />
   }
   return home(<JourneyMap courses={courses} />)
 }

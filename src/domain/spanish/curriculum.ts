@@ -9,8 +9,10 @@ export type SpanishAreaId = 'harbor' | 'market' | 'jungle'
 export interface SpanishArea {
   id: SpanishAreaId
   title: string
+  /** The area's Spanish name, under the English one on the map (spec 020). */
+  esName: string
   emoji: string
-  /** Sticker earned when every skill in the area is crowned (F20). */
+  /** Sticker earned when every skill in the area is crowned (spec 020). */
   sticker: { id: string; name: string; emoji: string }
 }
 
@@ -28,18 +30,21 @@ export const SPANISH_AREAS: readonly SpanishArea[] = [
   {
     id: 'harbor',
     title: 'Harbor',
+    esName: 'El puerto',
     emoji: '⚓',
     sticker: { id: 'es.area.harbor', name: 'Harbor flag', emoji: '⚓' },
   },
   {
     id: 'market',
     title: 'Market',
+    esName: 'El mercado',
     emoji: '🧺',
     sticker: { id: 'es.area.market', name: 'Market basket', emoji: '🧺' },
   },
   {
     id: 'jungle',
     title: 'Jungle Trail',
+    esName: 'La selva',
     emoji: '🌴',
     sticker: { id: 'es.area.jungle', name: 'Fiesta piñata', emoji: '🪅' },
   },
@@ -198,6 +203,13 @@ export const spanishSkillsIn = (area: SpanishAreaId) =>
   SPANISH_SKILLS.filter((s) => s.area === area)
 
 type SpanishProgress = Partial<Record<SkillId, SkillMastery>>
+
+/** The ¡Fiesta! stop (spec 020): a party lesson mixing the whole island. Not a skill. */
+export const FIESTA: SkillId = 'es.fiesta'
+
+/** The fiesta opens when every Jungle Trail skill is crowned (spec 020 AC4). */
+export const fiestaOpen = (progress: SpanishProgress) =>
+  spanishSkillsIn('jungle').every((s) => progress[s.id]?.crowned)
 
 /** Skills unlock in order: each one opens when the one before it is crowned (§2.1). */
 export function spanishUnlocked(progress: SpanishProgress): SkillId[] {

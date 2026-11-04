@@ -1,7 +1,8 @@
 import type { SkillMastery } from '../engine/mastery'
 import type { LessonPhase, QuestionResult, SavedLesson } from '../engine/lessonSession'
 import type { SkillId, SpanishKind, SpanishMistakeKey } from '../types'
-import { getSpanishSkill, spanishDue } from './curriculum'
+import { createRng } from '../rng'
+import { FIESTA, getSpanishSkill, SPANISH_SKILLS, spanishDue } from './curriculum'
 import { generateSpanishQuestion, type SpanishDifficulty, type SpanishQuestion } from './questions'
 import { getWord, shown } from './words'
 
@@ -87,15 +88,34 @@ export interface StartSpanishLesson {
   skipCheck?: boolean
   /** Whether this device can speak (spec 019 AC9). */
   canHear?: boolean
+  /** ¡Fiesta! (spec 020 AC4): 8 questions from 8 skills across the island. */
+  fiesta?: boolean
+}
+
+/** The fiesta: 8 different skills picked by seed, one kind each, at difficulty 2 and 3. */
+function fiestaPlan(seed: number, canHear: boolean): PlannedSpanish[] {
+  const rng = createRng(seed)
+  return rng
+    .shuffle(SPANISH_SKILLS)
+    .slice(0, SPANISH_LESSON_LENGTH)
+    .map((skill, i) => ({
+      skillId: skill.id,
+      kind: heard(rng.pick(skill.kinds), canHear),
+      seed: seed * 101 + i * 7919,
+      fixedDifficulty: (i % 2 === 0 ? 2 : 3) as SpanishDifficulty,
+    }))
 }
 
 export function startSpanishLesson(options: StartSpanishLesson): SpanishLessonState {
   const { skillId, seed, at, progress = {}, mode = 'skill', skipCheck = false } = options
   const canHear = options.canHear ?? true
+  const fiesta = options.fiesta ?? false
   const due = mode === 'review' ? spanishDue(progress, at) : []
   const skills = due.length > 0 ? due : [skillId]
   let plan: PlannedSpanish[]
-  if (skipCheck) {
+  if (fiesta) {
+    plan = fiestaPlan(seed, canHear)
+  } else if (skipCheck) {
     plan = Array.from({ length: SPANISH_SKIP_CHECK_LENGTH }, (_, i) => ({
       skillId,
       kind: heard('listen', canHear),
@@ -110,11 +130,13 @@ export function startSpanishLesson(options: StartSpanishLesson): SpanishLessonSt
       plan.splice(SAY_AFTER, 0, { skillId: after.skillId, kind: 'say', seed: after.seed })
     }
   }
-  const difficulty = skipCheck ? 3 : startDifficulty(progress[skillId])
+  const difficulty = skipCheck ? 3 : fiesta ? 2 : startDifficulty(progress[skillId])
   const first = plan[0] as PlannedSpanish
   return {
-    skillId: skills[0] as SkillId,
-    mode,
+    // The fiesta is saved as its own lesson, so its first finish can be celebrated once.
+    skillId: fiesta ? FIESTA : (skills[0] as SkillId),
+    // `skill` mode, so the finished fiesta counts in best scores (its stop is crowned).
+    mode: fiesta ? 'skill' : mode,
     worldId: null,
     seed,
     phase: 'answering',

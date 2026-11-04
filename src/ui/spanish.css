@@ -2,7 +2,7 @@
    reviewed word data as `--swatch`. Shared tiles, banners and map nodes do the motion. */
 
 @layer components {
-  /* ---------------------------------------------------------- home path */
+  /* ---------------------------------------------------------- Hola Island (spec 020) */
   .spanish-home__note {
     margin: 0;
     font-size: var(--mq-text-base);
@@ -17,6 +17,107 @@
   }
   .band--es-jungle {
     background: var(--mq-map-jungle);
+  }
+  .island-sign {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: var(--mq-tap-kid);
+    padding: var(--mq-space-1) var(--mq-space-4);
+    border: 0;
+    border-radius: var(--mq-radius-card);
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .island-sign__es {
+    font-family: var(--mq-font-body);
+    font-size: var(--mq-text-base);
+    font-weight: var(--mq-weight-bold);
+    color: var(--mq-ink-muted);
+  }
+  .island-scene {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .island-scene__wave {
+    position: absolute;
+    bottom: var(--mq-space-6);
+    left: -10%;
+    width: 120%;
+    height: var(--mq-space-4);
+    border-radius: var(--mq-radius-pill);
+    background: radial-gradient(
+        circle at var(--mq-space-4) 0,
+        transparent var(--mq-space-3),
+        var(--mq-island-foam) calc(var(--mq-space-3) + var(--mq-stroke) / 2)
+      )
+      0 0 / var(--mq-space-8) 100% repeat-x;
+    opacity: 0.8;
+  }
+  .island-scene__wave--2 {
+    bottom: calc(var(--mq-space-12) + var(--mq-space-6));
+    left: -20%;
+    opacity: 0.5;
+  }
+  .island-scene__boat {
+    position: absolute;
+    right: var(--mq-space-6);
+    bottom: var(--mq-space-8);
+    font-size: var(--mq-text-3xl);
+  }
+  .island-scene__awning {
+    position: absolute;
+    top: var(--mq-space-12);
+    left: var(--mq-space-4);
+    width: calc(var(--mq-tile-min) * 0.9);
+    height: var(--mq-space-8);
+    border-radius: 0 0 var(--mq-radius-card) var(--mq-radius-card);
+    background: repeating-linear-gradient(
+      90deg,
+      var(--mq-island-awning) 0 var(--mq-space-3),
+      var(--mq-island-awning-light) var(--mq-space-3) var(--mq-space-6)
+    );
+  }
+  .island-scene__awning--2 {
+    top: 55%;
+    right: var(--mq-space-4);
+    left: auto;
+  }
+  .island-scene__leaf {
+    position: absolute;
+    top: var(--mq-space-8);
+    left: calc(-1 * var(--mq-space-4));
+    width: calc(var(--mq-tile-min) * 0.8);
+    aspect-ratio: 2 / 1;
+    border-radius: 0 var(--mq-radius-pill);
+    background: var(--mq-island-leaf);
+    rotate: 20deg;
+    opacity: 0.7;
+  }
+  .island-scene__leaf--2 {
+    top: 45%;
+    right: calc(-1 * var(--mq-space-4));
+    left: auto;
+    rotate: -160deg;
+  }
+  .island-scene__leaf--3 {
+    top: auto;
+    bottom: var(--mq-space-12);
+    rotate: 35deg;
+  }
+  .fiesta-moment {
+    min-height: 100dvh;
+    background: var(--mq-island-sand);
+  }
+  .fiesta-moment__friends {
+    margin: 0;
+    font-size: var(--mq-text-2xl);
+    letter-spacing: var(--mq-space-1);
   }
 
   /* ---------------------------------------------------------- pictures */

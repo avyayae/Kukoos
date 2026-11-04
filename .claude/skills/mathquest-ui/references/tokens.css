@@ -94,6 +94,10 @@
   --mq-castle-throne: #f5dfa8;
   --mq-island-sea: #bfe6f2; /* Hola Island (spec 018): sea and sand */
   --mq-island-sand: #fbeccb;
+  --mq-island-foam: #eaf8fc; /* Hola Island (spec 020): waves, stall awnings, leaves */
+  --mq-island-awning: #ff8a65;
+  --mq-island-awning-light: #fff1e6;
+  --mq-island-leaf: #6fbf4f;
   --mq-map-row: 112px; /* vertical distance between path nodes */
   --mq-map-step: 72px; /* zigzag offset */
   --mq-map-node: 72px;

@@ -35,8 +35,12 @@ interface SpanishLessonScreenProps {
   mode?: 'skill' | 'review'
   /** "Already know these words?" (spec 019 AC7): not saved; reports the finished check. */
   skipCheck?: boolean
+  /** ¡Fiesta! (spec 020): 8 questions from across the island. */
+  fiesta?: boolean
   onDone?: (state: SpanishLessonState) => void
   onExit: () => void
+  /** After the celebration of a finished lesson (defaults to `onExit`). */
+  onFinished?: () => void
   now?: () => number
 }
 
@@ -53,14 +57,16 @@ export function SpanishLessonScreen({
   progress,
   mode = 'skill',
   skipCheck = false,
+  fiesta = false,
   onDone,
   onExit,
+  onFinished = onExit,
   now = Date.now,
 }: SpanishLessonScreenProps) {
   useActivity('spanish')
   const [canHear] = useState(isSpeechSupported)
   const [state, dispatch] = useReducer(spanishLessonReducer, undefined, () =>
-    startSpanishLesson({ skillId, seed, at: now(), progress, mode, skipCheck, canHear }),
+    startSpanishLesson({ skillId, seed, at: now(), progress, mode, skipCheck, canHear, fiesta }),
   )
   const { readAloud: autoRead, setReadAloud: setAutoRead } = useReadAloud()
   const [confirmExit, setConfirmExit] = useState(false)
@@ -154,7 +160,7 @@ export function SpanishLessonScreen({
   if (phase === 'complete') {
     if (skipCheck) return null
     return (
-      <LessonComplete state={state} effects={effects} autoRead={autoRead} onContinue={onExit} />
+      <LessonComplete state={state} effects={effects} autoRead={autoRead} onContinue={onFinished} />
     )
   }
 

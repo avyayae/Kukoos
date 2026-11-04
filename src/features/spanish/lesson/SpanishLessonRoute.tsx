@@ -1,8 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { clockNow } from '@/app/clock'
 import { useProfiles, useProgress, useRepos } from '@/data'
-import { getSpanishSkill, isSpanishSkill, spanishDue } from '@/domain/spanish/curriculum'
+import { speakParts } from '@/audio/tts'
+import {
+  FIESTA,
+  fiestaOpen,
+  getSpanishSkill,
+  isSpanishSkill,
+  spanishDue,
+} from '@/domain/spanish/curriculum'
 import { skipCheckPassed } from '@/domain/spanish/lesson'
 import { Button3D, Kukoos } from '@/ui'
 import { SPANISH_COPY } from '../copy'
@@ -15,7 +22,7 @@ function parseSeed(raw: string | null): number {
   return raw !== null && Number.isSafeInteger(s) && s >= 0 ? s : Date.now() % 1_000_000
 }
 
-type Stage = 'offer' | 'check' | 'passed' | 'failed' | 'lesson'
+type Stage = 'offer' | 'check' | 'passed' | 'failed' | 'lesson' | 'fiesta'
 
 /** A full-screen Kukoos card (offer, passed, failed): the same layout as chess. */
 function Card({
@@ -63,7 +70,17 @@ export default function SpanishLessonRoute() {
   )
 
   const isReview = skillId === SPANISH_REVIEW
-  if (!isReview && !isSpanishSkill(skillId)) {
+  const isFiesta = skillId === FIESTA
+  // Has this kid finished a fiesta before? Known before the lesson starts (spec 020 AC4).
+  const [hadFiesta, setHadFiesta] = useState<boolean | null>(null)
+  useEffect(() => {
+    if (!isFiesta || !profile) return
+    void repos.lessons
+      .bestFirstTryBySkill(profile.id)
+      .then((scores) => setHadFiesta(scores[FIESTA] !== undefined))
+  }, [isFiesta, profile, repos])
+
+  if (!isReview && !isFiesta && !isSpanishSkill(skillId)) {
     return (
       <Card
         title="Hmm, Kukoos can’t find that one."
@@ -75,6 +92,30 @@ export default function SpanishLessonRoute() {
   }
   if (!loaded) return null
   const progress = loaded.progress
+
+  if (isFiesta) {
+    if (!fiestaOpen(progress)) {
+      return (
+        <Card
+          title={SPANISH_COPY.fiestaTitle}
+          body={SPANISH_COPY.fiestaNotYet}
+          mood="encourage"
+          actions={back}
+        />
+      )
+    }
+    if (stage === 'fiesta') return <FiestaMoment onDone={home} />
+    return (
+      <SpanishLessonScreen
+        skillId={FIESTA}
+        seed={seed}
+        progress={progress}
+        fiesta
+        onExit={home}
+        onFinished={() => (hadFiesta === false ? setStage('fiesta') : home())}
+      />
+    )
+  }
 
   if (isReview) {
     const due = spanishDue(progress, now)
@@ -178,5 +219,34 @@ export default function SpanishLessonRoute() {
       progress={progress}
       onExit={home}
     />
+  )
+}
+
+/** The first finished fiesta (spec 020 AC4): the island throws a party, once. */
+function FiestaMoment({ onDone }: { onDone: () => void }) {
+  useEffect(() => {
+    speakParts([{ es: SPANISH_COPY.fiestaTitle }, SPANISH_COPY.fiestaBody])
+  }, [])
+  return (
+    <main className="screen moment fiesta-moment" data-testid="fiesta-moment">
+      <div className="moment__stage">
+        <div className="moment__burst" aria-hidden="true" />
+        <div className="moment__emoji" aria-hidden="true">
+          🪅
+        </div>
+      </div>
+      <h1 className="moment__title" lang="es">
+        {SPANISH_COPY.fiestaTitle}
+      </h1>
+      <p className="fiesta-moment__friends" aria-hidden="true">
+        🦁 🐵 🐶 🐮 🦒 🐢
+      </p>
+      <p className="moment__body">{SPANISH_COPY.fiestaBody}</p>
+      <div className="moment__action">
+        <Button3D variant="primary" size="xl" block onClick={onDone}>
+          Back to the island
+        </Button3D>
+      </div>
+    </main>
   )
 }

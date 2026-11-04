@@ -6,6 +6,8 @@ export const REWARD_COPY = {
   goodnightTitle: 'Great job today!',
   goodnightBody: 'Kukoos is going to sleep. See you tomorrow!',
   chessOffer: 'Math is sleeping. Want to play chess?',
+  spanishOffer: 'Math is sleeping. Want to learn Spanish?',
+  bothOffer: 'Math is sleeping. Want to play chess or learn Spanish?',
   frozen: 'Kukoos kept your flame warm!',
   newFlame: "Let's start a new flame today!",
 } as const

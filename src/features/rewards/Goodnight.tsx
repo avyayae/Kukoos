@@ -9,25 +9,44 @@ import { Button3D, Kukoos, useReadAloud } from '@/ui'
 import { AvatarArt } from '@/ui/AvatarArt'
 import { plural, REWARD_COPY } from './copy'
 
+/** An open-play course a kid can still switch to (specs 013 AC3, 020 AC6). */
+export interface OpenPlayOffer {
+  course: 'chess' | 'spanish'
+  onOpen: () => void
+}
+
+const OFFER_BUTTON: Record<OpenPlayOffer['course'], { icon: string; label: string }> = {
+  chess: { icon: '♞', label: 'Play chess' },
+  spanish: { icon: '💬', label: 'Learn Spanish' },
+}
+
 interface GoodnightProps {
   /** Today's active minutes, shown as a quiet "look what you did". */
   minutes: number
-  /** Kids with chess can keep playing chess (spec 013 AC3). */
-  onChess?: (() => void) | undefined
+  /** Open-play courses whose own limit isn't reached: offered instead of goodbye. */
+  offers?: readonly OpenPlayOffer[]
+}
+
+function offerLine(offers: readonly OpenPlayOffer[]): string | null {
+  const chess = offers.some((o) => o.course === 'chess')
+  const spanish = offers.some((o) => o.course === 'spanish')
+  if (chess && spanish) return REWARD_COPY.bothOffer
+  if (chess) return REWARD_COPY.chessOffer
+  if (spanish) return REWARD_COPY.spanishOffer
+  return null
 }
 
 /**
  * The daily limit is reached (spec 008 AC8): a calm night sky, Kukoos asleep, no sound loop
  * and no math play button. The only way back to math is a grown-up's +10 behind the gate;
- * a kid who also learns chess is offered chess, which is open play (spec 013).
+ * a kid who also learns chess or Spanish is offered them, as open play (specs 013, 020).
  */
-export function Goodnight({ minutes, onChess }: GoodnightProps) {
+export function Goodnight({ minutes, offers = [] }: GoodnightProps) {
   useActivity(null)
   const { profile } = useProfiles()
   const { readAloud } = useReadAloud()
-  const speech = onChess
-    ? `${REWARD_COPY.goodnightTitle} ${REWARD_COPY.chessOffer}`
-    : `${REWARD_COPY.goodnightTitle} ${REWARD_COPY.goodnightBody}`
+  const offer = offerLine(offers)
+  const speech = `${REWARD_COPY.goodnightTitle} ${offer ?? REWARD_COPY.goodnightBody}`
   const announce = useEffectEvent(() => {
     playSfx('lullaby')
     if (readAloud) speak(speech)
@@ -54,15 +73,19 @@ export function Goodnight({ minutes, onChess }: GoodnightProps) {
         </span>
       </div>
       <h1 className="goodnight__title">{REWARD_COPY.goodnightTitle}</h1>
-      <p className="goodnight__body">
-        {onChess ? REWARD_COPY.chessOffer : REWARD_COPY.goodnightBody}
-      </p>
+      <p className="goodnight__body">{offer ?? REWARD_COPY.goodnightBody}</p>
       <p className="goodnight__today">You did {plural(minutes, 'minute')} of space travel today.</p>
-      {onChess && (
-        <Button3D variant="primary" size="xl" onClick={onChess}>
-          <span aria-hidden="true">♞</span> Play chess
+      {offers.map((o, i) => (
+        <Button3D
+          key={o.course}
+          variant={i === 0 ? 'primary' : 'secondary'}
+          size="xl"
+          onClick={o.onOpen}
+        >
+          <span aria-hidden="true">{OFFER_BUTTON[o.course].icon}</span>{' '}
+          {OFFER_BUTTON[o.course].label}
         </Button3D>
-      )}
+      ))}
       <Link to="/grown-ups" className="goodnight__grownups">
         🔒 Grown-ups
       </Link>
